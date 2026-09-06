@@ -132,6 +132,26 @@ body{
 
 .wrap{max-width:940px;margin:0 auto;padding:0 20px 100px}
 
+/* ---------- 準備中の頁 ---------- */
+/* **画面いっぱいに、看板と一言だけ。**
+   配れるものがまだ無いので、置くものを増やさない。 */
+.standby{
+  min-height:100svh;
+  display:grid;place-items:center;align-content:center;
+  gap:clamp(22px,4vh,40px);
+  padding:24px;text-align:center;
+}
+/* 準備中の一言。**看板より小さく、地の色に近づける。**
+   主役は看板のほうで、これは添え書き */
+.standby p{
+  margin:0;
+  font-family:var(--display);
+  font-size:clamp(15px,2.6vw,19px);
+  letter-spacing:.24em;
+  color:var(--sub);
+}
+.standby .en{font-size:clamp(10px,1.6vw,12px)}
+
 /* ---------- 表紙 ---------- */
 header{padding:54px 0 30px;text-align:center}
 /* 小さい札。**からし色に黒の縁と硬い影。** 丸くするのは、下の章の丸番号と揃えるため */
@@ -224,13 +244,19 @@ strong,b{font-weight:900}
   display:inline-block;
   font-family:var(--logo);font-weight:900;font-synthesis-weight:none;
   color:#fff;background:var(--green);
-  border:2px solid var(--ink);
+  /* **縁も、文字サイズに合わせて太らせる。**
+     道具の側は 16px のとき 2px（0.125em）。それをそのまま掛けると、
+     大きくしたとき黒が勝ちすぎるので、控えめの比にしてある。
+     max で 2px を下限にしておくのは、小さく使ったときに線が消えないため。 */
+  border:max(2px,0.055em) solid var(--ink);
   border-radius:0.5em;
   padding:0.06em 0.7em 0.1em;
   box-shadow:0.19em 0.19em 0 var(--orange);
   white-space:nowrap;line-height:1.4;
 }
 .brand--lg{font-size:clamp(26px,5.4vw,40px)}
+/* 準備中の頁の看板。**画面の主役なので、いちばん大きく取る** */
+.brand--xl{font-size:clamp(34px,8.4vw,76px)}
 .brand--sm{font-size:16px}
 /* 英字の添え。**字間を大きく開ける。** 昭和の看板は、欧文を飾りとして扱う */
 .en{font-size:11px;font-weight:900;letter-spacing:.34em;color:var(--sub)}

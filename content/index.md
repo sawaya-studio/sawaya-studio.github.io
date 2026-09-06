@@ -37,7 +37,7 @@ description: ここに、検索結果と SNS に出る一行を書く。
 <!-- [ 名前, 行き先, 顔, 走る場所 ]  顔は recaday / telop / plain -->
 ::: shelf
 [
-  ["recaday", "/recaday/", "recaday", "iOS / Android"],
+  ["recaday", "/recaday/closed-test/", "recaday", "iOS / Android"],
   ["テロップスタジオ", "/telop-studio/", "telop", "Android → iOS → PC"]
 ]
 :::

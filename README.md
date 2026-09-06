@@ -8,7 +8,8 @@ node tools/build.mjs --watch    直したら、そのつど作り直す
 node tools/serve.mjs            http://127.0.0.1:5199/ で見る
 ```
 
-**書き方は [content/_書き方.md](content/_書き方.md) にあります。**
+**手順は [content/_手順.md](content/_手順.md)**、
+**書ける部品の一覧は [content/_書き方.md](content/_書き方.md)** にあります。
 
 ---
 

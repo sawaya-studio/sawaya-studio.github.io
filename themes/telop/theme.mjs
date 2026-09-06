@@ -59,6 +59,15 @@ ${js ? `<script src="${js}" defer></script>` : ''}
 </div>`;
     },
 
+    /*
+      準備中の頁。**画面いっぱいに、看板と一言だけ。**
+      配れるものがまだ無いので、置くものを増やさない。
+      増やすと「もう使えるのか」と思わせてしまう。
+    */
+    standby: ({ inner }) => `<div class="standby">
+${inner}
+</div>`,
+
     /* 表紙。中に ::: eyebrow / # 見出し / ::: lede を置く */
     cover: ({ inner }) => `<header>\n${inner}\n</header>`,
 
