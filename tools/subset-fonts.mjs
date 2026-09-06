@@ -62,6 +62,26 @@ const JOBS = [
   },
   {
     /*
+      sawaya studio の欧字（Saira、SIL OFL）。**この頁だけで使う。**
+
+      **日本語は入っていない書体**なので、名乗り・節の名前・走る場所といった
+      欧字の札にだけ掛かる。日本語の見出しと本文は system のゴシックのまま。
+
+      元をこの site の中（tools/fonts-src/）に置いているのは、
+      **ほかの書体と違って、手元のどこにも無いから**（recaday と plot-studio から
+      借りているものは、あちらにある）。Google Fonts から取ってきた latin の 1 本で、
+      100〜900 の可変軸を持っている。
+
+      頁ぜんぶの字を渡すが、**日本語は Saira に無いので、そのまま落ちる。**
+    */
+    name: 'Saira',
+    from: 'tools/fonts-src/Saira-latin.woff2',
+    to: 'assets/fonts/Saira-Variable.woff2',
+    pages: ['index.html'],
+    extra: ASCII + '/→・()、。',
+  },
+  {
+    /*
       看板の書体（851ゴチカクット）。**看板に出る字だけ。**
       頁ぜんぶを拾うと、本文の字まで入って重くなる（本文には使わない書体）。
       だから class="brand" の中だけを見る。
@@ -96,7 +116,9 @@ const JOBS = [
 let failed = false;
 
 for (const job of JOBS) {
-  if (!fs.existsSync(job.from)) {
+  const from = path.isAbsolute(job.from) || /^[A-Za-z]:/.test(job.from)
+    ? job.from : path.join(ROOT, job.from);
+  if (!fs.existsSync(from)) {
     console.error(`× ${job.name} の元が無い:\n  ${job.from}`);
     failed = true;
     continue;
@@ -120,7 +142,7 @@ for (const job of JOBS) {
 
   try {
     execFileSync('py', [
-      '-3.14', '-m', 'fontTools.subset', job.from,
+      '-3.14', '-m', 'fontTools.subset', from,
       `--text=${text}`,
       `--output-file=${out}`,
       '--flavor=woff2',

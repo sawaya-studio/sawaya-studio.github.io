@@ -30,9 +30,21 @@
   --radius:14px;
   --ui:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans",
        "Hiragino Kaku Gothic ProN","Noto Sans JP","Yu Gothic UI",Meiryo,sans-serif;
-  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  /* 欧字の札に使う書体。**この頁だけ。** 日本語は Saira に入っていないので、
+     日本語の見出しと本文は system のゴシックのまま（--ui）。 */
+  --label:"Saira",var(--ui);
 }
 
+/* 欧字の書体。**Saira**（SIL OFL）。名乗りと、節の名前と、走る場所に使う。
+   100〜900 の可変軸を 1 本で持っているので、**太さを変えてもファイルは増えない。**
+   font-weight に幅を書いておかないと、ブラウザが自前で太らせてしまう。
+   この頁に出てくる字だけに絞ってある（tools/subset-fonts.mjs）。 */
+@font-face{
+  font-family:"Saira";
+  src:url("/assets/fonts/Saira-Variable.woff2") format("woff2-variations");
+  font-weight:100 900;
+  font-display:swap;
+}
 /* 看板の書体。**道具に入っているものと同じ 1 本**を、使う字だけに絞って置いてある */
 @font-face{
   font-family:"Telop Logo";
@@ -73,12 +85,12 @@ hr{border:0;border-top:1px solid var(--line);margin:34px 0}
    **大文字に変換しないこと。** 名前は全部小さい字（sawaya studio）で、
    ここで uppercase を掛けると SAWAYA STUDIO になってしまう */
 .top{padding:clamp(40px,9vw,84px) 0 0}
-.mark{font-family:var(--mono);font-size:11.5px;font-weight:600;
+.mark{font-family:var(--label);font-size:11.5px;font-weight:600;
       letter-spacing:.22em;color:var(--faint);margin:0 0 14px}
 
 /* 節の名前。**両側に罫を引いて、真ん中に置く** */
 .eyebrow{display:flex;align-items:center;gap:12px;margin:0 0 18px;
-  font-family:var(--mono);font-size:10.5px;font-weight:600;letter-spacing:.18em;
+  font-family:var(--label);font-size:10.5px;font-weight:600;letter-spacing:.18em;
   text-transform:uppercase;color:var(--faint)}
 .eyebrow::before,
 .eyebrow::after{content:"";flex:1;height:1px;background:var(--line)}
@@ -119,7 +131,7 @@ hr{border:0;border-top:1px solid var(--line);margin:34px 0}
   margin:13px 0 0;
 }
 .shelf .name b{font-size:15.5px;font-weight:700;letter-spacing:-.01em}
-.shelf .name span{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;
+.shelf .name span{font-family:var(--label);font-size:10.5px;letter-spacing:.1em;
   text-transform:uppercase;color:var(--faint);white-space:nowrap}
 .shelf a{text-decoration:none;color:inherit}
 .shelf a::after{content:"";position:absolute;inset:0}  /* 札のどこを押しても飛ぶ */
@@ -218,7 +230,7 @@ hr{border:0;border-top:1px solid var(--line);margin:34px 0}
 /* **真ん中に 1 列。** 2 列の表にすると、中央そろえの中でここだけ左右に散る */
 .links{list-style:none;margin:0 auto;padding:0;display:grid;gap:10px;max-width:400px}
 .links li{display:flex;flex-direction:column;align-items:center;gap:1px;font-size:14px}
-.links b{font-family:var(--mono);font-weight:600;color:var(--faint);
+.links b{font-family:var(--label);font-weight:600;color:var(--faint);
   font-size:10.5px;letter-spacing:.14em;text-transform:uppercase}
 
 .chips{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin:0;padding:0;list-style:none}

@@ -18,6 +18,15 @@
     "withJson": true
   },
   {
+    "name": "Saira",
+    "chars": "assets/fonts/Saira-Variable.chars.txt",
+    "pages": [
+      "index.html"
+    ],
+    "classes": null,
+    "withJson": false
+  },
+  {
     "name": "851ゴチカクット",
     "chars": "assets/fonts/851Gkktt-logo.chars.txt",
     "pages": [

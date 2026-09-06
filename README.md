@@ -87,6 +87,7 @@ node tools/bake-clouds.mjs
 | テロップスタジオの組み | 「昭和レトロポップ見本帳」（ロゴを決めるための下調べ）から |
 | 看板の書体 | 851ゴチカクット（作者: 8:51:22 pm）。改造・再配布可・商用可 |
 | 見出しの書体 | RocknRoll One（SIL OFL）。見本帳が本命に挙げたもの |
+| sawaya studio の欧字 | Saira（SIL OFL）。**この頁だけ。**元は tools/fonts-src/ |
 | 時計の書体 | どれも SIL OFL。ライセンス文は `assets/fonts/OFL-*.txt` |
 
 **書体は、頁に出てくる字だけに絞ってあります**（`pyftsubset`）。
