@@ -45,4 +45,20 @@ http.createServer((req, res) => {
       'cache-control': 'no-store',
     }).end(buf);
   });
-}).listen(PORT, '127.0.0.1', () => console.log('http://127.0.0.1:' + PORT + '/'));
+})
+  .on('error', (e) => {
+    // **すでに立ち上がっているだけ、のことが多い。**
+    // 積み上がった英語の記録を出しても、何をすればよいか分からないので、
+    // その場でやることだけを言う
+    if (e.code === 'EADDRINUSE') {
+      console.error(`\n  ${PORT} 番はもう使われています。`);
+      console.error('  たいていは、前に立ち上げたサーバがまだ動いています。');
+      console.error(`  そのまま http://127.0.0.1:${PORT}/ を開いてください。\n`);
+      console.error('  止めたいときは、その窓で Ctrl+C。窓が見つからないときは');
+      console.error(`    Windows … netstat -ano | findstr :${PORT}   で番号を見て  taskkill /F /PID <番号>`);
+      console.error(`    Mac     … lsof -ti :${PORT} | xargs kill\n`);
+      process.exit(1);
+    }
+    throw e;
+  })
+  .listen(PORT, '127.0.0.1', () => console.log('http://127.0.0.1:' + PORT + '/'));

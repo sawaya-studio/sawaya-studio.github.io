@@ -2,10 +2,15 @@
 
 公開ページ。`content/` の `.md` を書くと、頁ができます。
 
+**見ながら書くなら、`preview.bat` をダブルクリック**（Mac / Linux は `./preview.sh`）。
+作り直し・サーバ・ブラウザが一度に立ち上がります。
+
+自分で打つなら、こうです。
+
 ```
-node tools/build.mjs            作り直す
-node tools/build.mjs --watch    直したら、そのつど作り直す
-node tools/serve.mjs            http://127.0.0.1:5199/ で見る
+npm run build     作り直す
+npm run watch     直したら、そのつど作り直す
+npm run serve     http://127.0.0.1:5199/ で見る
 ```
 
 **手順は [content/_手順.md](content/_手順.md)**、
