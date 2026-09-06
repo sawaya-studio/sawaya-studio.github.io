@@ -9,12 +9,13 @@
   **ここで大気の積分を回さないこと。** 散乱はすでに焼いてある。
 
   使い方
-    <canvas id="sky" data-clouds="/assets/clouds.png" aria-hidden="true"></canvas>
+    <script src="/assets/clouds.js" defer></script>   ← 先に読む（雲の絵）
+    <canvas id="sky" aria-hidden="true"></canvas>
     <script src="/assets/sky.js" defer></script>
 
   **画面いっぱいの 1 枚とは限らない。** data-sky を付けた canvas にも同じものが掛かる
   （トップの札の中など）。#sky と [data-sky] の両方を拾って、1 枚ずつ同じものを回す。
-    <canvas data-sky data-clouds="/assets/clouds.png" aria-hidden="true"></canvas>
+    <canvas data-sky aria-hidden="true"></canvas>
 
   色は skyTable.ts の 7:00（朝）の行で止めてある。**この site はずっと朝。**
   描けない環境では何もしない。地の色（--sky-fallback）が残るだけで、読むぶんには困らない。
@@ -216,7 +217,16 @@ function mount(canvas) {
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, clouds);
     draw(last);
   };
-  clouds.src = canvas.dataset.clouds || 'clouds.png';
+  /*
+    雲の出どころ。**既定は頁に抱えた 1 枚**（assets/clouds.js が置く data: の絵）。
+
+    **.png を直に読ませないこと。** ファイルを直接開いた（file://）とき、
+    Chrome は別ファイルの画像を「よそから来たもの」として扱い、
+    WebGL のテクスチャに載せられない。すると雲の濃さが一定になり、
+    しきい値を越えず、**雲が一枚も出ない空**になる（空と太陽だけ出る）。
+    data-clouds は、置き場を変えたいときのための逃げ道。
+  */
+  clouds.src = canvas.dataset.clouds || window.RECADAY_CLOUDS || 'clouds.png';
 
   var TIME_SCALE = 0.5;
   var FRAME_MS = 50; // 20 回 / 秒。雲はゆっくり流れるだけなので足りる

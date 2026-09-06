@@ -71,7 +71,8 @@ ${head({ page, css })}
   <button type="button" data-set="en">English</button>
 </div>
 
-<canvas id="sky" data-clouds="/assets/clouds.png" aria-hidden="true"></canvas>
+<script src="/assets/clouds.js" defer></script>
+<canvas id="sky" aria-hidden="true"></canvas>
 
 <svg width="0" height="0" aria-hidden="true" style="position:absolute">
   <defs>

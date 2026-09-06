@@ -14,7 +14,7 @@ node tools/serve.mjs            http://127.0.0.1:5199/ で見る
 
 ## 頁
 
-| `/` | Sawaya Studio | `content/index.md` ／ テーマ `works` |
+| `/` | sawaya studio | `content/index.md` ／ テーマ `works` |
 | `/recaday/` | recaday の紹介 | `content/recaday/index.md` ／ テーマ `recaday` |
 | `/recaday/closed-test/` | クローズドテストの案内 | **手で書いた頁**（作り直しの対象外） |
 | `/telop-studio/` | テロップスタジオの紹介 | `content/telop-studio/index.md` ／ テーマ `telop` |
@@ -45,7 +45,8 @@ tools/
   serve.mjs     手元で見るためのサーバ
 assets/         ← 頁をまたいで使う重いもの
   sky.js        うしろの空（recaday アプリの SKSL を WebGL へ写したもの）
-  clouds.png    その雲（tools/sky/bake.py が焼いた 1 枚）
+  clouds.js     その雲。**頁の中に抱えている**（下記）
+  clouds.png    その元（tools/sky/bake.py が焼いた 1 枚）。**消さないこと**
   fonts/        時刻の書体。**使う字だけに絞ってある**（1〜5KB）
 site.json       ← site の名前と URL。**名前を変えるときはここだけ**
 ```
@@ -54,6 +55,24 @@ site.json       ← site の名前と URL。**名前を変えるときはここ�
 
 **css も js も、頁の中に埋めています。** 頁は数枚しかなく、どれも 1 回読んで終わりなので、
 別ファイルにして往復を増やすより速いためです。共有するのは重いものだけで、それが `/assets/`。
+
+---
+
+## 雲を、頁の中に抱えている理由
+
+**頁のファイルを直接開く（file://）と、Chrome は別ファイルの画像を「よそから来たもの」
+として扱います。** よその画像は WebGL のテクスチャに載せられないので、雲の濃さが一定になり、
+しきい値を越えず、**雲が一枚も出ない空**になります。空と太陽は出るので、一見それらしく
+見えてしまうのが厄介なところです。
+
+だから雲は `assets/clouds.js` に抱えてあります。**`clouds.png` を直に読ませないこと。**
+元の closed-test の頁も、同じ理由で頁の中に埋めていました。
+
+雲を差し替えるときは、`assets/clouds.png` を置き換えてから焼き直します。
+
+```
+node tools/bake-clouds.mjs
+```
 
 ---
 

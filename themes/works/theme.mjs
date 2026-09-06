@@ -1,5 +1,5 @@
 /*
-  Sawaya Studio のテーマ。
+  sawaya studio のテーマ。
 
   **見た目はまだ決まっていない。**（コンセプトとデザインは別途相談）
   いまは中身を置ける形だけ用意してある。決まったら style.css を差し替える。
@@ -19,7 +19,7 @@ const FACE = {
     closed-test の頁と同じ雲（tools/sky/bake.py が焼いた 1 枚）を引いて描く。
     ここを CSS の縞で真似ていたことがあるが、**縞は雲にならない。**
   */
-  recaday: () => '<canvas data-sky data-clouds="/assets/clouds.png"></canvas>' +
+  recaday: () => '<canvas data-sky></canvas>' +
                  '<div class="clock">07:41</div>',
 
   // 方眼紙と、緑の看板と、台本の行。**字は読ませない。行があることだけ分かればよい**
@@ -43,6 +43,7 @@ ${head({ page, css })}
 </head>
 <body>
 ${body}
+<script src="/assets/clouds.js" defer></script>
 <script src="/assets/sky.js" defer></script>
 ${js.trim() ? `<script>\n${js}</script>` : ''}
 </body>

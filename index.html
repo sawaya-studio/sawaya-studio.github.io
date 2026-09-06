@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Sawaya Studio</title>
+<title>sawaya studio</title>
 <meta name="description" content="ここに、検索結果と SNS に出る一行を書く。">
-<meta property="og:title" content="Sawaya Studio">
+<meta property="og:title" content="sawaya studio">
 <meta property="og:description" content="ここに、検索結果と SNS に出る一行を書く。">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://sawayaworks.github.io/">
@@ -15,7 +15,7 @@
 
 <style>
 /*
-  Sawaya Studio。
+  sawaya studio。
   ==========================================================================
   **この頁は、何かを言葉で説明しない。**
 
@@ -83,10 +83,12 @@ a{color:var(--ink)}
 strong{font-weight:700}
 hr{border:0;border-top:1px solid var(--line);margin:34px 0}
 
-/* 名乗り。**大きくしない。**「誰か」より「何を作ったか」を先に見せる */
+/* 名乗り。**大きくしない。**「誰か」より「何を作ったか」を先に見せる。
+   **大文字に変換しないこと。** 名前は全部小さい字（sawaya studio）で、
+   ここで uppercase を掛けると SAWAYA STUDIO になってしまう */
 .top{padding:clamp(40px,9vw,84px) 0 0}
 .mark{font-family:var(--mono);font-size:11.5px;font-weight:600;
-      letter-spacing:.22em;text-transform:uppercase;color:var(--faint);margin:0 0 14px}
+      letter-spacing:.22em;color:var(--faint);margin:0 0 14px}
 
 .eyebrow{display:flex;align-items:center;gap:10px;margin:0 0 16px;
   font-family:var(--mono);font-size:10.5px;font-weight:600;letter-spacing:.18em;
@@ -235,13 +237,13 @@ footer{border-top:1px solid var(--line);margin-top:clamp(44px,8vw,88px);
 <body>
 <main>
 <section class="top">
-<p class="mark">Sawaya Studio</p>
+<p class="mark">sawaya studio</p>
 <h1>ここに、いちばん言いたい一行。</h1>
 </section>
 <section id="works">
 <ul class="shelf">
   <li>
-    <div class="face face--recaday" aria-hidden="true"><canvas data-sky data-clouds="./assets/clouds.png"></canvas><div class="clock">07:41</div></div>
+    <div class="face face--recaday" aria-hidden="true"><canvas data-sky></canvas><div class="clock">07:41</div></div>
     <div class="name"><b><a href="./recaday/">recaday</a></b><span>iOS / Android</span></div>
   </li>
   <li>
@@ -264,13 +266,14 @@ footer{border-top:1px solid var(--line);margin-top:clamp(44px,8vw,88px);
 </main>
 <footer>
   <div class="footin">
-<span>Sawaya Studio</span>
+<span>sawaya studio</span>
 <span>ここに、ひとこと</span>
   </div>
 </footer>
+<script src="./assets/clouds.js" defer></script>
 <script src="./assets/sky.js" defer></script>
 <script>
-/* Sawaya Studio の頁は、いまのところ動くところが無い。
+/* sawaya studio の頁は、いまのところ動くところが無い。
    見た目が決まって、動かしたいものが出てきたらここに書く。 */
 </script>
 </body>
