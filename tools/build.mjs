@@ -160,7 +160,41 @@ async function buildAll() {
     console.log(`  ${r.outRel.padEnd(34)} ${(r.bytes / 1024).toFixed(1)} KB`);
   }
   console.log(`${made.length} 枚`);
+  checkFonts();
   return made;
+}
+
+/*
+  絞った書体に、足りない字が無いか見る。
+  ==========================================================================
+  見出しの書体は「その頁に出てくる字だけ」に絞って置いてある（tools/subset-fonts.mjs）。
+  **見出しに新しい字を足すと、そこだけ別の書体で出る。**
+  黙って起こると気づけないので、作り直すたびにここで数える。
+*/
+const FONT_CHECKS = [
+  { page: 'telop-studio/index.html', chars: 'assets/fonts/RocknRollOne-Regular.chars.txt', font: 'RocknRoll One' },
+];
+
+function checkFonts() {
+  for (const c of FONT_CHECKS) {
+    const page = path.join(ROOT, c.page);
+    const list = path.join(ROOT, c.chars);
+    if (!fs.existsSync(page) || !fs.existsSync(list)) continue;
+    const have = new Set(fs.readFileSync(list, 'utf8'));
+    const html = fs.readFileSync(page, 'utf8')
+      .replace(/<style[\s\S]*?<\/style>/gi, ' ')
+      .replace(/<script[\s\S]*?<\/script>/gi, ' ')
+      .replace(/<!--[\s\S]*?-->/g, ' ')
+      .replace(/<[^>]+>/g, ' ')
+      .replace(/&[a-z]+;|&#\d+;/gi, ' ');
+    const missing = new Set();
+    for (const ch of html) if (!/\s/.test(ch) && !have.has(ch)) missing.add(ch);
+    if (missing.size) {
+      console.log(`\n! ${c.font} に無い字が ${missing.size} 個あります: ${[...missing].join('')}`);
+      console.log('  そこだけ別の書体で出ます。絞り直してください:');
+      console.log('    node tools/subset-fonts.mjs');
+    }
+  }
 }
 
 await buildAll();

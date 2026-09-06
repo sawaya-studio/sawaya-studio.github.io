@@ -79,8 +79,20 @@ node tools/bake-clouds.mjs
 ## 素材の出どころ
 
 | 空・雲・ロゴ・時計の書体 | [recaday](https://github.com/SawayaWorks/recaday) から |
-| ロゴの書体（テロップスタジオ） | 851ゴチカクット（作者: 8:51:22 pm）。改造・再配布可・商用可 |
+| テロップスタジオの組み | 「昭和レトロポップ見本帳」（ロゴを決めるための下調べ）から |
+| 看板の書体 | 851ゴチカクット（作者: 8:51:22 pm）。改造・再配布可・商用可 |
+| 見出しの書体 | RocknRoll One（SIL OFL）。見本帳が本命に挙げたもの |
 | 時計の書体 | どれも SIL OFL。ライセンス文は `assets/fonts/OFL-*.txt` |
 
-書体は `.md` に出てくる字だけに絞ってあります（`pyftsubset`）。
-字を増やしたら、絞り直してください。
+**書体は、頁に出てくる字だけに絞ってあります**（`pyftsubset`）。
+RocknRoll One は日本語ぶんで 950KB ありますが、絞ると 12KB です。
+
+見出しに新しい字を使ったら、絞り直してください。
+
+```
+node tools/build.mjs
+node tools/subset-fonts.mjs
+```
+
+**足りない字があるときは `node tools/build.mjs` が教えてくれます**
+（そこだけ別の書体で出てしまい、黙って起こると気づけないため）。
