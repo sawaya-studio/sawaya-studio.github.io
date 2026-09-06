@@ -125,18 +125,25 @@ ${js ? `<script src="${js}" defer></script>` : ''}
        この頁は何かを言葉で説明しないので、
        「どんな道具か」は札の絵が受けもつ。
 
-         [ 名前, 行き先, 顔, 走る場所 ]
+         [ 名前, 行き先, 顔, 走る場所, ほかの行き先 ]
            顔 … recaday / telop / plain
+           ほかの行き先 … [ ["Instagram", "https://…"], … ]（省いてよい）
+
+       **ほかの行き先は、札そのものより上に置く。** 札は「どこを押しても飛ぶ」
+       ようにしてあるので、上に出さないと、そこを押しても札のほうへ飛ぶ。
 
        **顔の中に説明の字を置かないこと。**
        置いた瞬間に、見せる頁ではなくなる。
        ============================================================ */
     shelf({ data = [] }) {
       return `<ul class="shelf">
-${data.map(([name, href, face, meta, tint]) =>
+${data.map(([name, href, face, meta, links]) =>
   `  <li>
-    <div class="face face--${esc(face || 'plain')}"${tint ? ` style="--tint:${esc(tint)}"` : ''} aria-hidden="true">${FACE[face] ? FACE[face]() : FACE.plain()}</div>
-    <div class="name"><b><a href="${esc(href)}">${esc(name)}</a></b>${meta ? `<span>${esc(meta)}</span>` : ''}</div>
+    <div class="face face--${esc(face || 'plain')}" aria-hidden="true">${FACE[face] ? FACE[face]() : FACE.plain()}</div>
+    <div class="name"><b><a href="${esc(href)}">${esc(name)}</a></b>${meta ? `<span>${esc(meta)}</span>` : ''}</div>${
+    Array.isArray(links) && links.length ? `
+    <div class="more">${links.map(([label, to]) =>
+      `<a href="${esc(to)}"${/^https?:/.test(to) ? ' target="_blank" rel="noopener"' : ''}>${esc(label)}</a>`).join('')}</div>` : ''}
   </li>`).join('\n')}
 </ul>`;
     },

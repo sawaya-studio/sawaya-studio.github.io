@@ -52,8 +52,9 @@ appleIcon: /assets/sawaya-studio-icon.png
 <!-- [ 名前, 行き先, 顔, 走る場所 ]  顔は recaday / telop / plain -->
 ::: shelf
 [
-  ["recaday", "/recaday/closed-test/", "recaday", "Android (iOS 対応予定)"],
-  ["テロップスタジオ", "/telop-studio/", "telop", "未リリース (iOS / Android 対応予定)"]
+  ["recaday", "/recaday/closed-test/", "recaday", "Android (iOS 対応予定)",
+    [["Instagram", "https://www.instagram.com/recaday_app/"]]],
+  ["テロップスタジオ", "/telop-studio/", "telop", "未リリース (iOS / Android / PC 対応予定)"]
 ]
 :::
 

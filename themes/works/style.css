@@ -21,9 +21,10 @@
   ここが小さな取扱説明になってしまう。見せたいのは中身ではなく、顔のほう。
 */
 :root{
-  /* **試しにグレー。** 元は #faf9f7（ほとんど白）。
-     戻すときはここ 1 行 */
-  --paper:#eae9e5;
+  /* 地。**うっすらグレー。** ほとんど白（#faf9f7）だと札が浮かず、
+     濃くする（#eae9e5）と地のほうが出てくる。その間。
+     変えるときはここ 1 行 */
+  --paper:#f2f1ed;
   --card:#ffffff;
   --ink:#1a1a1a;
   --sub:#6a6a6a;
@@ -227,6 +228,26 @@ hr{border:0;border-top:1px solid var(--line);margin:34px 0}
 .shelf .name b{font-size:15.5px;font-weight:700;letter-spacing:-.01em}
 .shelf .name span{font-family:var(--label);font-size:10.5px;letter-spacing:.1em;
   text-transform:uppercase;color:var(--faint);white-space:nowrap}
+/* 札の下に置く、ほかの行き先（Instagram など）。
+
+   **札そのものより上に置くこと。** 札は「どこを押しても飛ぶ」ようにしてあり、
+   その当たり判定（.shelf a::after）が札ぜんぶを覆っている。
+   上に出しておかないと、ここを押しても札のほうへ飛ぶ。 */
+.shelf .more{
+  position:relative;z-index:1;
+  display:flex;justify-content:center;flex-wrap:wrap;gap:14px;
+  margin-top:7px;
+}
+.shelf .more a{
+  font-family:var(--label);
+  font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--faint);
+  text-decoration:none;
+  border-bottom:1px solid transparent;
+  padding-bottom:1px;
+}
+.shelf .more a:hover{color:var(--ink);border-bottom-color:var(--faint)}
+
 .shelf a{text-decoration:none;color:inherit}
 .shelf a::after{content:"";position:absolute;inset:0}  /* 札のどこを押しても飛ぶ */
 .shelf a:focus-visible{outline:none}
