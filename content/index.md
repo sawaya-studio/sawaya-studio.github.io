@@ -29,10 +29,12 @@ appleIcon: /assets/sawaya-studio-icon.png
 ::: logo
 :::
 
-## 生活をちょっとおしゃれでたのしく
 
-ちょっとだけおしゃれに</br>
-ちょっとだけたのしく
+## ちょっとだけおしゃれに
+
+## ちょっとだけたのしく
+
+かんたんに生活を彩るアプリを作っています
 
 
 :::
@@ -60,7 +62,7 @@ appleIcon: /assets/sawaya-studio-icon.png
 <!-- [ 名前, 行き先, （出したい字。省くと行き先がそのまま出る）] -->
 ::: links
 [
-  ["GitHub", "https://github.com/SawayaWorks"]
+  ["GitHub", "https://github.com/sawaya-studio"]
 ]
 :::
 
