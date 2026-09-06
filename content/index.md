@@ -2,7 +2,9 @@
 theme: works
 lang: ja
 title: "{{site.name}}"
-description: ここに、検索結果と SNS に出る一行を書く。
+description: sawaya studio top ページ
+icon: /assets/sawaya-studio-icon.svg
+appleIcon: /assets/sawaya-studio-icon.png
 ---
 
 <!--
@@ -27,7 +29,10 @@ description: ここに、検索結果と SNS に出る一行を書く。
 ::: logo
 :::
 
-# ここに、いちばん<br>言いたい一行。
+# 生活をちょっと便利でおしゃれでたのしく
+おしゃれでたのしく
+
+
 
 :::
 
