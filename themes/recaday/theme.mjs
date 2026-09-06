@@ -102,9 +102,7 @@ ${body}
 </main>
 
 <script src="/assets/sky.js" defer></script>
-
-<script>
-${js}</script>
+${js ? `<script src="${js}" defer></script>` : ""}
 
 </body>
 </html>

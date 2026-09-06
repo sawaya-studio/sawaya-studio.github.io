@@ -39,7 +39,7 @@ ${head({ page, css })}
 ${ticker(page.tickerTop ?? '')}
 ${body}
 ${ticker(page.tickerBottom ?? page.tickerTop ?? '')}
-${js.trim() ? `<script>\n${js}</script>` : ''}
+${js ? `<script src="${js}" defer></script>` : ''}
 </body>
 </html>
 `;

@@ -60,7 +60,7 @@ ${head({ page, css })}
 ${body}
 <script src="/assets/clouds.js" defer></script>
 <script src="/assets/sky.js" defer></script>
-${js.trim() ? `<script>\n${js}</script>` : ''}
+${js ? `<script src="${js}" defer></script>` : ''}
 </body>
 </html>
 `;

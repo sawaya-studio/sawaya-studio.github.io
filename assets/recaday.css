@@ -1,0 +1,603 @@
+  /*
+    closed-test の頁と同じ組み。**色はアプリの src/theme.ts と src/lib/skyTable.ts から。**
+    朝の空（7:00）に固定してあるので、暗い側の組は持たない。
+
+    ガラスの板は塗りを薄く（0.10）、縁を強く。残す影は内側だけ。
+    うしろが空なので、板を濃くすると空が見えなくなる。
+  */
+  :root {
+    color-scheme: light;
+    --ink: #1E2430;
+    --ink-muted: #46505F;
+    --ink-faint: #6B7688;
+    --sky-fallback: #7097AD;
+    --go-fill: #F2D357;
+    --on-accent: #241F08;
+    --rec: #8A5E06;
+    --here-fill: #8FBBBD;
+    --glass-fill: rgba(255, 255, 255, 0.10);
+    --glass-edge: rgba(255, 255, 255, 0.42);
+    --glass-edge-top: rgba(255, 255, 255, 0.92);
+    --glass-edge-bottom: rgba(255, 255, 255, 0.22);
+    --plate-radius: 5px;
+    --ui: -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans",
+          "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Yu Gothic UI", Meiryo, sans-serif;
+  }
+
+  /* ============================================================
+     日本語と英語
+
+     **両方を組んでおいて、片方を伏せる。**
+     読み込んでから字を差し替える作りにすると、最初の一瞬だけもう片方が見える。
+     どちらを出すかは、この頁のいちばん上の script が組み上がる前に決めている。
+
+     **出す側ではなく、伏せる側を指定すること。**
+     「全部伏せて、片方だけ display を戻す」と書くと、戻した値がその部品の
+     本来の並べ方（grid など）を上書きしてしまう。
+     ============================================================ */
+  html[data-lang="ja"] [data-l="en"] { display: none !important; }
+  html[data-lang="en"] [data-l="ja"] { display: none !important; }
+
+  /* 手で選び直す口。**端末の言語と読みたい言語は、いつも同じとは限らない** */
+  .lang {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 2;
+    display: flex;
+    gap: 2px;
+    padding: 3px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.30);
+    border: 1px solid rgba(255, 255, 255, 0.62);
+    box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+  }
+  .lang button {
+    appearance: none;
+    border: 0;
+    margin: 0;
+    padding: 5px 11px;
+    border-radius: 999px;
+    background: transparent;
+    color: var(--ink-muted);
+    font: inherit;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    cursor: pointer;
+  }
+  .lang button[aria-pressed="true"] {
+    background: rgba(255, 255, 255, 0.72);
+    color: var(--ink);
+  }
+  .lang button:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+
+  body {
+    margin: 0;
+    min-height: 100svh;
+    background: var(--sky-fallback);
+    color: var(--ink);
+    font-family: var(--ui);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* 空。アプリの SkyBackdrop.tsx の SKSL をそのまま WebGL へ写してある（/assets/sky.js） */
+  #sky {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    z-index: 0;
+  }
+
+  main { position: relative; z-index: 1; }
+
+  /* ============================================================
+     時刻の書体。**アプリに入っているものと同じ .ttf を、
+     数字とコロンと AM/PM だけに絞って置いてある**（それぞれ 1〜2KB）。
+     どれも SIL OFL。ライセンス文は /assets/fonts/ に置いてある。
+     ============================================================ */
+  @font-face { font-family: "Clock Bold";    src: url("/assets/fonts/JetBrainsMono-ExtraBold.woff2") format("woff2"); font-display: swap; }
+  @font-face { font-family: "Clock Thin";    src: url("/assets/fonts/IBMPlexMono-Light.woff2")       format("woff2"); font-display: swap; }
+  @font-face { font-family: "Clock Retro";   src: url("/assets/fonts/SpaceMono-Bold.woff2")          format("woff2"); font-display: swap; }
+  @font-face { font-family: "Clock Digital"; src: url("/assets/fonts/ShareTechMono-Regular.woff2")   format("woff2"); font-display: swap; }
+  @font-face { font-family: "Clock Serif";   src: url("/assets/fonts/CutiveMono-Regular.woff2")      format("woff2"); font-display: swap; }
+  @font-face { font-family: "Cap Round";     src: url("/assets/fonts/MPLUS1p-Bold.woff2")            format("woff2"); font-display: swap; }
+
+  /* ---------- 名前だけで 1 画面 ---------- */
+  /*
+    ワードマークと record a day は、tools/social/instagram.py の logo_lockup が
+    焼いた 1 枚をそのまま置いている。**CSS で組み直さないこと。**
+    あちらは字間を「ロゴのインク幅の 94%」になるまで描いて測って詰め直し、
+    2 段の重心も光学中心へ寄せている。
+  */
+  .hero {
+    position: relative;
+    min-height: 100svh;
+  }
+  .lockup {
+    position: absolute;
+    top: 47%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 53.9svmin;
+    max-width: 88vw;
+    height: auto;
+    filter: drop-shadow(0 0.2svmin 0.6svmin rgba(0, 0, 0, 0.28));
+  }
+  /* 下に続きがあるという合図。**名前だけの画面で終わらせないこと** */
+  .more {
+    position: absolute;
+    left: 50%;
+    bottom: 22px;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--ink-muted);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .more span { font-size: 15px; line-height: 1; }
+  .more:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; }
+
+  /* ---------- 読むところ ---------- */
+  .body {
+    max-width: 34rem;
+    margin: 0 auto;
+    padding: clamp(10px, 3svh, 34px) 20px 72px;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+
+  /* ガラスの板。塗りは薄く、縁は強く。残す影は内側だけ */
+  .plate {
+    background: var(--glass-fill);
+    border: 1px solid var(--glass-edge);
+    border-top-color: var(--glass-edge-top);
+    border-bottom-color: var(--glass-edge-bottom);
+    border-radius: var(--plate-radius);
+    box-shadow:
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.72),
+      inset 0 -10px 18px 0 rgba(28, 42, 64, 0.07);
+    backdrop-filter: blur(2px) saturate(1.06);
+    -webkit-backdrop-filter: blur(2px) saturate(1.06);
+    padding: 20px 20px 22px;
+  }
+
+  h1 {
+    margin: 0 0 12px;
+    font-size: clamp(21px, 5.2vw, 28px);
+    font-weight: 800;
+    line-height: 1.55;
+    letter-spacing: -0.5px;
+    text-wrap: balance;
+  }
+  h2 {
+    margin: 0 0 10px;
+    font-size: 17px;
+    font-weight: 800;
+    line-height: 1.6;
+    letter-spacing: -0.3px;
+  }
+  h3 { margin: 0 0 4px; font-size: 13.5px; font-weight: 700; }
+  p {
+    margin: 0 0 12px;
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.78;
+    letter-spacing: -0.1px;
+  }
+  p:last-child { margin-bottom: 0; }
+  b, strong { font-weight: 700; }
+
+  .eyebrow {
+    margin: 0 0 8px;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--rec);
+    display: flex;
+    align-items: center;
+    gap: 9px;
+  }
+  .eyebrow::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, rgba(138, 94, 6, 0.32), rgba(138, 94, 6, 0));
+  }
+  .note { font-size: 12px; font-weight: 600; line-height: 1.75; color: var(--ink-muted); }
+
+  /* 印つきの箇条書き。しるしは here-fill（アプリの「いま撮っている所」の色） */
+  .tick { list-style: none; margin: 0; padding: 0; display: grid; gap: 9px; }
+  .tick li {
+    display: grid;
+    grid-template-columns: 15px 1fr;
+    gap: 9px;
+    align-items: start;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.72;
+  }
+  .tick li::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    margin-top: 8px;
+    margin-left: 4px;
+    border-radius: 2px;
+    background: var(--here-fill);
+    border: 1px solid rgba(78, 126, 128, 0.55);
+  }
+
+  /* 2 列。**上ぞろえにする。** 揃えないと、背の低いほうの中身が
+     行の高さいっぱいに引き伸ばされて、箇条書きの行間が開く */
+  .cols { display: grid; gap: 12px; align-items: start; }
+  @media (min-width: 33rem) { .cols { grid-template-columns: 1fr 1fr; } }
+  .cols p { font-size: 13px; line-height: 1.75; color: var(--ink-muted); margin: 0; }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
+  .chips li {
+    font-size: 11.5px;
+    font-weight: 600;
+    line-height: 1;
+    padding: 7px 11px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.30);
+    border: 1px solid rgba(255, 255, 255, 0.55);
+    color: var(--ink-muted);
+    white-space: nowrap;
+  }
+
+  /* ============================================================
+     焼き込みの枠。**比率はアプリと同じ**（src/theme.ts の clockStyle）。
+       数字の高さ   短辺 × 0.118（capSizeRatio）
+       キャプション 短辺 × 0.052（captionSizeRatio）
+       すきま       短辺 × 0.028（captionGapRatio）
+     文字サイズは「数字の高さ ÷ その書体の大文字の高さ」で決める。
+     だから**書体を替えても数字の大きさは変わらない**。
+     ============================================================ */
+  .frame {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    container-type: size;
+    border-radius: 4px;
+    overflow: hidden;
+    background: #7d8aa0;
+    box-shadow: 0 6px 20px rgba(20, 28, 40, 0.26);
+    isolation: isolate;
+  }
+  .scene { position: absolute; inset: 0; }
+  /* 朝の駅 */
+  .scene--dawn {
+    background:
+      radial-gradient(120% 70% at 22% 44%, rgba(255,244,214,0.95) 0%, rgba(255,214,150,0.35) 22%, rgba(255,214,150,0) 52%),
+      linear-gradient(to bottom, #7FA0BC 0%, #A8B8C4 46%, #C9B295 62%, #6B6256 74%, #3D3B3A 100%);
+  }
+  .scene--dawn::after {
+    content: "";
+    position: absolute;
+    inset: 62% 0 0;
+    background: repeating-linear-gradient(96deg, rgba(0,0,0,0.16) 0 12px, rgba(255,255,255,0.05) 12px 30px);
+  }
+  /* 窓のある部屋 */
+  .scene--room {
+    background:
+      linear-gradient(118deg, rgba(255,246,222,0.96) 0%, rgba(255,236,198,0.55) 26%, rgba(255,236,198,0) 46%),
+      linear-gradient(to bottom, #D9CFC0 0%, #BFB3A4 48%, #8C8478 100%);
+  }
+  .scene--room::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(118deg, rgba(255,255,255,0.85) 0 13%, rgba(255,255,255,0) 14%);
+  }
+  /* 公園 */
+  .scene--park {
+    background:
+      radial-gradient(90% 60% at 78% 16%, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 44%),
+      linear-gradient(to bottom, #8FB6D0 0%, #A9C6D6 38%, #93A96C 52%, #5E7A3C 100%);
+  }
+  .scene--park::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(58% 44% at 24% 34%, rgba(46,74,32,0.55) 0%, rgba(46,74,32,0) 60%);
+  }
+  .frame::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    box-shadow: inset 0 0 48px rgba(20, 28, 40, 0.2);
+  }
+
+  .burn {
+    --cap: 11.8cqh;   /* 数字の高さ = 短辺 × capSizeRatio */
+    --cap-h: 0.73;    /* その書体の大文字の高さ（em）＝ capHeightRatio */
+    --line-h: 1.32;   /* 行の高さ（em）＝ lineHeightRatio */
+    --fs: calc(var(--cap) / var(--cap-h));
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+  .clock {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    transform: translateY(-50%);
+    text-align: center;
+    color: #FFFFFF;
+    font-family: "Clock Bold", ui-monospace, monospace;
+    font-size: 3.4rem;   /* cq 単位が使えないときの保険 */
+    font-size: var(--fs);
+    line-height: var(--line-h);
+    font-variant-numeric: tabular-nums;
+    text-shadow: 0 2px 1.2cqh rgba(0, 0, 0, 0.45);
+  }
+  .caption {
+    position: absolute;
+    left: 8%;
+    right: 8%;
+    /* 中央から「時刻の枠の半分 + すきま」だけ下 */
+    top: calc(50% + (var(--fs) * var(--line-h)) / 2 + 2.8cqh);
+    text-align: center;
+    color: #FFFFFF;
+    font-family: "Cap Round", var(--ui);
+    font-weight: 700;
+    font-size: 5.2cqh;
+    line-height: 1.4;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-shadow: 0 2px 1cqh rgba(0, 0, 0, 0.45);
+  }
+
+  /* 書体ごとの実測値（src/theme.ts の CLOCK_FONTS）。
+     大文字の高さと行の高さは枠側（.burn）に持たせる。
+     キャプションの位置も時刻の枠の高さから決まるので、同じ値を親から引く必要がある。 */
+  .burn[data-font="bold"]    { --cap-h: 0.73;  --line-h: 1.320; }
+  .burn[data-font="thin"]    { --cap-h: 0.698; --line-h: 1.300; }
+  .burn[data-font="retro"]   { --cap-h: 0.700; --line-h: 1.481; }
+  .burn[data-font="digital"] { --cap-h: 0.700; --line-h: 1.127; }
+  .burn[data-font="serif"]   { --cap-h: 0.572; --line-h: 1.101; }
+  .burn[data-font="round"]   { --cap-h: 0.73;  --line-h: 1.395; }
+
+  .burn[data-font="bold"]    .clock { font-family: "Clock Bold", monospace; }
+  .burn[data-font="thin"]    .clock { font-family: "Clock Thin", monospace; }
+  .burn[data-font="retro"]   .clock { font-family: "Clock Retro", monospace; }
+  .burn[data-font="digital"] .clock { font-family: "Clock Digital", monospace; }
+  .burn[data-font="serif"]   .clock { font-family: "Clock Serif", monospace; }
+  .burn[data-font="round"]   .clock { font-family: "Cap Round", var(--ui); }
+
+  /* ---------- 選ぶ口 ---------- */
+  .picker {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    padding: 10px 2px 2px;
+    scrollbar-width: thin;
+  }
+  .pick {
+    flex: 0 0 auto;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--ink-muted);
+    padding: 9px 13px;
+    border-radius: 999px;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.26);
+    border: 1px solid rgba(255, 255, 255, 0.55);
+    box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.66);
+    white-space: nowrap;
+    transition: background 0.14s ease, color 0.14s ease;
+  }
+  .pick:hover { background: rgba(255, 255, 255, 0.46); }
+  .pick[aria-pressed="true"] {
+    background: var(--go-fill);
+    border-color: rgba(255, 255, 255, 0.62);
+    color: var(--on-accent);
+  }
+  .pick:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+  .pick[data-font="bold"]    { font-family: "Clock Bold", monospace; }
+  .pick[data-font="thin"]    { font-family: "Clock Thin", monospace; }
+  .pick[data-font="retro"]   { font-family: "Clock Retro", monospace; }
+  .pick[data-font="digital"] { font-family: "Clock Digital", monospace; }
+  .pick[data-font="serif"]   { font-family: "Clock Serif", monospace; }
+  .pick[data-font="round"]   { font-family: "Cap Round", var(--ui); }
+
+  /* ---------- フィルター（src/filters.ts と同じ掛かり方） ---------- */
+  .filter-none   { filter: none; }
+  .filter-skin   { filter: contrast(0.95) saturate(0.98) brightness(1.02) sepia(0.06); }
+  .filter-vivid  { filter: saturate(1.22) contrast(1.12); }
+  .filter-bright { filter: brightness(1.08) saturate(1.06) contrast(0.97); }
+  .filter-sepia  { filter: grayscale(1) sepia(0.78) brightness(1.04) contrast(0.95); }
+  .filter-mono   { filter: grayscale(1) contrast(1.06); }
+  .filter-bold   { filter: url(#duotone-bold); }
+  .filter-binary { filter: url(#binary); }
+
+  /* ---------- 再生の帯 ---------- */
+  .player { display: flex; align-items: center; gap: 12px; margin-top: 12px; }
+  .play {
+    flex: 0 0 auto;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    background: rgba(255, 255, 255, 0.30);
+    border: 1px solid rgba(255, 255, 255, 0.62);
+    box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.72);
+    color: var(--ink);
+  }
+  .play:hover { background: rgba(255, 255, 255, 0.5); }
+  .play:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+  .play svg { width: 15px; height: 15px; display: block; }
+  .track {
+    flex: 1;
+    display: flex;
+    gap: 3px;
+    height: 9px;
+    border-radius: 999px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.28);
+    border: 1px solid rgba(255, 255, 255, 0.52);
+  }
+  .seg { position: relative; background: rgba(143, 187, 189, 0.42); }
+  .seg span { position: absolute; inset: 0 auto 0 0; width: 0%; background: var(--go-fill); }
+  .stamp {
+    flex: 0 0 auto;
+    font-family: "Clock Bold", monospace;
+    font-size: 13px;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ---------- 書き出しの図 ---------- */
+  .joiner { display: grid; gap: 8px; }
+  .clip {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    padding: 10px 13px;
+    border-radius: var(--plate-radius);
+    background: rgba(255, 255, 255, 0.26);
+    border: 1px solid rgba(255, 255, 255, 0.52);
+  }
+  .clip b { font-family: "Clock Bold", monospace; font-size: 13px; color: var(--rec); font-variant-numeric: tabular-nums; }
+  .clip span { font-size: 12.5px; color: var(--ink-muted); font-weight: 500; }
+  .arrow { text-align: center; color: var(--ink-faint); font-size: 15px; line-height: 1; }
+  .result {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 13px;
+    border-radius: var(--plate-radius);
+    background: var(--go-fill);
+    border: 1px solid rgba(255, 255, 255, 0.62);
+    color: var(--on-accent);
+    font-weight: 700;
+    font-size: 13.5px;
+  }
+
+  /* ---------- カメラ画面の見立て ---------- */
+  .phone {
+    width: min(208px, 100%);
+    aspect-ratio: 9 / 16;
+    container-type: size;
+    position: relative;
+    border-radius: 22px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 0 10px 28px rgba(20, 28, 40, 0.28);
+    margin: 0 auto;
+  }
+  /* 縦なので短辺は幅のほう */
+  .phone .burn { --cap: 11.8cqw; }
+  .phone .clock { text-shadow: 0 2px 1.2cqw rgba(0, 0, 0, 0.45); }
+  .guide {
+    position: absolute;
+    inset: 13% 7%;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 5px;
+  }
+  .shutter {
+    position: absolute;
+    left: 50%;
+    bottom: 5.5%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 3px solid rgba(255, 255, 255, 0.9);
+    display: grid;
+    place-items: center;
+  }
+  .shutter i { width: 34px; height: 34px; border-radius: 50%; background: #FF3B30; display: block; }
+  .phone-chip {
+    position: absolute;
+    bottom: 8%;
+    font-size: 9.5px;
+    font-weight: 600;
+    color: #FFFFFF;
+    padding: 5px 8px;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.34);
+  }
+  .phone-chip--l { left: 6%; }
+  .phone-chip--r { right: 6%; }
+
+  /* ---------- 押す口 ---------- */
+  .act {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 4px;
+    padding: 12px 18px;
+    border-radius: var(--plate-radius);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -0.1px;
+    text-decoration: none;
+    background: var(--go-fill);
+    color: var(--on-accent);
+    border: 1px solid rgba(255, 255, 255, 0.62);
+    box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.72);
+    transition: transform 90ms ease, filter 90ms ease;
+  }
+  .act:hover { filter: brightness(1.05); }
+  .act:active { transform: translateY(1px); }
+  .act:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+
+  .closing { text-align: center; padding: 30px 22px; }
+  .closing p {
+    margin: 0 auto;
+    max-width: 30ch;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 2;
+    text-wrap: balance;
+  }
+
+  footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 2px 4px 0;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--ink-muted);
+  }
+  footer a { color: var(--ink); }
+
+  @media (max-width: 420px) {
+    .body { gap: 18px; padding: 14px 14px 48px; }
+    .plate { padding: 17px 15px 19px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .act, .pick { transition: none; }
+  }
+

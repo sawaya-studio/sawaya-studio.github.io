@@ -51,7 +51,10 @@ export function dataScript(id, value) {
 }
 
 /** 共通の <head>。頁ごとに違うのは front matter で渡す。
-    site の名前と URL は **site.json の 1 か所**にある（名前が変わってもそこだけ直す） */
+    site の名前と URL は **site.json の 1 か所**にある（名前が変わってもそこだけ直す）。
+
+    css は `/assets/<テーマ>.css?v=…` の形で渡ってくる。**頁の中に埋めない。**
+    ?v= は中身から作った印で、直したときに古いものが residual で残らないようにするためのもの。 */
 export function head({ page, css, extra = '' }) {
   const origin = page.site?.origin ?? '';
   const url = origin + page.url;
@@ -68,6 +71,5 @@ ${img ? `<meta property="og:image" content="${img}">\n<meta name="twitter:card" 
 ${page.icon ? `<link rel="icon" href="${page.icon}">\n<link rel="apple-touch-icon" href="${page.appleIcon ?? page.icon}">` : ''}
 <link rel="canonical" href="${url}">
 ${extra}
-<style>
-${css}</style>`;
+<link rel="stylesheet" href="${css}">`;
 }

@@ -1,0 +1,322 @@
+/* ============================================================
+   テロップスタジオ
+   ==========================================================================
+   **「昭和レトロポップ見本帳」の組みをそのまま使っている。**
+   （2026-08-26 のアーティファクト。この道具のロゴを決めるための下調べ）
+
+   見本帳から持ってきた決まりは 5 つ。
+
+     ・地は**クリーム**。昭和の紙は白くない（わら半紙・喫茶店のメニュー）
+     ・**影はぼかさない。** ずらした写しを 1 枚置くだけ
+     ・**縁は黒で 2px。** 原色どうしのあいだに黒を 1 本入れると、互いに濁らない
+     ・**文字を図案として扱う。** 枠で囲む、札に載せる、丸に入れる
+     ・色は緑とオレンジ。足すのは**からし色**と**えんじ**の 2 色まで
+
+   夜は**ネオン看板**にする。**単なる反転にしないこと。**
+   昭和には「喫茶店の紙」と「夜のネオン」の 2 つの顔がある。
+
+   **道具の画面は持ちこまない。** ここは道具の顔を見せる頁で、
+   使い方を説明する頁ではない。
+   ============================================================ */
+
+:root{
+  /* 昼：喫茶店の紙 */
+  --ground:#fbf4e4;
+  --paper:#fffaf0;
+  --ink:#241d16;
+  --sub:#6d6152;
+  --line:#e6dcc2;
+  --grid:#eee5cf;
+
+  /* この道具の色。**ここだけは道具の側（ui/public/index.html）と同じ値** */
+  --green:#2fa45f;
+  --green-deep:#1f7a46;
+  --orange:#f2913c;
+  --orange-pale:#fdf1e4;
+  /* 見本帳で足すことにした 2 色 */
+  --mustard:#e0ae35;
+  --enji:#b23f2d;
+  --turquoise:#3aa89e;
+
+  --shadow:4px 4px 0 var(--orange);
+  --shadow-s:3px 3px 0 var(--orange);
+  --radius:14px;
+
+  --display:"RocknRoll One","Zen Kaku Gothic New","Hiragino Sans","Yu Gothic UI",system-ui,sans-serif;
+  --logo:"Telop Logo",var(--display);
+  --body:"Noto Sans JP","Zen Kaku Gothic New","Hiragino Sans","Yu Gothic UI",Meiryo,system-ui,sans-serif;
+}
+
+/* 夜：ネオン看板 */
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#171310;
+    --paper:#221c17;
+    --ink:#f6ecd9;
+    --sub:#a2947f;
+    --line:#3a2f26;
+    --grid:#241d17;
+
+    --green:#4fd183;
+    --green-deep:#8ee8ae;
+    --orange:#ffa956;
+    --orange-pale:#4a3320;
+    --mustard:#f0c455;
+    --enji:#e2705c;
+    --turquoise:#5fd2c7;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#171310;
+  --paper:#221c17;
+  --ink:#f6ecd9;
+  --sub:#a2947f;
+  --line:#3a2f26;
+  --grid:#241d17;
+  --green:#4fd183;
+  --green-deep:#8ee8ae;
+  --orange:#ffa956;
+  --orange-pale:#4a3320;
+  --mustard:#f0c455;
+  --enji:#e2705c;
+  --turquoise:#5fd2c7;
+}
+
+/* 見出しの書体。**RocknRoll One**（SIL OFL）。見本帳が本命に挙げたもの。
+   写植時代の丸ゴシックで、やわらかさと読みやすさを両立する唯一の候補だった。
+   **この頁に出てくる字だけに絞ってある**（tools/subset-fonts.mjs）。
+   字を足したら絞り直すこと。build が足りない字を教えてくれる。 */
+@font-face{
+  font-family:"RocknRoll One";
+  src:url("/assets/fonts/RocknRollOne-Regular.woff2") format("woff2");
+  font-display:swap;
+}
+/* 看板の書体。**851ゴチカクット**（改造・再配布可・商用可）。
+   道具に同梱しているものと同じ 1 本。**本文には使わない。**
+   形が勝って読みにくい。ロゴだけ。 */
+@font-face{
+  font-family:"Telop Logo";
+  src:url("/assets/fonts/851Gkktt-logo.woff2") format("woff2");
+  font-display:swap;
+}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+
+/* 方眼紙。**画像を持たない。** 1px の線を縦横に敷き詰めるだけで出る。
+   道具の側と同じ 32px 間隔 */
+body{
+  margin:0;
+  background-color:var(--ground);
+  background-image:
+    linear-gradient(var(--grid) 1px,transparent 1px),
+    linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:32px 32px;
+  color:var(--ink);
+  font-family:var(--body);
+  font-size:16px;
+  line-height:1.85;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ---------- 上下に流れる帯 ---------- */
+/* **同じ字を 2 回続けて書くこと。** 半分だけ動かして繰り返すので、
+   1 回ぶんだと途中で切れる（theme.mjs が 2 回にしている） */
+.ticker{
+  background:var(--green);color:#fff;overflow:hidden;white-space:nowrap;
+  font-weight:900;font-size:12px;letter-spacing:.22em;padding:7px 0;
+  border-top:2px solid var(--ink);border-bottom:2px solid var(--ink);
+}
+.ticker span{display:inline-block;padding-right:2.5em;animation:slide 26s linear infinite}
+@keyframes slide{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+.wrap{max-width:940px;margin:0 auto;padding:0 20px 100px}
+
+/* ---------- 表紙 ---------- */
+header{padding:54px 0 30px;text-align:center}
+/* 小さい札。**からし色に黒の縁と硬い影。** 丸くするのは、下の章の丸番号と揃えるため */
+.eyebrow{
+  display:inline-block;font-size:11px;font-weight:900;letter-spacing:.3em;
+  color:var(--ink);background:var(--mustard);
+  padding:5px 16px;border:2px solid var(--ink);border-radius:99px;
+  box-shadow:var(--shadow-s);
+}
+h1{
+  font-family:var(--display);font-size:clamp(34px,7.4vw,60px);
+  line-height:1.22;margin:22px 0 10px;color:var(--green);
+  text-shadow:var(--shadow);text-wrap:balance;
+}
+.lede{max-width:62ch;margin:0 auto;color:var(--sub);font-size:15px}
+
+/* ---------- 章 ---------- */
+section{margin-top:64px}
+/* 丸番号。**えんじ。** 緑（押せる色）とも、オレンジ（飾り）とも別の役 */
+.num{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:34px;height:34px;flex:none;
+  background:var(--enji);color:#fff;border:2px solid var(--ink);border-radius:50%;
+  font-family:var(--display);font-size:16px;line-height:1;
+}
+h2{
+  display:flex;align-items:center;gap:12px;
+  font-family:var(--display);font-size:clamp(20px,3.2vw,26px);
+  margin:0 0 6px;color:var(--ink);line-height:1.4;
+}
+h3{margin:0 0 3px;font-size:15px;font-weight:900}
+.note{color:var(--sub);font-size:14px;margin:0 0 22px;max-width:64ch}
+p{margin:0 0 14px}
+p:last-child{margin-bottom:0}
+strong,b{font-weight:900}
+
+/* ---------- 紙 ---------- */
+/* **枠は黒 2px、影はぼかさない。** これだけで昭和の紙になる */
+.card{
+  background:var(--paper);border:2px solid var(--ink);border-radius:var(--radius);
+  padding:22px;box-shadow:var(--shadow);
+}
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
+
+.label{
+  font-size:11px;font-weight:900;letter-spacing:.16em;color:var(--sub);
+  text-transform:uppercase;margin:0 0 8px;
+}
+.cap{font-size:13px;color:var(--sub);margin:10px 0 0;line-height:1.7}
+.cap b{color:var(--ink)}
+
+/* 札。**丸くして黒で囲む。** 色は役ごと（緑＝できる／からし＝ただし書き） */
+.tag{
+  display:inline-block;
+  font-size:11px;font-weight:900;letter-spacing:.08em;
+  border:2px solid var(--ink);border-radius:99px;padding:2px 10px;background:var(--ground);
+}
+.tag.ok{background:var(--green);color:#fff}
+.tag.hm{background:var(--mustard);color:var(--ink)}
+.tags{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 0;padding:0;list-style:none}
+
+/* ---------- 見せ台 ---------- */
+/* 中身を大きく見せる台。**地は水玉。** 機械で刷ったくり返しを敷いて、
+   その上の図案を浮かせる（見本帳 1 章「幾何学模様をくり返す」） */
+.stage{
+  padding:38px 22px;display:grid;place-items:center;gap:8px;text-align:center;
+  background-color:var(--ground);
+  background-image:radial-gradient(var(--line) 2px,transparent 2.1px);
+  background-size:14px 14px;
+}
+.showcase{
+  background:var(--paper);border:2px solid var(--ink);border-radius:var(--radius);
+  padding:0;overflow:hidden;box-shadow:var(--shadow);
+}
+.showcase .why{padding:16px 20px;border-top:2px solid var(--ink);
+  font-size:13px;color:var(--sub);line-height:1.75}
+.showcase .why b{color:var(--ink)}
+
+/* 看板。**緑の箱に白い字、オレンジのぼかさない影、黒の縁。**
+   見本帳の 4 章「枠で囲む」＋「影をぼかさない」。道具の側と同じ組み。
+
+   **太らせない。** ゴチカクットは1ウェイトしか無いので、900 を求めると
+   ブラウザが勝手に太らせて、角と隙間が潰れる。
+   **overflow:hidden を掛けないこと。** この書体は字のインクが送り幅より
+   わずかに外へ出るので、最後の一字が切り落とされる。
+   余白・角丸・影は、道具の側と同じ「文字サイズに対する比」で持つ。 */
+.brand{
+  display:inline-block;
+  font-family:var(--logo);font-weight:900;font-synthesis-weight:none;
+  color:#fff;background:var(--green);
+  border:2px solid var(--ink);
+  border-radius:0.5em;
+  padding:0.06em 0.7em 0.1em;
+  box-shadow:0.19em 0.19em 0 var(--orange);
+  white-space:nowrap;line-height:1.4;
+}
+.brand--lg{font-size:clamp(26px,5.4vw,40px)}
+.brand--sm{font-size:16px}
+/* 英字の添え。**字間を大きく開ける。** 昭和の看板は、欧文を飾りとして扱う */
+.en{font-size:11px;font-weight:900;letter-spacing:.34em;color:var(--sub)}
+
+/* ---------- 上の帯（頁の名札） ---------- */
+.topbar{
+  position:sticky;top:0;z-index:30;
+  background:var(--ground);
+  border-bottom:2px solid var(--ink);
+  display:flex;gap:12px;align-items:center;
+  padding:9px 18px;flex-wrap:wrap;
+}
+.topbar .quiet{color:var(--sub);font-size:11px;white-space:nowrap}
+.grow{flex:1}
+/* **数字と札はオレンジ。** 押せないので、緑（押せる色）の決まりを壊さない */
+.pill{font-size:11px;padding:3px 11px;border-radius:99px;
+  background:var(--orange);color:var(--ink);font-weight:900;white-space:nowrap;
+  border:2px solid var(--ink);box-shadow:var(--shadow-s)}
+
+/* ---------- 押す口 ---------- */
+/* **緑は押せるものだけ。** 飾りに緑を使うと、押せる色が意味を失う */
+.cta{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:center;margin-top:26px}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--display);font-size:15px;
+  background:var(--green);color:#fff;
+  border:2px solid var(--ink);border-radius:10px;
+  padding:9px 20px;cursor:pointer;text-decoration:none;
+  box-shadow:var(--shadow-s);
+  transition:transform .1s, box-shadow .1s;
+}
+.btn:hover{background:var(--green-deep)}
+/* **押すと沈む。** 影のぶんだけ動かすと、指の下で紙が凹んだように見える */
+.btn:active{transform:translate(3px,3px);box-shadow:none}
+.btn.ghost{background:var(--paper);color:var(--ink)}
+
+/* ---------- 表 ---------- */
+.scroller{overflow-x:auto}
+.tbl{
+  width:100%;border-collapse:separate;border-spacing:0;font-size:14px;
+  background:var(--paper);border:2px solid var(--ink);border-radius:var(--radius);
+  overflow:hidden;box-shadow:var(--shadow);
+}
+.tbl th,.tbl td{text-align:left;padding:12px 16px;border-bottom:2px solid var(--line);
+  vertical-align:top;line-height:1.75}
+.tbl tr:last-child th,.tbl tr:last-child td{border-bottom:none}
+.tbl th{font-weight:900;white-space:nowrap;width:1%;color:var(--ink);
+  border-right:2px solid var(--line)}
+.tbl td{color:var(--sub)}
+
+/* ---------- これから ---------- */
+.road{list-style:none;margin:0;padding:0;display:grid;gap:14px}
+.road li{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start;
+  background:var(--paper);border:2px solid var(--ink);border-radius:var(--radius);
+  padding:16px 20px;box-shadow:var(--shadow-s)}
+.road .n{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;
+  font-family:var(--display);font-size:14px;line-height:1;
+  background:var(--mustard);color:var(--ink);border:2px solid var(--ink)}
+/* いまここ。**えんじの丸にして、影を大きくする** */
+.road li.now .n{background:var(--enji);color:#fff}
+.road li.now{box-shadow:var(--shadow)}
+.road b{display:block;font-size:15px;font-weight:900}
+.road span span{font-size:13.5px;color:var(--sub);line-height:1.8}
+
+/* ---------- しめ ---------- */
+.close{
+  margin-top:64px;background:var(--green);color:#fff;
+  border:3px solid var(--ink);border-radius:var(--radius);padding:26px;
+  box-shadow:var(--shadow);
+}
+.close h2{color:#fff}
+.close .num{background:var(--paper);color:var(--ink)}
+.close .note{color:#ffffffcc}
+.close p{font-size:14.5px;line-height:1.85}
+.close b{background:var(--mustard);color:var(--ink);padding:0 5px;border-radius:3px}
+.close a{color:#fff}
+
+footer{border-top:2px solid var(--ink);padding:20px;font-size:12px;color:var(--sub)}
+.footin{max-width:940px;margin:0 auto;display:flex;flex-wrap:wrap;gap:6px 14px;
+  align-items:center;justify-content:space-between}
+
+a{color:inherit}
+:focus-visible{outline:3px solid var(--enji);outline-offset:2px}
+
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .ticker span{animation:none}
+  *{transition-duration:.01ms !important}
+}

@@ -19,13 +19,15 @@
       ---
 
   テーマは themes/<名前>/ にある。
-      style.css   その頁の見た目（**丸ごと頁に埋める。**別ファイルにしない）
-      page.js     その頁を動かすもの（同上）
+      style.css   その頁の見た目
+      page.js     その頁を動かすもの
       theme.mjs   頁の外枠と、::: で呼べる部品
 
-  **css も js も、頁の中に埋めてしまう。** 頁は数枚しかなく、どれも 1 回読んで
-  終わりなので、別ファイルにして往復を増やすより速い。共有するのは
-  重いもの（空・雲・書体・絵）だけで、それは /assets/ に置いてある。
+  style.css と page.js は、**テーマごとに 1 本ずつ /assets/ へ書き出す**
+  （assets/recaday.css など）。頁はそれを読むだけ。
+  名前のうしろに付く ?v= は中身から作った印で、**直したのに古いものが出る**のを防ぐ。
+
+  page.js は、中身が注記だけのときは読みこまない（空のファイルを取りに行かせない）。
 
   作らないもの
   --------------------------------------------------------------------------
@@ -35,6 +37,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { createHash } from 'node:crypto';
 import { render } from './md.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -80,14 +83,42 @@ function frontMatter(src) {
 
 /* ---------- 走らせる ---------- */
 
-const themeCache = new Map();
+/** 中身から作る短い印。**直したのに古いものが出る**のを防ぐためだけのもの */
+function stamp(text) {
+  return createHash('sha1').update(text).digest('hex').slice(0, 8);
+}
+
+/** 注記と空白しか無いか（空の js を読みこませないため） */
+function isEmptyJs(js) {
+  return !js.replace(/\/\*[\s\S]*?\*\//g, '').replace(/^\s*\/\/.*$/gm, '').trim();
+}
+
 async function loadTheme(name) {
   const dir = path.join(THEMES, name);
   if (!fs.existsSync(dir)) throw new Error(`テーマ "${name}" が themes/ に無い`);
   // --watch で読み直せるように、毎回ちがう名前で読む
   const mod = await import(pathToFileURL(path.join(dir, 'theme.mjs')).href + '?t=' + Date.now());
   const read = (f) => (fs.existsSync(path.join(dir, f)) ? fs.readFileSync(path.join(dir, f), 'utf8') : '');
-  return { ...mod.default, css: read('style.css'), js: read('page.js'), name };
+
+  // テーマの見た目と動きは、**頁に埋めずに /assets/ へ 1 本ずつ書き出す**
+  const css = read('style.css');
+  const js = read('page.js');
+  fs.mkdirSync(path.join(ROOT, 'assets'), { recursive: true });
+  fs.writeFileSync(path.join(ROOT, `assets/${name}.css`), css);
+
+  // 注記だけの page.js は、**置かないし読ませない。**
+  // 空のファイルを site に残すと、あとで「これは何だ」と探すことになる
+  const jsPath = path.join(ROOT, `assets/${name}.js`);
+  const empty = isEmptyJs(js);
+  if (empty) { if (fs.existsSync(jsPath)) fs.rmSync(jsPath); }
+  else fs.writeFileSync(jsPath, js);
+
+  return {
+    ...mod.default,
+    name,
+    css: `/assets/${name}.css?v=${stamp(css)}`,
+    js: empty ? '' : `/assets/${name}.js?v=${stamp(js)}`,
+  };
 }
 
 function walk(dir, out = []) {
