@@ -118,10 +118,25 @@ async function buildOne(file) {
   const site = JSON.parse(fs.readFileSync(path.join(ROOT, 'site.json'), 'utf8'));
   const page = { ...meta, url, rel, outRel, site };
   const html = render(body, { blocks: theme.blocks ?? {}, ctx: page });
-  // {{site.name}} / {{site.origin}} は、どこに書いても site.json の値になる。
-  // **名前を変えるときに直すのは site.json だけ**にしておく
-  const out = theme.shell({ page, body: html, css: theme.css, js: theme.js })
+  let out = theme.shell({ page, body: html, css: theme.css, js: theme.js })
+    // {{site.name}} / {{site.origin}} は、どこに書いても site.json の値になる。
+    // **名前を変えるときに直すのは site.json だけ**にしておく
     .replace(/\{\{site\.(\w+)\}\}/g, (m, k) => (site[k] != null ? String(site[k]) : m));
+
+  /*
+    根から書いた道（/assets/… ）を、その頁からの道に直す。
+
+    **頁をそのまま開いても出るようにするため。** 根から書いたままだと、
+    file:// で開いたときにドライブの根を見にいって、空も書体も絵も出ない。
+    書くときは根から（どの頁でも同じ字面で済む）、出すときは相対にする。
+
+    site の外を指すもの（https://… ）と、canonical / og:url はここを通らない。
+  */
+  const depth = outRel.split('/').length - 1;
+  const base = depth ? '../'.repeat(depth) : './';
+  out = out
+    .replace(/(\s(?:src|href|data-clouds)=")\/(?!\/)/g, `$1${base}`)
+    .replace(/(url\(")\/(?!\/)/g, `$1${base}`);
 
   const dest = path.join(ROOT, outRel);
   fs.mkdirSync(path.dirname(dest), { recursive: true });

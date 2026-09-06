@@ -14,7 +14,7 @@ node tools/serve.mjs            http://127.0.0.1:5199/ で見る
 
 ## 頁
 
-| `/` | Sawaya Works | `content/index.md` ／ テーマ `works` |
+| `/` | Sawaya Studio | `content/index.md` ／ テーマ `works` |
 | `/recaday/` | recaday の紹介 | `content/recaday/index.md` ／ テーマ `recaday` |
 | `/recaday/closed-test/` | クローズドテストの案内 | **手で書いた頁**（作り直しの対象外） |
 | `/telop-studio/` | テロップスタジオの紹介 | `content/telop-studio/index.md` ／ テーマ `telop` |
