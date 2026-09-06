@@ -1,0 +1,598 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>テロップスタジオ</title>
+<meta name="description" content="ここに、検索結果と SNS に出る一行を書く。">
+<meta property="og:title" content="テロップスタジオ">
+<meta property="og:description" content="ここに、検索結果と SNS に出る一行を書く。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://sawayaworks.github.io/telop-studio/">
+<meta property="og:image" content="https://sawayaworks.github.io/telop-studio/icon.png">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="/telop-studio/favicon.png">
+<link rel="apple-touch-icon" href="/telop-studio/favicon.png">
+<link rel="canonical" href="https://sawayaworks.github.io/telop-studio/">
+
+<style>
+/* ============================================================
+   この頁は、道具そのもの（ui/public/index.html）から
+   **色も寸法も作法もそのまま引いている。**
+
+   ・地は方眼紙（--bg / --grid）。画像は持たない、1px の線を敷き詰めるだけ
+   ・**緑は押せるものだけ。** 飾りに緑を使うと、押せる色が意味を失う
+   ・**オレンジは押せないものだけ。** 飾り・数字・見出しの影
+   ・**押せるものは黒（--edge）で囲う。** 原色どうしのあいだに黒を1本
+   ・**影はぼかさない。** ずらした面を1枚置くだけ（ぼかすと今風になる）
+
+   道具の側を直したら、ここも合わせること。値は
+   ui/public/index.html / mobile/theme/index.ts / tools/gen-icons.mjs と
+   **同じ4か所め**にあたる。
+   ============================================================ */
+:root{
+  --key:#2fa45f; --key-deep:#1f7a46; --key-ink:#08301c; --key-lite:#6ec98f;
+  --bg:#fbf4e4; --paper:#fff;
+  --ink:#16211b; --sub:#5a6a60; --line:#e6dcc2; --rule:#f2ead8;
+  --sel:#e8f5ec;
+  --cut:#c6462f;
+  --accent:#f2913c; --accent-lite:#f8c193; --accent-ink:#a75c14;
+  --accent-pale:#fdf1e4;
+  --pop:3px 3px 0 var(--accent-lite);
+  --pop-s:2px 2px 0 var(--accent-lite);
+  --edge:#16211b;
+  --grid:#eee5cf;
+  --radius:10px;
+  --font:"Noto Sans JP","Yu Gothic UI","Hiragino Sans",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+
+/* ロゴの書体。**851ゴチカクット**（作者: 8:51:22 pm ／ 改造・再配布可）。
+   道具に同梱しているものと同じ1本を、**使う字だけに絞って**置いてある（1KB）。
+   **本文には使わない。** 形が勝って読みにくい。ロゴだけ。 */
+@font-face{
+  font-family:"Telop Logo";
+  src:url("logo.woff2") format("woff2");
+  font-display:swap;
+}
+
+/* 方眼紙。**画像を持たない。** 1px の線を縦横に敷き詰めるだけで出る。
+   道具の側と同じ 32px 間隔 */
+body{margin:0;background-color:var(--bg);
+     background-image:linear-gradient(var(--grid) 1px,transparent 1px),
+                      linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+     background-size:32px 32px;
+     color:var(--ink);font-family:var(--font);
+     font-size:15px;line-height:1.85;-webkit-font-smoothing:antialiased}
+
+/* ---------- 上の帯 ---------- */
+header{position:sticky;top:0;z-index:30;background:#fffffff2;
+       -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+       border-bottom:1px solid var(--line);display:flex;gap:10px;align-items:center;
+       padding:9px 18px;flex-wrap:wrap}
+/* ロゴ。**緑の箱に白い字、オレンジの硬い影、黒の縁。**
+   道具の側（.brand）とまったく同じ組み方。
+   **太らせない。** ゴチカクットは1ウェイトしか無いので、900 を求めると
+   ブラウザが勝手に太らせて角と隙間が潰れる。900 は書体が読めなかったとき用 */
+.brand{
+  flex:none;margin:0 4px 3px 0;white-space:nowrap;
+  font-family:"Telop Logo",var(--font);font-weight:900;font-synthesis-weight:none;
+  font-size:17px;line-height:1.35;
+  color:#fff;background:var(--key);
+  border:2px solid var(--ink);border-radius:8px;padding:1px 11px;
+  box-shadow:3px 3px 0 var(--accent);
+}
+.grow{flex:1}
+/* **数字と札はオレンジ。** 押せないので緑の規則を壊さない */
+.pill{font-size:11px;padding:4px 11px;border-radius:99px;
+      background:var(--accent);color:#fff;font-weight:700;white-space:nowrap;
+      box-shadow:var(--pop-s)}
+.quiet{color:var(--sub);font-size:11px;white-space:nowrap}
+
+/* ---------- 骨格 ---------- */
+main{max-width:1060px;margin:0 auto;padding:0 18px 72px}
+section{margin-top:clamp(40px,7vw,76px)}
+h1{font-size:clamp(26px,5vw,44px);line-height:1.5;letter-spacing:-.02em;
+   font-weight:800;margin:0 0 18px;text-wrap:balance}
+h2{font-size:clamp(19px,3vw,27px);line-height:1.6;letter-spacing:-.01em;
+   font-weight:800;margin:0 0 14px;text-wrap:balance}
+h3{font-size:15px;font-weight:700;margin:0 0 6px}
+p{margin:0 0 15px;max-width:60ch}
+p:last-child{margin-bottom:0}
+strong{font-weight:700}
+.lead{font-size:clamp(15px,1.9vw,17.5px);color:var(--sub);font-weight:500;max-width:48ch}
+/* 小さい字の注意書き。**上に少し空ける。** 直前の図に貼りつくと、図の一部に見える */
+.note{font-size:12.5px;line-height:1.85;color:var(--sub);margin-top:14px}
+
+/* 見出しの上に置く小さな見出し。**菱形は道具の側（.chead::before）と同じ** */
+.eyebrow{display:flex;align-items:center;gap:9px;margin:0 0 12px;
+         font-size:11px;font-weight:700;letter-spacing:.14em;color:var(--accent-ink)}
+.eyebrow::before{content:'';width:8px;height:8px;flex:none;border-radius:2px;
+         background:var(--accent);transform:rotate(45deg)}
+.eyebrow::after{content:'';flex:1;height:1px;background:var(--line)}
+
+/* 紙。**枠は1本、角丸 10px。** 道具の .card と同じ */
+.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);
+      padding:20px 22px}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(238px,1fr));gap:14px}
+.cols .card p{margin:0;font-size:13.5px;line-height:1.8;color:var(--sub)}
+
+/* 押せるもの。**黒で囲い、ぼかさない影を敷く** */
+.btn{display:inline-flex;align-items:center;gap:8px;
+     font-family:inherit;font-size:14px;font-weight:700;
+     background:var(--key-deep);color:#fff;border:2px solid var(--edge);
+     border-radius:8px;padding:9px 17px;cursor:pointer;text-decoration:none;
+     box-shadow:var(--pop-s);transition:background .12s}
+.btn:hover{background:var(--key-ink)}
+.btn:active{transform:translate(2px,2px);box-shadow:none}
+.btn.ghost{background:var(--paper);color:var(--ink)}
+.btn.ghost:hover{background:var(--sel)}
+.btn:focus-visible{outline:2px solid var(--key-deep);outline-offset:3px}
+
+/* ---------- ヒーロー ---------- */
+.hero{padding-top:clamp(34px,6vw,64px)}
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin:20px 0 0;padding:0;list-style:none}
+.chips li{font-size:12px;font-weight:600;padding:5px 12px;border-radius:99px;
+     background:var(--accent-pale);color:var(--accent-ink);border:1px solid var(--accent-lite)}
+.cta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:24px}
+
+/* ============================================================
+   行の一覧。**道具の画面をそのまま持ってきている。**
+
+   ・本文は、行の種類によらず必ず同じ x から始まる（--gutter）
+   ・部品は、その行にさわるまで出しゃばらない（枠を透明にしておく）
+   ・色は「何の行か」の1役だけ
+   ============================================================ */
+.demo{--gutter:236px;
+      display:grid;grid-template-columns:1fr 372px;gap:14px;align-items:start;margin-top:22px}
+@media (max-width:940px){
+  .demo{grid-template-columns:1fr}
+  .demo .rows{--gutter:150px}
+}
+.rows{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);
+      overflow:hidden;min-width:0}
+.row{position:relative;display:flex;align-items:center;gap:8px;
+     padding:5px 12px 5px calc(var(--gutter) + 12px);
+     border-bottom:1px solid var(--rule);background:var(--paper);cursor:default}
+.row:last-child{border-bottom:none}
+.row:hover{background:#fffaf0}
+.row.sel{background:var(--sel);box-shadow:inset 3px 0 0 var(--key-deep)}
+/* **切った行は消さない。** 消すと、どこを切ったのか分からなくなって戻せない */
+.row.cut{background:#fbf4f3}
+.row.cut .txt,.row.cut .hint{opacity:.42;text-decoration:line-through;text-decoration-color:#c98a80}
+.row.cut:hover{background:#f9efed}
+
+.gutter{position:absolute;left:12px;top:0;bottom:0;width:var(--gutter);
+        display:flex;align-items:center;gap:6px;padding-right:16px}
+.gutter .at{flex:none;width:56px;font-variant-numeric:tabular-nums;font-size:11px;
+     color:var(--sub);text-align:right}
+.grip{color:#c6d2cf;flex:none;width:13px;text-align:center;user-select:none;font-size:12px}
+.row:hover .grip{color:var(--key-deep)}
+/* **何の行かを、名前で出す。** 3px の帯だけだと、色を覚えていないと分からない */
+.kind{flex:none;width:64px;text-align:center;font-size:11px;font-weight:700;
+      border-radius:6px;padding:3px 0;line-height:1.25;letter-spacing:.02em;
+      border:1px solid transparent;white-space:nowrap;user-select:none}
+.kind.speech{background:#e8f5ec;color:#1f7a46;border-color:#cfe8d8}
+.kind.gap   {background:#fdeedd;color:#9a5a1c;border-color:#f7dcc1}
+.kind.telop {background:#e6e9fd;color:#3b45a0;border-color:#ccd2f7}
+.kind.se    {background:#fdeedd;color:#8f5410;border-color:#f7dcc1}
+.row.cut .kind{opacity:.5}
+.bar{width:3px;height:22px;border-radius:2px;flex:none;background:var(--line)}
+.row.telop .bar{background:#2fa45f}
+.row.se .bar{background:#d68f4a}
+/* 誰が喋ったか。**色は、この1役だけ** */
+.who{flex:1;min-width:0;font-weight:600;font-size:12.5px;color:var(--sub);
+     white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.who i{font-style:normal;display:inline-block;width:8px;height:8px;border-radius:2px;
+     margin-right:5px;vertical-align:baseline}
+
+/* 本文。**入力欄に見せない。** 台本を読んでいる気分をこわさない */
+.txt{flex:1;min-width:80px;font-size:15px;line-height:1.7;padding:3px 6px;
+     border:1px solid transparent;border-radius:7px;white-space:pre-wrap;word-break:break-word}
+.hint{color:var(--sub);font-size:12px;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row.gap{color:var(--sub)}
+/* 無音の長さを、そのまま棒の長さで見せる。**数字より速く分かる** */
+.lenbar{height:5px;border-radius:99px;background:var(--line);flex:none;min-width:6px}
+.row.gap.long .lenbar{background:#e8a58f}
+.row.gap.long .hint{color:#a8410a;font-weight:600}
+
+/* 右そで。**さわるまで枠を出さない** */
+.tools{display:flex;align-items:center;gap:6px;flex:none;margin-left:auto}
+.mini{font-family:inherit;font-size:12px;padding:0 8px;height:28px;flex:none;
+      border:2px solid transparent;background:transparent;color:var(--sub);
+      border-radius:8px;cursor:pointer;line-height:1}
+.row:hover .mini{border-color:var(--line);background:var(--paper)}
+.mini:hover{color:var(--ink);border-color:var(--key-deep)}
+.mini.on{background:var(--key-deep);border-color:var(--edge);color:#fff}
+.mini.danger.on{background:var(--cut);border-color:var(--edge);color:#fff}
+.mini:focus-visible{outline:2px solid var(--key-deep);outline-offset:2px}
+.sw{display:flex;gap:3px;flex:none}
+.sw button{width:20px;height:20px;padding:0;border:2px solid transparent;border-radius:5px;
+      cursor:pointer;line-height:0}
+.sw button[aria-pressed="true"]{border-color:var(--edge)}
+.sw button:focus-visible{outline:2px solid var(--key-deep);outline-offset:2px}
+
+/* ============================================================
+   右の、いつでも見える画面。
+   **テロップの位置は数字では決められない。つまんで動かせる場所が要る。**
+   ============================================================ */
+.side{position:sticky;top:62px;min-width:0}
+.screen{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);
+        overflow:hidden}
+.chead{padding:9px 13px;font-weight:600;font-size:13px;display:flex;align-items:center;gap:8px}
+.chead::before{content:'';width:7px;height:7px;flex:none;border-radius:2px;
+        background:var(--accent);transform:rotate(45deg)}
+.chead .quiet{margin-left:auto}
+#stage{position:relative;background:#0e1116;width:100%;aspect-ratio:16/9;
+       overflow:hidden;user-select:none;touch-action:none}
+/* 撮った動画のかわりに置く絵。**実際の画面には、あなたの動画が出る** */
+.scene{position:absolute;inset:0;
+  background:
+    radial-gradient(58% 46% at 34% 30%, rgba(255,236,196,.34) 0%, rgba(255,236,196,0) 62%),
+    linear-gradient(163deg,#2b3340 0%,#232a35 42%,#1a1f28 100%)}
+.scene::after{content:'';position:absolute;inset:0;
+  background:repeating-linear-gradient(106deg,rgba(255,255,255,.028) 0 3px,rgba(0,0,0,0) 3px 9px)}
+#tl{position:absolute;left:50%;bottom:9%;transform:translateX(-50%);
+    max-width:88%;text-align:center;cursor:grab;
+    font-weight:800;font-size:5.4cqw;line-height:1.34;white-space:pre-wrap;
+    color:#fff;
+    /* フチ。道具の焼き込み（core/paint.js）と同じ考えで、外側に4方向 */
+    -webkit-text-stroke:0.34em #16211b;paint-order:stroke fill}
+#stage{container-type:inline-size}
+#tl.grabbing{cursor:grabbing}
+#tl.sel{outline:2px dashed #ffffffaa;outline-offset:5px}
+.hand{position:absolute;left:10px;top:10px;font-size:11px;color:#fff;
+      background:#000000a8;padding:3px 9px;border-radius:99px;pointer-events:none}
+/* 位置の見取り図。**9か所。つまんで置いた所が、ここにも出る** */
+.posgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:13px}
+.posgrid button{aspect-ratio:16/7;border:2px solid var(--line);background:var(--paper);
+      border-radius:6px;cursor:pointer;padding:0}
+.posgrid button[aria-pressed="true"]{border-color:var(--edge);background:var(--sel);
+      box-shadow:var(--pop-s)}
+.posgrid button:focus-visible{outline:2px solid var(--key-deep);outline-offset:2px}
+
+/* ---------- 表 ---------- */
+.tbl{width:100%;border-collapse:collapse;font-size:13.5px;background:var(--paper);
+     border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+.tbl th,.tbl td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--rule);
+     vertical-align:top;line-height:1.75}
+.tbl tr:last-child th,.tbl tr:last-child td{border-bottom:none}
+.tbl th{font-weight:700;white-space:nowrap;width:1%;color:var(--ink)}
+.tbl td{color:var(--sub)}
+.scroller{overflow-x:auto}
+
+/* ---------- これから ---------- */
+.road{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.road li{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start;
+     background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);
+     padding:15px 18px}
+.road .n{width:26px;height:26px;border-radius:99px;display:grid;place-items:center;
+     font-size:12px;font-weight:700;background:var(--accent);color:#fff;
+     box-shadow:var(--pop-s);font-variant-numeric:tabular-nums}
+.road li.now{border-color:var(--edge);border-width:2px;box-shadow:var(--pop)}
+.road li.now .n{background:var(--key-deep)}
+.road b{display:block;font-size:14.5px}
+.road span{font-size:12.5px;color:var(--sub);line-height:1.8}
+
+footer{border-top:1px solid var(--line);margin-top:clamp(48px,8vw,88px);
+       padding:22px 18px 40px;font-size:12px;color:var(--sub)}
+.footin{max-width:1060px;margin:0 auto;display:flex;flex-wrap:wrap;gap:12px;
+        align-items:center;justify-content:space-between}
+footer a{color:var(--key-deep);font-weight:600}
+
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *{transition-duration:.01ms !important}
+}
+
+</style>
+</head>
+<body>
+<header>
+  <span class="brand">テロップスタジオ</span>
+  <span class="quiet">ここに、ひとことの説明</span>
+  <span class="grow"></span>
+  <span class="pill">作っています</span>
+</header>
+<main>
+<section class="hero">
+<p class="eyebrow">TELOP STUDIO</p>
+<h1>ここに、いちばん言いたい一行。</h1>
+<p class="lead">ここに、その下の 2〜3 行。</p>
+<ul class="chips">
+<li>ここに札</li>
+<li>ここに札</li>
+<li>ここに札</li>
+</ul>
+<div class="cta">
+<a class="btn" href="#road">いまどこまで来ているか</a>
+<a class="btn ghost" href="#how">画面をさわってみる</a>
+</div>
+</section>
+<section id="how">
+<p class="eyebrow">画面</p>
+<h2>さわれる画面の見出し</h2>
+<p>ここに本文。</p>
+<div class="demo">
+  <div class="rows" id="rows"></div>
+  <div class="side">
+    <div class="screen">
+      <div class="chead">画面 <span class="quiet" id="stamp"></span></div>
+      <div id="stage">
+        <div class="scene"></div>
+        <span class="hand">つまんで動かせます</span>
+        <div id="tl" class="sel" tabindex="0" role="button"
+             aria-label="テロップ。つまんで動かせます"></div>
+      </div>
+      <div class="posgrid" id="posgrid" role="group" aria-label="テロップを置く場所"></div>
+    </div>
+    <p class="note" style="margin-top:10px">※ うしろの絵は見本です。</p>
+  </div>
+</div>
+<script type="application/json" id="editor-rows">{"rows":[{"kind":"speech","at":"0:00.4","who":0,"text":"ここにセリフ","cut":true},{"kind":"gap","at":"0:02.1","len":1.9},{"kind":"speech","at":"0:04.0","who":0,"text":"ここにセリフ"},{"kind":"speech","at":"0:07.2","who":1,"text":"ここにセリフ"},{"kind":"gap","at":"0:10.6","len":0.4},{"kind":"telop","at":"0:11.0","text":"ここにテロップ"},{"kind":"se","at":"0:12.4","file":"ぽん.wav","hint":"この時刻に1回鳴る"},{"kind":"speech","at":"0:13.1","who":0,"text":"ここにセリフ"}],"speakers":[{"name":"わたし","color":"#2fa45f"},{"name":"ゲスト","color":"#f2913c"}],"pos":7}</script>
+</section>
+<section>
+<p class="eyebrow">できること</p>
+<h2>できることの見出し</h2>
+<div class="scroller">
+<table class="tbl">
+<tbody>
+<tr><th>ここに項目</th><td>ここに説明</td></tr>
+<tr><th>ここに項目</th><td>ここに説明</td></tr>
+<tr><th>ここに項目</th><td>ここに説明</td></tr>
+</tbody></table>
+</div>
+</section>
+<section>
+<p class="eyebrow">つくり</p>
+<h2>つくりの見出し</h2>
+<div class="cols">
+<div class="card">
+<h3>ここに小見出し</h3>
+<p>ここに本文。</p>
+</div>
+<div class="card">
+<h3>ここに小見出し</h3>
+<p>ここに本文。</p>
+</div>
+<div class="card">
+<h3>ここに小見出し</h3>
+<p>ここに本文。</p>
+</div>
+</div>
+</section>
+<section id="road">
+<p class="eyebrow">これから</p>
+<h2>これからの見出し</h2>
+<p>ここに本文。</p>
+<ol class="road">
+  <li class="now">
+    <span class="n">1</span>
+    <span><b>Android 版</b><span>ここに説明。</span></span>
+  </li>
+  <li>
+    <span class="n">2</span>
+    <span><b>iOS 版</b><span>ここに説明。</span></span>
+  </li>
+  <li>
+    <span class="n">3</span>
+    <span><b>Windows / Mac</b><span>ここに説明。</span></span>
+  </li>
+</ol>
+<p class="note">ここに、ひとこと。</p>
+</section>
+</main>
+<footer>
+  <div class="footin">
+<span>ここに、この頁が何の頁かを一行で</span>
+<span><a href="/">Sawaya Works</a></span>
+  </div>
+</footer>
+<script>
+/*
+  テロップスタジオの頁を動かすところ。
+
+  **道具の app.js と同じ考え方で作ってある。**
+    ・状態は 1 か所（S）に置いて、書き換えたら draw() で描き直す
+    ・行の一覧と右の画面は、**同じ状態を見ている**。だから片方を直すと両方動く
+    ・**位置は数字で決めない。** つまんで動かした所を、見取り図が追いかける
+
+  道具そのものはこれよりずっと多くのことをするが、
+  「行を直すと画面が変わる」という手ざわりだけは、ここで同じにしてある。
+
+  **その ::: を .md に書かなければ、ここは何もしない。**
+*/
+(function () {
+  'use strict';
+
+  var src = document.getElementById('editor-rows');
+  if (!src) return;
+  var cfg = JSON.parse(src.textContent);
+
+  /* 出す場所。**9か所。** 道具の PosGrid と同じ並び */
+  var POS = [
+    { x: 0.10, y: 0.10, ax: 'left',   ay: 'top'    },
+    { x: 0.50, y: 0.10, ax: 'center', ay: 'top'    },
+    { x: 0.90, y: 0.10, ax: 'right',  ay: 'top'    },
+    { x: 0.10, y: 0.50, ax: 'left',   ay: 'middle' },
+    { x: 0.50, y: 0.50, ax: 'center', ay: 'middle' },
+    { x: 0.90, y: 0.50, ax: 'right',  ay: 'middle' },
+    { x: 0.10, y: 0.91, ax: 'left',   ay: 'bottom' },
+    { x: 0.50, y: 0.91, ax: 'center', ay: 'bottom' },
+    { x: 0.90, y: 0.91, ax: 'right',  ay: 'bottom' }
+  ];
+
+  var SPEAKERS = cfg.speakers;
+  var S = {
+    rows: cfg.rows,
+    sel: cfg.rows.findIndex(function (r) { return r.kind === 'speech' && !r.cut; }),
+    pos: cfg.pos,
+    minGap: 1.0   // これより長い無音を「長い」として色を変える
+  };
+  if (S.sel < 0) S.sel = 0;
+
+  var KIND_NAME = { speech: 'セリフ', gap: '無音', telop: 'テロップ', text: '文字', se: '効果音', bgm: 'BGM' };
+
+  var rowsEl = document.getElementById('rows');
+  var tl = document.getElementById('tl');
+  var stage = document.getElementById('stage');
+  var grid = document.getElementById('posgrid');
+  var stamp = document.getElementById('stamp');
+
+  function el(tag, attrs, kids) {
+    var n = document.createElement(tag);
+    for (var k in attrs) {
+      if (k === 'class') n.className = attrs[k];
+      else if (k === 'style') n.setAttribute('style', attrs[k]);
+      else if (k.slice(0, 2) === 'on') n.addEventListener(k.slice(2), attrs[k]);
+      else n.setAttribute(k, attrs[k]);
+    }
+    (kids || []).forEach(function (c) {
+      if (c) n.appendChild(typeof c === 'string' ? document.createTextNode(c) : c);
+    });
+    return n;
+  }
+
+  /* 切る / 戻す。**消さずに、線を引くだけ。**
+     消すと、どこを切ったのか分からなくなって戻せない */
+  function cutBtn(r, i) {
+    return el('button', {
+      type: 'button',
+      class: 'mini danger' + (r.cut ? ' on' : ''),
+      title: r.cut ? 'カットをやめる' : 'この行を落とす',
+      'aria-pressed': String(!!r.cut),
+      onclick: function (e) { e.stopPropagation(); r.cut = !r.cut; S.sel = i; draw(); }
+    }, ['×']);
+  }
+
+  function drawRows() {
+    rowsEl.textContent = '';
+    S.rows.forEach(function (r, i) {
+      var cls = ['row', r.kind];
+      if (i === S.sel) cls.push('sel');
+      if (r.cut) cls.push('cut');
+      if (r.kind === 'gap' && r.len >= S.minGap) cls.push('long');
+
+      var gut = [
+        el('span', { class: 'grip', 'aria-hidden': 'true' }, ['⣿']),
+        el('span', { class: 'at' }, [r.at || '']),
+        el('span', { class: 'kind ' + r.kind }, [KIND_NAME[r.kind] || r.kind]),
+        el('span', { class: 'bar' })
+      ];
+      if (r.kind === 'speech' && SPEAKERS[r.who]) {
+        gut.push(el('span', { class: 'who' }, [
+          el('i', { style: 'background:' + SPEAKERS[r.who].color }), SPEAKERS[r.who].name
+        ]));
+      }
+
+      var body = [];
+      var tools = [];
+
+      if (r.kind === 'speech') {
+        body.push(el('span', { class: 'txt' }, [r.text]));
+        // 誰が喋ったか。**押すと入れ替わる。字の色もいっしょに変わる**
+        tools.push(el('span', { class: 'sw', role: 'group', 'aria-label': '誰が喋ったか' },
+          SPEAKERS.map(function (s, k) {
+            return el('button', {
+              type: 'button', title: s.name, 'aria-label': s.name,
+              'aria-pressed': String(r.who === k),
+              style: 'background:' + s.color,
+              onclick: function (e) { e.stopPropagation(); r.who = k; S.sel = i; draw(); }
+            });
+          })));
+      } else if (r.kind === 'gap') {
+        // 無音の長さを、そのまま棒の長さで見せる。**数字より速く分かる**
+        body.push(el('span', { class: 'lenbar', style: 'width:' + Math.min(180, 8 + r.len * 26) + 'px' }));
+        body.push(el('span', { class: 'hint' }, ['無音' + (r.cut ? '（カットしています）' : '')]));
+        body.push(el('span', { class: 'hint', style: 'flex:none' }, [r.len.toFixed(1) + ' 秒']));
+      } else if (r.kind === 'telop' || r.kind === 'text') {
+        body.push(el('span', { class: 'txt' }, [r.text]));
+      } else if (r.kind === 'se' || r.kind === 'bgm') {
+        body.push(el('span', { class: 'hint' }, [(r.file || '') + (r.hint ? ' ・ ' + r.hint : '')]));
+      }
+      tools.push(cutBtn(r, i));
+
+      rowsEl.appendChild(el('div', {
+        class: cls.join(' '),
+        onmousedown: function (e) {
+          if (e.target.closest('button')) return;
+          S.sel = i; draw();
+        }
+      }, [el('div', { class: 'gutter' }, gut)].concat(body).concat([el('div', { class: 'tools' }, tools)])));
+    });
+  }
+
+  function drawScreen() {
+    var r = S.rows[S.sel] || S.rows[0];
+    var p = POS[S.pos];
+
+    tl.textContent = r.kind === 'gap' ? '（無音）'
+      : r.kind === 'se' || r.kind === 'bgm' ? '（音）'
+      : (r.text || '');
+    tl.style.color = (r.kind === 'speech' && SPEAKERS[r.who]) ? SPEAKERS[r.who].color : '#ffffff';
+    tl.style.opacity = r.cut ? '0.35' : '1';
+    stamp.textContent = r.at || '';
+
+    // 置いた所。**縦横それぞれ、寄せる向きも合わせて動かす**
+    tl.style.left = (p.x * 100) + '%';
+    tl.style.top = (p.y * 100) + '%';
+    tl.style.bottom = 'auto';
+    tl.style.transform = 'translate(' +
+      (p.ax === 'left' ? '0' : p.ax === 'right' ? '-100%' : '-50%') + ',' +
+      (p.ay === 'top' ? '0' : p.ay === 'bottom' ? '-100%' : '-50%') + ')';
+    tl.style.textAlign = p.ax;
+
+    grid.querySelectorAll('button').forEach(function (b, k) {
+      b.setAttribute('aria-pressed', String(k === S.pos));
+    });
+  }
+
+  function draw() { drawRows(); drawScreen(); }
+
+  POS.forEach(function (p, k) {
+    grid.appendChild(el('button', {
+      type: 'button',
+      'aria-label': '場所 ' + (k + 1),
+      'aria-pressed': String(k === S.pos),
+      onclick: function () { S.pos = k; draw(); }
+    }));
+  });
+
+  /* つまんで動かす。**いちばん近い所へ落ちる。**
+     どこにでも置けるようにすると、次に開いたとき数ピクセルずれて見える */
+  var dragging = false;
+  function pickNearest(cx, cy) {
+    var box = stage.getBoundingClientRect();
+    var x = (cx - box.left) / box.width;
+    var y = (cy - box.top) / box.height;
+    var best = 0, bestD = Infinity;
+    POS.forEach(function (p, k) {
+      var d = (p.x - x) * (p.x - x) + (p.y - y) * (p.y - y);
+      if (d < bestD) { bestD = d; best = k; }
+    });
+    if (best !== S.pos) { S.pos = best; draw(); }
+  }
+  tl.addEventListener('pointerdown', function (e) {
+    dragging = true;
+    tl.classList.add('grabbing');
+    tl.setPointerCapture(e.pointerId);
+    e.preventDefault();
+  });
+  tl.addEventListener('pointermove', function (e) { if (dragging) pickNearest(e.clientX, e.clientY); });
+  tl.addEventListener('pointerup', function () { dragging = false; tl.classList.remove('grabbing'); });
+  tl.addEventListener('pointercancel', function () { dragging = false; tl.classList.remove('grabbing'); });
+  // 指が使えないときのために、矢印でも動かせるようにしておく
+  tl.addEventListener('keydown', function (e) {
+    var d = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -3, ArrowDown: 3 }[e.key];
+    if (d == null) return;
+    e.preventDefault();
+    S.pos = Math.max(0, Math.min(8, S.pos + d));
+    draw();
+  });
+
+  draw();
+})();
+</script>
+</body>
+</html>

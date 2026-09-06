@@ -1,0 +1,629 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>recaday クローズドテスト</title>
+<meta name="description" content="recaday（時刻が焼き込まれた vlog を作る iOS / Android アプリ）のクローズドテストへの参加手順。Google グループに入り、Google Play からインストールします。">
+<meta property="og:title" content="recaday クローズドテスト">
+<meta property="og:description" content="Google グループに入って、Google Play からインストールするだけです。">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://sawayaworks.github.io/assets/recaday-lockup.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/assets/recaday-icon.png">
+<link rel="apple-touch-icon" href="/assets/recaday-icon.png">
+<link rel="canonical" href="https://sawayaworks.github.io/recaday/closed-test/">
+<style>
+  /*
+    色はアプリの src/theme.ts と src/lib/skyTable.ts から取ってきたもの。
+    朝の空（7:00）に固定してあるので、暗い側の組は持たない。
+  */
+  :root {
+    color-scheme: light;
+    --ink: #1E2430;
+    --ink-muted: #46505F;
+    --ink-faint: #6B7688;
+    --sky-fallback: #7097AD;
+    --go-fill: #F2D357;
+    --on-accent: #241F08;
+    /* ガラスの板。theme.ts の glass をそのまま写したもの */
+    --glass-fill: rgba(255, 255, 255, 0.10);
+    --glass-edge: rgba(255, 255, 255, 0.42);
+    --glass-edge-top: rgba(255, 255, 255, 0.92);
+    --glass-edge-bottom: rgba(255, 255, 255, 0.22);
+    --plate-radius: 5px;
+    --ui: -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans",
+          "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Yu Gothic UI", Meiryo, sans-serif;
+  }
+
+
+  /* ============================================================
+     日本語と英語
+
+     **両方を組んでおいて、片方を伏せる。**
+     読み込んでから字を差し替える作りにすると、最初の一瞬だけ
+     もう片方が見える。ここは名前が大きく出る頁なので、それが目立つ。
+
+     どちらを出すかは、この頁のいちばん上の script が
+     組み上がる前に決めている。
+     ============================================================ */
+  /*
+    **出す側ではなく、伏せる側を指定すること。**
+    「全部伏せて、片方だけ display を戻す」と書くと、戻した値が
+    その部品の本来の並べ方（grid など）を上書きしてしまう。
+    実際 .notes li の grid が消えて、番号が字の上に落ちた。
+  */
+  html[data-lang="ja"] [data-l="en"] { display: none !important; }
+  html[data-lang="en"] [data-l="ja"] { display: none !important; }
+
+  /* 手で選び直す口。**端末の言語と読みたい言語は、いつも同じとは限らない** */
+  .lang {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 2;
+    display: flex;
+    gap: 2px;
+    padding: 3px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.30);
+    border: 1px solid rgba(255, 255, 255, 0.62);
+    box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+  }
+  .lang button {
+    appearance: none;
+    border: 0;
+    margin: 0;
+    padding: 5px 11px;
+    border-radius: 999px;
+    background: transparent;
+    color: var(--ink-muted);
+    font: inherit;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    cursor: pointer;
+  }
+  .lang button[aria-pressed="true"] {
+    background: rgba(255, 255, 255, 0.72);
+    color: var(--ink);
+  }
+  .lang button:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+
+  body {
+    margin: 0;
+    min-height: 100svh;
+    background: var(--sky-fallback);
+    color: var(--ink);
+    font-family: var(--ui);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /*
+    空。アプリの SkyBackdrop.tsx の SKSL をそのまま WebGL へ写してある。
+    雲のテクスチャも同じ 1 枚（tools/sky/bake.py が焼いたもの）。
+  */
+  #sky {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    z-index: 0;
+  }
+
+  main {
+    position: relative;
+    z-index: 1;
+  }
+
+  /*
+    名前だけで 1 画面を使う。**組みはインスタの投稿と同じ。**
+
+    ワードマークと record a day は、tools/social/instagram.py の logo_lockup が
+    焼いた 1 枚をそのまま置いている（story-0730.png と同じ組み）。
+    **CSS で組み直さないこと。** あちらは字間を「ロゴのインク幅の 94%」になるまで
+    描いて測って詰め直し、2 段の重心も光学中心へ寄せている。web で近い値を
+    手で入れると、必ずどこかで食い違う。
+
+    大きさは投稿と同じ「短辺の 52%」。1.036 を掛けてあるのは、焼いた 1 枚が
+    光学中心へ寄せるぶんの余白を左右に持っているため（ロゴのインク幅で 52% になる）。
+  */
+  .hero {
+    position: relative;
+    min-height: 100svh;
+  }
+  .lockup {
+    position: absolute;
+    /* 投稿と同じ高さ。ぴったり中央より少し上。下に置くと沈んで見える */
+    top: 47%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 53.9svmin;
+    max-width: 88vw;
+    height: auto;
+    /* 影も投稿と同じ（ぼかし 0.6% / 落とし 0.2% / 濃さ 0.28） */
+    filter: drop-shadow(0 0.2svmin 0.6svmin rgba(0, 0, 0, 0.28));
+  }
+
+  /*
+    下に続きがあるという合図。**名前だけの画面で終わらせないこと。**
+    最初の画面に手順が 1 つも出ないので、これが無いと読み終わったと思われる。
+  */
+  .more {
+    position: absolute;
+    left: 50%;
+    bottom: 22px;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--ink-muted);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .more span { font-size: 15px; line-height: 1; }
+  .more:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; }
+
+  .steps {
+    max-width: 31rem;
+    margin: 0 auto;
+    /* 合図から飛んできた先。上端に張り付かないぶんだけ空ける */
+    padding: clamp(10px, 3svh, 34px) 20px 72px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+
+  ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  /*
+    ガラスの板。塗りは薄く、縁は強く。
+    残す影は内側だけ（上辺に走る細い光と、下辺のわずかな翳り）。
+  */
+  .plate {
+    background: var(--glass-fill);
+    border: 1px solid var(--glass-edge);
+    border-top-color: var(--glass-edge-top);
+    border-bottom-color: var(--glass-edge-bottom);
+    border-radius: var(--plate-radius);
+    box-shadow:
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.72),
+      inset 0 -10px 18px 0 rgba(28, 42, 64, 0.07);
+    /* 板の下は空。透かしたぶんだけ、うしろを少しだけ鈍らせる */
+    backdrop-filter: blur(2px) saturate(1.06);
+    -webkit-backdrop-filter: blur(2px) saturate(1.06);
+  }
+
+  li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 4px 14px;
+    padding: 18px 18px 20px;
+  }
+
+  .step {
+    grid-row: 1 / 3;
+    font-size: 13px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    color: var(--on-accent);
+    background: var(--go-fill);
+    border-radius: 999px;
+    width: 22px;
+    height: 22px;
+    display: grid;
+    place-items: center;
+    margin-top: 1px;
+  }
+
+  li p {
+    grid-column: 2;
+    margin: 0;
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: -0.1px;
+    line-height: 1.72;
+  }
+
+  .act {
+    grid-column: 2;
+    margin-top: 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 11px 18px;
+    border-radius: var(--plate-radius);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -0.1px;
+    text-decoration: none;
+    background: var(--go-fill);
+    color: var(--on-accent);
+    border: 1px solid rgba(255, 255, 255, 0.62);
+    box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.72);
+    transition: transform 90ms ease, filter 90ms ease;
+  }
+  .act:hover { filter: brightness(1.05); }
+  .act:active { transform: translateY(1px); }
+  .act:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+
+
+  /* ============================================================
+     押す場所
+
+     **本物の画面をそのまま置く。** 描き起こした図に一度したが、実物が
+     手に入ったので入れ替えた。押す前に見た絵と、開いた先の絵が同じであること
+     そのものが案内になる。
+
+     こちらで足しているのは金色の枠と番号と矢印だけ。
+     顔写真と連絡先のメールは伏せてある（この頁は誰の手にも渡るため）。
+     ============================================================ */
+  .how {
+    grid-column: 2;
+    margin-top: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .how-lead {
+    margin: 0;
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+    color: var(--ink-muted);
+  }
+
+  .real {
+    position: relative;
+    border: 1px solid rgba(255, 255, 255, 0.62);
+    border-radius: var(--plate-radius);
+    overflow: hidden;
+    background: #FFFFFF;
+    line-height: 0;
+  }
+  .real img { display: block; width: 100%; height: auto; }
+
+  /*
+    押す所を囲む枠。**塗りつぶさないこと。** 下の字が読めなくなると、
+    画面と見比べられなくなる。囲うだけで十分に目立つ。
+  */
+  .ring {
+    position: absolute;
+    border: 2px solid var(--go-fill);
+    border-radius: 4px;
+    box-shadow: 0 0 0 3px rgba(242, 211, 87, 0.34), 0 0 10px rgba(242, 211, 87, 0.5);
+    pointer-events: none;
+  }
+  /*
+    無視してよい所。**金では囲わないこと。** 金は「押す所」の色で、
+    同じ色で囲うと押す所が 2 つあるように見える。灰の破線で「触らない」を出す。
+  */
+  .skip {
+    position: absolute;
+    border: 3px dashed rgba(30, 36, 48, 0.55);
+    border-radius: 5px;
+    background: rgba(30, 36, 48, 0.09);
+    pointer-events: none;
+  }
+  /*
+    札。**枠の線に埋もれさせないこと。**
+    破線の上に小さな札を置いていたので、線と札が同じ濃さで混ざって読めなかった。
+    白い縁で切り離し、字も大きくする。
+  */
+  .skip-tag {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    padding: 5px 13px;
+    border-radius: 999px;
+    background: #1E2430;
+    color: #FFFFFF;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    line-height: 1.25;
+    white-space: nowrap;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.92);
+    pointer-events: none;
+  }
+
+  /* 枠の右上に付ける番号。下の説明の丸と対応する */
+  .spot {
+    position: absolute;
+    transform: translate(-40%, -55%);
+    width: 20px;
+    height: 20px;
+    border-radius: 999px;
+    background: var(--ink);
+    color: #FFFFFF;
+    font-size: 11px;
+    font-weight: 700;
+    display: grid;
+    place-items: center;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    pointer-events: none;
+  }
+  /*
+    押す向きを指す矢印。**番号とは別に置く。**
+    番号は下の説明と突き合わせるためのもので、「ここを押す」とは言っていない。
+    矢印は右下から当てる（指やマウスが来る側から差すと、隠さずに指せる）。
+
+    **字の矢印（↖）を使わないこと。** 書体まかせなので細く、
+    白い画面の上では線が消える。太さを決められる図として描く。
+    白い縁を下に敷いてあるので、濃い所へ重なっても輪郭が残る。
+  */
+  .point {
+    position: absolute;
+    width: 42px;
+    height: 42px;
+    overflow: visible;
+    pointer-events: none;
+  }
+
+  /* 図の下に付ける説明。番号は枠の丸と対応する */
+  .notes {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+  .notes li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 9px;
+    padding: 0;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.65;
+    color: var(--ink);
+  }
+  .notes .n {
+    width: 17px;
+    height: 17px;
+    margin-top: 3px;
+    border-radius: 999px;
+    background: var(--ink);
+    color: #FFFFFF;
+    font-size: 10px;
+    font-weight: 700;
+    display: grid;
+    place-items: center;
+    font-variant-numeric: tabular-nums;
+  }
+  .notes em {
+    font-style: normal;
+    font-weight: 700;
+    background: rgba(255, 255, 255, 0.42);
+    border-radius: 3px;
+    padding: 1px 5px;
+    white-space: nowrap;
+  }
+  .caution {
+    margin: 0;
+    font-size: 11.5px;
+    font-weight: 600;
+    line-height: 1.7;
+    color: var(--ink-muted);
+  }
+  .figure-note {
+    margin: 0;
+    text-align: center;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.7;
+    color: var(--ink-faint);
+  }
+
+  .tag {
+    font-weight: 700;
+    color: var(--ink);
+    /* ハッシュタグと ID は文中で拾えるように、わずかに面を敷く */
+    background: rgba(255, 255, 255, 0.38);
+    border-radius: 3px;
+    padding: 1px 5px;
+    margin: 0 1px;
+    white-space: nowrap;
+  }
+  a.tag { text-decoration: none; }
+  a.tag:hover { background: rgba(255, 255, 255, 0.62); }
+  a.tag:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+
+  @media (max-width: 420px) {
+    .steps { gap: 18px; padding: 14px 14px 48px; }
+    li { padding: 16px 15px 18px; }
+    li p { font-size: 14.5px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .act { transition: none; }
+  }
+</style>
+<script>
+/*
+  どちらの言葉で出すかを、**組み上がる前に**決める。
+  あとから差し替える作りだと、最初の一瞬だけもう片方が見える。
+
+  一度選んだら覚える。**端末の言語と読みたい言語は、いつも同じとは限らない。**
+  貯め場が使えない環境（私用の窓など）でも落ちないように、触るのは try の中。
+*/
+(function () {
+  var saved = null;
+  try { saved = localStorage.getItem('recaday-lang'); } catch (e) { /* 貯め場が無いだけ */ }
+  var lang = saved || ((navigator.language || 'en').toLowerCase().indexOf('ja') === 0 ? 'ja' : 'en');
+  document.documentElement.dataset.lang = lang;
+  document.documentElement.lang = lang;
+})();
+</script>
+</head>
+<body>
+
+<div class="lang" role="group" aria-label="Language">
+  <button type="button" data-set="ja">日本語</button>
+  <button type="button" data-set="en">English</button>
+</div>
+
+<canvas id="sky" data-clouds="/assets/clouds.png" aria-hidden="true"></canvas>
+
+<main>
+  <section class="hero">
+    <img class="lockup" id="lockup" src="/assets/recaday-lockup.png" width="1658" height="536" alt="recaday — record a day" />
+    <a class="more" href="#join">
+      <span data-l="ja">Closed テストへの参加方法</span>
+      <span data-l="en">How to join the closed test</span>
+      <span aria-hidden="true">↓</span>
+    </a>
+  </section>
+
+  <section class="steps" id="join">
+  <ol>
+    <li class="plate">
+      <span class="step">1</span>
+      <p data-l="ja">Google グループに参加してください</p>
+      <p data-l="en">Join the Google Group</p>
+      <a class="act" href="https://groups.google.com/g/recaday-closed-test/"
+         target="_blank" rel="noopener">
+        <span data-l="ja">Google グループに参加</span>
+        <span data-l="en">Join the Google Group</span>
+      </a>
+
+      <div class="how">
+        <p class="how-lead" data-l="ja">押すとこの画面が出ます</p>
+        <p class="how-lead" data-l="en">This is the screen you will see</p>
+        <div class="real">
+          <img id="shot-groups" src="shot-groups.png" width="554" height="460" alt="Google Groups. The join button sits at the top." />
+          <span class="skip" style="left:17.0%;top:30.0%;width:66.0%;height:26.5%"></span>
+          <span class="skip-tag" style="left:50.0%;top:30.0%" data-l="ja">ここは無視</span>
+          <span class="skip-tag" style="left:50.0%;top:30.0%" data-l="en">Ignore this</span>
+          <span class="ring" style="left:46.4%;top:13.0%;width:27.5%;height:7.2%"></span>
+          <span class="spot" style="left:73.9%;top:13.0%">1</span>
+          <svg class="point" viewBox="0 0 40 40" aria-hidden="true" style="left:73.5%;top:20.5%">
+            <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <g stroke="#FFFFFF" stroke-width="11" opacity="0.95">
+                <path d="M34 34 L11 11" /><path d="M8 24 L8 8 L24 8" />
+              </g>
+              <g stroke="#1E2430" stroke-width="5.5">
+                <path d="M34 34 L11 11" /><path d="M8 24 L8 8 L24 8" />
+              </g>
+            </g>
+          </svg>
+        </div>
+        <ul class="notes">
+          <li data-l="ja"><span class="n">1</span><span>「このコンテンツにアクセスする権限がありません」は<b>無視して</b>、
+            上の <em>グループに参加</em> を押してください。</span></li>
+          <li data-l="en"><span class="n">1</span><span><b>Ignore</b> the message in the middle of the page
+            and press <em>Join group</em> at the top.</span></li>
+        </ul>
+        <p class="caution" data-l="en">The screenshot is in Japanese. Google Groups follows your own
+          account's language, so your wording will differ — <b>the button is in the same place.</b></p>
+      </div>
+    </li>
+
+    <li class="plate">
+      <span class="step">2</span>
+      <p data-l="ja">下記 URL より Google Play にアクセスしてインストール</p>
+      <p data-l="en">Open Google Play from the link below and install</p>
+      <a class="act" href="https://play.google.com/apps/testing/com.recaday.app"
+         target="_blank" rel="noopener">
+        <span data-l="ja">Google Play でテストに参加</span>
+        <span data-l="en">Opt in on Google Play</span>
+      </a>
+
+      <div class="how">
+        <p class="how-lead" data-l="ja">押すとこの画面が出ます</p>
+        <p class="how-lead" data-l="en">This is the screen you will see</p>
+        <div class="real">
+          <img id="shot-play" src="shot-play.png" width="861" height="520" alt="The Google Play testing page. Become a tester sits near the bottom." />
+          <span class="ring" style="left:42.3%;top:76.3%;width:17.2%;height:7.9%"></span>
+          <span class="spot" style="left:59.5%;top:76.3%">1</span>
+          <svg class="point" viewBox="0 0 40 40" aria-hidden="true" style="left:60.0%;top:85.0%">
+            <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <g stroke="#FFFFFF" stroke-width="11" opacity="0.95">
+                <path d="M34 34 L11 11" /><path d="M8 24 L8 8 L24 8" />
+              </g>
+              <g stroke="#1E2430" stroke-width="5.5">
+                <path d="M34 34 L11 11" /><path d="M8 24 L8 8 L24 8" />
+              </g>
+            </g>
+          </svg>
+        </div>
+        <ul class="notes">
+          <li data-l="ja"><span class="n">1</span><span><em>Become a tester</em> を押します。</span></li>
+          <li data-l="ja"><span class="n">2</span><span>表示が <em>You are a tester.</em> に変わったら、
+            そこに出る <em>download it on Google Play</em> からインストールします。</span></li>
+          <li data-l="en"><span class="n">1</span><span>Press <em>Become a tester</em>.</span></li>
+          <li data-l="en"><span class="n">2</span><span>Once it says <em>You are a tester.</em>, install from the
+            <em>download it on Google Play</em> link that appears.</span></li>
+        </ul>
+        <p class="caution" data-l="ja">このページは<b>英語で出ます</b>（日本語には切り替わりません）。
+          ストアで「アイテムが見つかりません」と出たときは、
+          数分おいてから開き直してください。</p>
+        <p class="caution" data-l="en">If the store says the item cannot be found,
+          wait a few minutes and open it again.</p>
+      </div>
+    </li>
+
+    <li class="plate">
+      <span class="step">3</span>
+      <p data-l="ja">SNS などに共有するときは <span class="tag">#recaday</span> というハッシュタグと
+        Instagram アカウント <a class="tag" href="https://www.instagram.com/recaday_app/"
+        target="_blank" rel="noopener">@recaday_app</a>
+        へのリプライもしてくれると嬉しいです！</p>
+      <p data-l="en">When you post about it, we would love a <span class="tag">#recaday</span> and a reply to
+        <a class="tag" href="https://www.instagram.com/recaday_app/"
+        target="_blank" rel="noopener">@recaday_app</a> on Instagram!</p>
+    </li>
+  </ol>
+
+  <p class="figure-note" data-l="ja">※ 枠の中は実際の画面です。金色の枠・番号・矢印だけ足しています。<br>
+    顔写真と連絡先のメールは伏せてあります。</p>
+  <p class="figure-note" data-l="en">The screens above are real. Only the gold outline, numbers and arrows
+    were added.<br>The profile picture and contact email are blurred.</p>
+  </section>
+</main>
+
+<script src="/assets/sky.js" defer></script>
+
+<script>
+/* 言葉の切り替え。押したら覚える */
+(function () {
+  var TITLE = { ja: 'recaday クローズドテスト', en: 'recaday closed test' };
+  var buttons = document.querySelectorAll('.lang button');
+  function apply(lang) {
+    document.documentElement.dataset.lang = lang;
+    document.documentElement.lang = lang;
+    document.title = TITLE[lang];
+    buttons.forEach(function (b) {
+      b.setAttribute('aria-pressed', String(b.dataset.set === lang));
+    });
+  }
+  buttons.forEach(function (b) {
+    b.addEventListener('click', function () {
+      apply(b.dataset.set);
+      try { localStorage.setItem('recaday-lang', b.dataset.set); } catch (e) { /* 覚えないだけ */ }
+    });
+  });
+  apply(document.documentElement.dataset.lang);
+})();
+</script>
+
+</body>
+</html>

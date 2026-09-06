@@ -1,0 +1,11 @@
+{
+  "name": "sawayaworks-site",
+  "private": true,
+  "type": "module",
+  "description": "公開ページ。content/ の .md から頁を作る。",
+  "scripts": {
+    "build": "node tools/build.mjs",
+    "watch": "node tools/build.mjs --watch",
+    "serve": "node tools/serve.mjs"
+  }
+}

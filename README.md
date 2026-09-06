@@ -1,0 +1,67 @@
+# sawayaworks.github.io
+
+公開ページ。`content/` の `.md` を書くと、頁ができます。
+
+```
+node tools/build.mjs            作り直す
+node tools/build.mjs --watch    直したら、そのつど作り直す
+node tools/serve.mjs            http://127.0.0.1:5199/ で見る
+```
+
+**書き方は [content/_書き方.md](content/_書き方.md) にあります。**
+
+---
+
+## 頁
+
+| `/` | Sawaya Works | `content/index.md` ／ テーマ `works` |
+| `/recaday/` | recaday の紹介 | `content/recaday/index.md` ／ テーマ `recaday` |
+| `/recaday/closed-test/` | クローズドテストの案内 | **手で書いた頁**（作り直しの対象外） |
+| `/telop-studio/` | テロップスタジオの紹介 | `content/telop-studio/index.md` ／ テーマ `telop` |
+
+`/recaday/closed-test/` だけは `content/` を持ちません。
+[recaday の側](https://github.com/SawayaWorks/recaday) の `store/closed-test.html` を
+そのまま持ってきたもので、**中身は変えていません**。変えたのは 3 つだけです。
+
+1. `doctype` / `charset` / `viewport` を足した（**無いと携帯で 980px 幅に縮んで出る**）
+2. 絵を base64 から実ファイルへ（581KB → 23KB）
+3. 空を `/assets/sky.js` の読み込みに
+
+---
+
+## 並び
+
+```
+content/        ← 中身（.md）。**ここだけ書けばよい**
+themes/         ← 見た目と部品
+  recaday/  telop/  works/
+    style.css     見た目。**頁の中に丸ごと埋まる**
+    page.js       動くところ。同上
+    theme.mjs     頁の外枠と、::: で呼べる部品
+  _lib.mjs      テーマが共通で使う小道具
+tools/
+  build.mjs     .md → .html
+  md.mjs        小さな Markdown
+  serve.mjs     手元で見るためのサーバ
+assets/         ← 頁をまたいで使う重いもの
+  sky.js        うしろの空（recaday アプリの SKSL を WebGL へ写したもの）
+  clouds.png    その雲（tools/sky/bake.py が焼いた 1 枚）
+  fonts/        時刻の書体。**使う字だけに絞ってある**（1〜5KB）
+site.json       ← site の名前と URL。**名前を変えるときはここだけ**
+```
+
+`content/` の並びが、そのまま URL になります。`_` で始まる `.md` は頁になりません。
+
+**css も js も、頁の中に埋めています。** 頁は数枚しかなく、どれも 1 回読んで終わりなので、
+別ファイルにして往復を増やすより速いためです。共有するのは重いものだけで、それが `/assets/`。
+
+---
+
+## 素材の出どころ
+
+| 空・雲・ロゴ・時計の書体 | [recaday](https://github.com/SawayaWorks/recaday) から |
+| ロゴの書体（テロップスタジオ） | 851ゴチカクット（作者: 8:51:22 pm）。改造・再配布可・商用可 |
+| 時計の書体 | どれも SIL OFL。ライセンス文は `assets/fonts/OFL-*.txt` |
+
+書体は `.md` に出てくる字だけに絞ってあります（`pyftsubset`）。
+字を増やしたら、絞り直してください。
