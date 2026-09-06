@@ -46,8 +46,10 @@ WEIGHT = 700           # 本文より太く。細い字は 16px で消える
 SIDE = 1000            # 図の中の一辺
 RADIUS = 0.22          # 角の丸み（一辺に対する比）
 LETTER_H = 0.52        # 字の高さ（一辺に対する比）
-GROUND = "#1A1A1A"     # 地（themes/works/style.css の --ink）
-INK = "#FAF9F7"        # 字（同 --paper）
+# **themes/works/style.css の --ink / --paper と同じ値にすること。**
+# ここだけ古い色のままだと、タブのアイコンと頁のロゴで黒が食い違う
+GROUND = "#1A1A18"     # 地（--ink。ロゴと同じ色）
+INK = "#F7F7F6"        # 字（--paper）
 PNG_SIDE = 180         # ホーム画面に置いたときの大きさ
 
 
