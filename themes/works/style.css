@@ -90,8 +90,19 @@ h1{font-size:clamp(24px,5vw,36px);line-height:1.5;font-weight:800;
 h2{font-size:clamp(17px,2.6vw,21px);line-height:1.6;font-weight:800;
    letter-spacing:-.01em;margin:0 0 12px;text-wrap:balance}
 h3{font-size:15px;font-weight:700;margin:0 0 4px}
-p{margin:0 auto 16px;max-width:46ch}
-p:last-child{margin-bottom:0}
+/*
+  **名前の付いていない段落だけに掛けること。**
+
+  ここを素の p にしていたせいで、.logo と .eyebrow が左へずれた（実測 13px と 99px）。
+  どちらも <p> なので max-width:46ch が効いて箱が狭くなり、そのうえで
+  クラス側に margin:0 … と書いたぶん、**auto の左右余白まで打ち消していた。**
+
+  名前を付けた段落（.logo / .eyebrow / .mark / .note）は、
+  それぞれ自分の幅と余白を持っている。ここから外しておけば、
+  クラス側で margin を書いても中心がずれない。
+*/
+p:not([class]){margin:0 auto 16px;max-width:46ch}
+p:not([class]):last-child{margin-bottom:0}
 a{color:var(--ink)}
 strong{font-weight:700}
 hr{border:0;border-top:1px solid var(--line);margin:34px 0}
@@ -107,10 +118,7 @@ hr{border:0;border-top:1px solid var(--line);margin:34px 0}
    **小さくしすぎると、ただの見出しに見える。**
    横に長い組み（比 8:1）なので、幅で 420px あたりまで取って、
    ようやく「ロゴが置いてある」と読める。 */
-/* **段落の決まりから外すこと。** .logo も <p> なので、放っておくと
-   p{margin:0 auto;max-width:46ch} が効く。そこへ margin を 0 で書くと、
-   **auto の左右余白まで打ち消して**、46ch の狭い箱ごと左へ寄る（実測 13px ずれていた）。 */
-.logo{margin:0 auto 34px;max-width:none}
+.logo{margin:0 auto 34px}
 .logo svg{
   display:block;margin:0 auto;
   width:clamp(258px,58vw,420px);height:auto;
