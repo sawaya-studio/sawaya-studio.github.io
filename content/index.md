@@ -29,9 +29,10 @@ appleIcon: /assets/sawaya-studio-icon.png
 ::: logo
 :::
 
-# 生活をちょっと便利でおしゃれでたのしく
-おしゃれでたのしく
+## 生活をちょっとおしゃれでたのしく
 
+ちょっとだけおしゃれに</br>
+ちょっとだけたのしく
 
 
 :::
@@ -42,8 +43,8 @@ appleIcon: /assets/sawaya-studio-icon.png
 <!-- [ 名前, 行き先, 顔, 走る場所 ]  顔は recaday / telop / plain -->
 ::: shelf
 [
-  ["recaday", "/recaday/closed-test/", "recaday", "iOS / Android"],
-  ["テロップスタジオ", "/telop-studio/", "telop", "Android → iOS → PC"]
+  ["recaday", "/recaday/closed-test/", "recaday", "Android (iOS 対応予定)"],
+  ["テロップスタジオ", "/telop-studio/", "telop", "未リリース (iOS / Android 対応予定)"]
 ]
 :::
 

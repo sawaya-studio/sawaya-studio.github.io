@@ -309,4 +309,12 @@ if (process.argv.includes('--watch')) {
     timer = setTimeout(() => { console.log('---'); buildAll(); }, 120);
   };
   for (const d of [CONTENT, THEMES]) fs.watch(d, { recursive: true }, bump);
+  /*
+    **site.json も見ること。** site の名前を変えたのに頁が変わらない、が起きる。
+    ファイルを名指しで見ると、エディタが「新しく作って置き換える」保存をしたときに
+    見失うので、**入れ物のほうを見て名前で絞る。**
+  */
+  fs.watch(ROOT, { recursive: false }, (_, name) => {
+    if (name === 'site.json') bump();
+  });
 }
