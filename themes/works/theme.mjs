@@ -8,6 +8,8 @@
 import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { esc, unwrapP, classifyList, head } from '../_lib.mjs';
+// 日本語の字詰め。**約物は枠の半分しか墨が無い**ので、そこを詰める
+import { kernText } from '../../tools/kerning.mjs';
 
 /*
   札の顔。
@@ -87,6 +89,30 @@ ${js ? `<script src="${js}" defer></script>` : ''}
       const p = fileURLToPath(new URL('../../assets/sawaya-studio.svg', import.meta.url));
       return `<p class="logo">${fs.readFileSync(p, 'utf8').trim()}</p>`;
     },
+
+    /*
+      キャッチコピー。**字詰めは自動でやる。**
+
+      日本語の約物（。、「」（）・）は、四角い枠の中に半分しか墨が無い。
+      そのまま並べると、そこだけ穴が空いて見える。
+      どこをどれだけ詰めるかは tools/kerning.mjs にある。
+
+      **書くのは字だけでよい。** 行を分けたいところで改行する。
+        ::: catch
+        ちょっとだけおしゃれに
+        ちょっとだけたのしく
+        :::
+
+      as= で見出しの段を選べる（既定は h1。頁に見出しが 1 つ要るので）。
+      **中で Markdown は効かない。** 1 字ずつ組み直すので、字だけを渡すこと。
+    */
+    catch: ({ attrs, raw }) => {
+      const tag = /^h[1-6]$/.test(attrs.as || '') ? attrs.as : (attrs.as === 'p' ? 'p' : 'h1');
+      return `<${tag} class="catch">${kernText(raw)}</${tag}>`;
+    },
+
+    /* キャッチの下に置く一行。**同じ字詰めを掛ける** */
+    lead: ({ raw }) => `<p class="lead">${kernText(raw)}</p>`,
 
     mark:    ({ inner }) => `<p class="mark">${unwrapP(inner)}</p>`,
     eyebrow: ({ inner }) => `<p class="eyebrow">${unwrapP(inner)}</p>`,

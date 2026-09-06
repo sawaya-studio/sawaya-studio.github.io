@@ -30,11 +30,16 @@ appleIcon: /assets/sawaya-studio-icon.png
 :::
 
 
-## ちょっとだけおしゃれに
+<!-- キャッチコピー。**字詰めは自動で入ります**（約物と、和文と欧文のあいだ）。
+     行を分けたいところで改行するだけ。中で Markdown は効きません -->
+::: catch
+ちょっとだけおしゃれに
+ちょっとだけたのしく
+:::
 
-## ちょっとだけたのしく
-
+::: lead
 かんたんに生活を彩るアプリを作っています
+:::
 
 
 :::
@@ -73,5 +78,5 @@ appleIcon: /assets/sawaya-studio-icon.png
 
 ::: footer
 <span>{{site.name}}</span>
-<span>ここに、ひとこと</span>
+<span>あなたの生活によりそう</span>
 :::

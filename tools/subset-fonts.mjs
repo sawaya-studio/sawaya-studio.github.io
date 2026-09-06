@@ -177,7 +177,9 @@ for (const job of JOBS) {
       `--text=${text}`,
       `--output-file=${out}`,
       '--flavor=woff2',
-      '--layout-features=',
+      // **kern を捨てないこと。** 落とすと、書体が持っている字組みが消えて
+      // 「A」と「V」のような対が離れたままになる。palt は持っている書体だけ効く
+      '--layout-features=kern,palt,liga,clig',
       '--no-hinting',
     ], { stdio: ['ignore', 'ignore', 'pipe'] });
   } catch (e) {

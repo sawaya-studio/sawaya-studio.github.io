@@ -140,6 +140,27 @@ hr{border:0;border-top:1px solid var(--line);margin:34px 0}
 
 .note{font-size:12.5px;line-height:1.85;color:var(--sub)}
 
+/* ---------- キャッチコピー ---------- */
+/* **1 つの塊にすること。** 行ごとに見出しを分けると、行間ではなく
+   見出しどうしの余白が入って、2 つの別の文に見える。
+   字詰めは tools/kerning.mjs が 1 字ずつ入れているので、ここでは触らない。 */
+.catch{
+  margin:0 auto 16px;max-width:var(--col);
+  font-size:clamp(19px,3.6vw,25px);
+  font-weight:800;
+  line-height:1.95;
+  letter-spacing:.03em;
+  text-wrap:balance;
+}
+/* その下の一行。**キャッチより弱く。** 主役は上 */
+.lead{
+  margin:0 auto;max-width:var(--col);
+  font-size:14px;
+  line-height:1.95;
+  letter-spacing:.02em;
+  color:var(--sub);
+}
+
 /* ============================================================
    棚。**札そのものが、その道具の顔。**
    ============================================================ */
