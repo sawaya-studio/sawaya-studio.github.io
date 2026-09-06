@@ -103,12 +103,12 @@
      数字とコロンと AM/PM だけに絞って置いてある**（それぞれ 1〜2KB）。
      どれも SIL OFL。ライセンス文は /assets/fonts/ に置いてある。
      ============================================================ */
-  @font-face { font-family: "Clock Bold";    src: url("/assets/fonts/JetBrainsMono-ExtraBold.woff2") format("woff2"); font-display: swap; }
-  @font-face { font-family: "Clock Thin";    src: url("/assets/fonts/IBMPlexMono-Light.woff2")       format("woff2"); font-display: swap; }
-  @font-face { font-family: "Clock Retro";   src: url("/assets/fonts/SpaceMono-Bold.woff2")          format("woff2"); font-display: swap; }
-  @font-face { font-family: "Clock Digital"; src: url("/assets/fonts/ShareTechMono-Regular.woff2")   format("woff2"); font-display: swap; }
-  @font-face { font-family: "Clock Serif";   src: url("/assets/fonts/CutiveMono-Regular.woff2")      format("woff2"); font-display: swap; }
-  @font-face { font-family: "Cap Round";     src: url("/assets/fonts/MPLUS1p-Bold.woff2")            format("woff2"); font-display: swap; }
+  @font-face { font-family: "Clock Bold";    src: url("fonts/JetBrainsMono-ExtraBold.woff2") format("woff2"); font-display: swap; }
+  @font-face { font-family: "Clock Thin";    src: url("fonts/IBMPlexMono-Light.woff2")       format("woff2"); font-display: swap; }
+  @font-face { font-family: "Clock Retro";   src: url("fonts/SpaceMono-Bold.woff2")          format("woff2"); font-display: swap; }
+  @font-face { font-family: "Clock Digital"; src: url("fonts/ShareTechMono-Regular.woff2")   format("woff2"); font-display: swap; }
+  @font-face { font-family: "Clock Serif";   src: url("fonts/CutiveMono-Regular.woff2")      format("woff2"); font-display: swap; }
+  @font-face { font-family: "Cap Round";     src: url("fonts/MPLUS1p-Bold.woff2")            format("woff2"); font-display: swap; }
 
   /* ---------- 名前だけで 1 画面 ---------- */
   /*

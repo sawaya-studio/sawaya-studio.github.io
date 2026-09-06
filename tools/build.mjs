@@ -25,7 +25,6 @@
 
   style.css と page.js は、**テーマごとに 1 本ずつ /assets/ へ書き出す**
   （assets/recaday.css など）。頁はそれを読むだけ。
-  名前のうしろに付く ?v= は中身から作った印で、**直したのに古いものが出る**のを防ぐ。
 
   page.js は、中身が注記だけのときは読みこまない（空のファイルを取りに行かせない）。
 
@@ -37,8 +36,9 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { createHash } from 'node:crypto';
+
 import { render } from './md.mjs';
+import { charsOf } from './pagetext.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const CONTENT = path.join(ROOT, 'content');
@@ -83,10 +83,6 @@ function frontMatter(src) {
 
 /* ---------- 走らせる ---------- */
 
-/** 中身から作る短い印。**直したのに古いものが出る**のを防ぐためだけのもの */
-function stamp(text) {
-  return createHash('sha1').update(text).digest('hex').slice(0, 8);
-}
 
 /** 注記と空白しか無いか（空の js を読みこませないため） */
 function isEmptyJs(js) {
@@ -101,7 +97,18 @@ async function loadTheme(name) {
   const read = (f) => (fs.existsSync(path.join(dir, f)) ? fs.readFileSync(path.join(dir, f), 'utf8') : '');
 
   // テーマの見た目と動きは、**頁に埋めずに /assets/ へ 1 本ずつ書き出す**
-  const css = read('style.css');
+  /*
+    書くときは根から（/assets/fonts/… ）。出すときは、**その css の場所からの道**に直す。
+
+    **css の中の道は、頁からではなく css の置き場所から数えられる。**
+    css は assets/ に置くので、/assets/fonts/x は fonts/x になる。
+    根のままにしておくと、頁をそのまま開いた（file://）ときにドライブの根を
+    見にいって、**書体がぜんぶ system のゴシックに落ちる**（黙って起こる）。
+    `url(#…)` は頁の中の図を指しているので、ここを通らない（引用符が無い）。
+  */
+  const css = read('style.css')
+    .replace(/(url\(")\/assets\//g, '$1')
+    .replace(/(url\(")\/(?!\/)/g, '$1../');
   const js = read('page.js');
   fs.mkdirSync(path.join(ROOT, 'assets'), { recursive: true });
   fs.writeFileSync(path.join(ROOT, `assets/${name}.css`), css);
@@ -113,11 +120,21 @@ async function loadTheme(name) {
   if (empty) { if (fs.existsSync(jsPath)) fs.rmSync(jsPath); }
   else fs.writeFileSync(jsPath, js);
 
+  /*
+    **名前のうしろに ?v= を付けないこと。**
+
+    直したのに古いものが出るのを防げるが、頁をそのまま開いた（file://）ときに
+    問い合わせの付いた道を読めない環境がある。そこで読めないと css がまるごと
+    落ちて、**頁が素のまま**になる。得より損のほうが大きい。
+
+    手元で見るあいだは tools/serve.mjs が「貯めるな」と言っているので困らない。
+    公開したあと古いものが出たときは、Ctrl+Shift+R で読み直せばよい。
+  */
   return {
     ...mod.default,
     name,
-    css: `/assets/${name}.css?v=${stamp(css)}`,
-    js: empty ? '' : `/assets/${name}.js?v=${stamp(js)}`,
+    css: `/assets/${name}.css`,
+    js: empty ? '' : `/assets/${name}.js`,
   };
 }
 
@@ -191,8 +208,57 @@ async function buildAll() {
     console.log(`  ${r.outRel.padEnd(34)} ${(r.bytes / 1024).toFixed(1)} KB`);
   }
   console.log(`${made.length} 枚`);
+  checkLinks(made);
   checkFonts();
   return made;
+}
+
+/*
+  指した先が本当にあるか数える。
+  ==========================================================================
+  **書体や絵が見つからないことは、黙って起こる。**
+  ブラウザは何も言わずに system の書体へ落とすし、空は雲なしで描かれる。
+  一度それで気づけなかったので（css を外へ出したとき、中の道を直し忘れた）、
+  作り直すたびにここで数える。
+
+  見るのは、頁の src / href と、css の中の url("…")。
+  外を指すもの（https: mailto: data: #…）は数えない。
+*/
+const HAND_MADE = ['recaday/closed-test/index.html'];   // 手で書いた頁も見る
+
+function checkLinks(made) {
+  const bad = [];
+
+  const look = (file, text, re) => {
+    const dir = path.dirname(path.join(ROOT, file));
+    for (const m of text.matchAll(re)) {
+      const href = m[1].split(/[?#]/)[0];
+      if (!href || /^(https?:|mailto:|data:|#|\/\/)/.test(href)) continue;
+      /*
+        **根から書いた道が残っていたら、それ自体が間違い。**
+        HTTP では通ってしまうので「ファイルはある」では見つけられない。
+        頁をそのまま開いた（file://）ときだけ壊れて、しかも黙って壊れる。
+      */
+      if (href.startsWith('/')) { bad.push(`${file} → ${m[1]}（根から書いた道が残っている）`); continue; }
+      if (!fs.existsSync(path.resolve(dir, href))) bad.push(`${file} → ${m[1]}（そこに無い）`);
+    }
+  };
+
+  for (const f of [...made.map((r) => r.outRel), ...HAND_MADE]) {
+    const p = path.join(ROOT, f);
+    if (!fs.existsSync(p)) continue;
+    look(f, fs.readFileSync(p, 'utf8'), /\s(?:src|href)="([^"]*)"/g);
+  }
+  for (const f of fs.readdirSync(path.join(ROOT, 'assets')).filter((n) => n.endsWith('.css'))) {
+    look(`assets/${f}`, fs.readFileSync(path.join(ROOT, 'assets', f), 'utf8'), /url\("([^"]*)"\)/g);
+  }
+
+  if (bad.length) {
+    console.log(`\n× 指した先が無いものが ${bad.length} 件あります:`);
+    for (const b of bad) console.log(`    ${b}`);
+    console.log('  **黙って起こります。**書体は system のものに落ち、絵は出ません。');
+    process.exitCode = 1;
+  }
 }
 
 /*
@@ -202,29 +268,33 @@ async function buildAll() {
   **見出しに新しい字を足すと、そこだけ別の書体で出る。**
   黙って起こると気づけないので、作り直すたびにここで数える。
 */
-const FONT_CHECKS = [
-  { page: 'telop-studio/index.html', chars: 'assets/fonts/RocknRollOne-Regular.chars.txt', font: 'RocknRoll One' },
-];
-
 function checkFonts() {
-  for (const c of FONT_CHECKS) {
-    const page = path.join(ROOT, c.page);
-    const list = path.join(ROOT, c.chars);
-    if (!fs.existsSync(page) || !fs.existsSync(list)) continue;
+  const manifest = path.join(ROOT, 'assets/fonts/_subsets.json');
+  if (!fs.existsSync(manifest)) return;
+
+  let told = false;
+  for (const job of JSON.parse(fs.readFileSync(manifest, 'utf8'))) {
+    const list = path.join(ROOT, job.chars);
+    if (!fs.existsSync(list)) continue;
     const have = new Set(fs.readFileSync(list, 'utf8'));
-    const html = fs.readFileSync(page, 'utf8')
-      .replace(/<style[\s\S]*?<\/style>/gi, ' ')
-      .replace(/<script[\s\S]*?<\/script>/gi, ' ')
-      .replace(/<!--[\s\S]*?-->/g, ' ')
-      .replace(/<[^>]+>/g, ' ')
-      .replace(/&[a-z]+;|&#\d+;/gi, ' ');
+
     const missing = new Set();
-    for (const ch of html) if (!/\s/.test(ch) && !have.has(ch)) missing.add(ch);
-    if (missing.size) {
-      console.log(`\n! ${c.font} に無い字が ${missing.size} 個あります: ${[...missing].join('')}`);
-      console.log('  そこだけ別の書体で出ます。絞り直してください:');
-      console.log('    node tools/subset-fonts.mjs');
+    for (const rel of job.pages) {
+      const p = path.join(ROOT, rel);
+      if (!fs.existsSync(p)) continue;
+      // **絞ったときと同じ拾い方をする**（tools/pagetext.mjs の 1 本を共有）
+      for (const ch of charsOf(fs.readFileSync(p, 'utf8'), job)) {
+        if (!have.has(ch)) missing.add(ch);
+      }
     }
+    if (missing.size) {
+      console.log(`\n! ${job.name} に無い字が ${missing.size} 個あります: ${[...missing].join('')}`);
+      told = true;
+    }
+  }
+  if (told) {
+    console.log('  **そこだけ別の書体で出ます**（黙って起こります）。絞り直してください:');
+    console.log('    node tools/subset-fonts.mjs');
   }
 }
 

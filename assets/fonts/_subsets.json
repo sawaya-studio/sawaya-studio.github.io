@@ -1,0 +1,67 @@
+[
+  {
+    "name": "RocknRoll One",
+    "chars": "assets/fonts/RocknRollOne-Regular.chars.txt",
+    "pages": [
+      "telop-studio/index.html"
+    ],
+    "classes": null,
+    "withJson": false
+  },
+  {
+    "name": "M PLUS 1p",
+    "chars": "assets/fonts/MPLUS1p-Bold.chars.txt",
+    "pages": [
+      "recaday/index.html"
+    ],
+    "classes": null,
+    "withJson": true
+  },
+  {
+    "name": "851ゴチカクット",
+    "chars": "assets/fonts/851Gkktt-logo.chars.txt",
+    "pages": [
+      "telop-studio/index.html",
+      "index.html"
+    ],
+    "classes": [
+      "brand"
+    ],
+    "withJson": false
+  },
+  {
+    "name": "JetBrains Mono",
+    "chars": "assets/fonts/JetBrainsMono-ExtraBold.chars.txt",
+    "pages": [],
+    "classes": null,
+    "withJson": false
+  },
+  {
+    "name": "IBM Plex Mono",
+    "chars": "assets/fonts/IBMPlexMono-Light.chars.txt",
+    "pages": [],
+    "classes": null,
+    "withJson": false
+  },
+  {
+    "name": "Space Mono",
+    "chars": "assets/fonts/SpaceMono-Bold.chars.txt",
+    "pages": [],
+    "classes": null,
+    "withJson": false
+  },
+  {
+    "name": "Share Tech Mono",
+    "chars": "assets/fonts/ShareTechMono-Regular.chars.txt",
+    "pages": [],
+    "classes": null,
+    "withJson": false
+  },
+  {
+    "name": "Cutive Mono",
+    "chars": "assets/fonts/CutiveMono-Regular.chars.txt",
+    "pages": [],
+    "classes": null,
+    "withJson": false
+  }
+]

@@ -88,7 +88,7 @@
    字を足したら絞り直すこと。build が足りない字を教えてくれる。 */
 @font-face{
   font-family:"RocknRoll One";
-  src:url("/assets/fonts/RocknRollOne-Regular.woff2") format("woff2");
+  src:url("fonts/RocknRollOne-Regular.woff2") format("woff2");
   font-display:swap;
 }
 /* 看板の書体。**851ゴチカクット**（改造・再配布可・商用可）。
@@ -96,7 +96,7 @@
    形が勝って読みにくい。ロゴだけ。 */
 @font-face{
   font-family:"Telop Logo";
-  src:url("/assets/fonts/851Gkktt-logo.woff2") format("woff2");
+  src:url("fonts/851Gkktt-logo.woff2") format("woff2");
   font-display:swap;
 }
 

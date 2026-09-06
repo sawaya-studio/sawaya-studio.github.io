@@ -21,6 +21,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
+import { charsOf } from './pagetext.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -32,26 +33,65 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
   pages … どの頁の字を拾うか
   extra … 頁に出てこなくても必ず入れる字
 */
+const ASCII = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+const SOLOG = 'E:/claude_workspace/solog/assets/fonts';
+
 const JOBS = [
   {
     name: 'RocknRoll One',
     from: 'E:/claude_workspace/plot-studio/node_modules/@fontsource/rocknroll-one/files/rocknroll-one-japanese-400-normal.woff2',
     to: 'assets/fonts/RocknRollOne-Regular.woff2',
     pages: ['telop-studio/index.html'],
-    // 章の丸に入る数字と矢印、英字と数字ひとそろい
-    extra: '0123456789→ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz・',
+    // 章の丸に入る数字と矢印
+    extra: ASCII + '→・',
   },
-];
+  {
+    /*
+      recaday のキャプションの書体。**時刻の「丸ゴシック」もこれ。**
 
-/** 頁から、目に見える字だけを取り出す（style と script の中は数えない） */
-function visibleText(html) {
-  return html
-    .replace(/<style[\s\S]*?<\/style>/gi, ' ')
-    .replace(/<script[\s\S]*?<\/script>/gi, ' ')
-    .replace(/<!--[\s\S]*?-->/g, ' ')
-    .replace(/<[^>]+>/g, ' ')
-    .replace(/&[a-z]+;|&#\d+;/gi, ' ');
-}
+      キャプションは頁に書いた字がそのまま出るので、**頁ごと拾う。**
+      ::: player が置く JSON の中の字も出るが、そこは `<script type="application/json">`
+      なので、visibleText では拾えない。**だから JSON も足して数える。**
+    */
+    name: 'M PLUS 1p',
+    from: `${SOLOG}/MPLUS1p-Bold.ttf`,
+    to: 'assets/fonts/MPLUS1p-Bold.woff2',
+    pages: ['recaday/index.html'],
+    withJson: true,
+    extra: ASCII + ':',
+  },
+  {
+    /*
+      看板の書体（851ゴチカクット）。**看板に出る字だけ。**
+      頁ぜんぶを拾うと、本文の字まで入って重くなる（本文には使わない書体）。
+      だから class="brand" の中だけを見る。
+    */
+    name: '851ゴチカクット',
+    from: 'E:/claude_workspace/plot-studio/mobile/assets/fonts/851Gkktt.ttf',
+    to: 'assets/fonts/851Gkktt-logo.woff2',
+    pages: ['telop-studio/index.html', 'index.html'],
+    classes: ['brand'],
+    extra: '',
+  },
+  /*
+    時刻の書体（丸ゴシック以外の 5 つ）。
+    **数字とコロンと AM/PM しか出ない**ので、頁を見に行く必要がない。
+    アプリ側もそう決めてある（時刻が受け持つのは数字とコロンと AM/PM だけ）。
+  */
+  ...[
+    ['JetBrains Mono', 'JetBrainsMono-ExtraBold'],
+    ['IBM Plex Mono', 'IBMPlexMono-Light'],
+    ['Space Mono', 'SpaceMono-Bold'],
+    ['Share Tech Mono', 'ShareTechMono-Regular'],
+    ['Cutive Mono', 'CutiveMono-Regular'],
+  ].map(([name, file]) => ({
+    name,
+    from: `${SOLOG}/${file}.ttf`,
+    to: `assets/fonts/${file}.woff2`,
+    pages: [],
+    extra: '0123456789:APM',
+  })),
+];
 
 let failed = false;
 
@@ -70,10 +110,8 @@ for (const job of JOBS) {
       failed = true;
       continue;
     }
-    for (const ch of visibleText(fs.readFileSync(p, 'utf8'))) {
-      // 空白と改行は要らない
-      if (!/\s/.test(ch)) chars.add(ch);
-    }
+    const html = fs.readFileSync(p, 'utf8');
+    for (const ch of charsOf(html, job)) chars.add(ch);
   }
 
   const text = [...chars].sort().join('');
@@ -99,5 +137,19 @@ for (const job of JOBS) {
   fs.writeFileSync(out.replace(/\.woff2$/, '.chars.txt'), text);
   console.log(`${job.to}  ${(fs.statSync(out).size / 1024).toFixed(1)} KB  （${chars.size} 字）`);
 }
+
+/*
+  何をどう拾ったかを残す。
+  **build.mjs はこれを見て、まったく同じ拾い方で「足りているか」を数える。**
+  ここに書いておかないと、絞り方と数え方がずれて、黙って字が欠ける。
+*/
+fs.writeFileSync(path.join(ROOT, 'assets/fonts/_subsets.json'),
+  JSON.stringify(JOBS.map((j) => ({
+    name: j.name,
+    chars: j.to.replace(/\.woff2$/, '.chars.txt'),
+    pages: j.pages,
+    classes: j.classes ?? null,
+    withJson: !!j.withJson,
+  })), null, 2) + '\n');
 
 if (failed) process.exitCode = 1;

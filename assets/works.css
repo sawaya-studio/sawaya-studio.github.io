@@ -36,7 +36,7 @@
 /* 看板の書体。**道具に入っているものと同じ 1 本**を、使う字だけに絞って置いてある */
 @font-face{
   font-family:"Telop Logo";
-  src:url("/assets/fonts/851Gkktt-logo.woff2") format("woff2");
+  src:url("fonts/851Gkktt-logo.woff2") format("woff2");
   font-display:swap;
 }
 
