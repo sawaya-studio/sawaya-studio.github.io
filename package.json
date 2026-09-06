@@ -1,5 +1,5 @@
 {
-  "name": "sawayaworks-site",
+  "name": "sawaya-studio-site",
   "private": true,
   "type": "module",
   "description": "公開ページ。content/ の .md から頁を作る。",

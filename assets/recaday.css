@@ -110,6 +110,42 @@
   @font-face { font-family: "Clock Serif";   src: url("fonts/CutiveMono-Regular.woff2")      format("woff2"); font-display: swap; }
   @font-face { font-family: "Cap Round";     src: url("fonts/MPLUS1p-Bold.woff2")            format("woff2"); font-display: swap; }
 
+  /* ---------- 準備中の一枚 ----------
+     ワードマークと、その下の一言だけ。**増やさないこと。**
+
+     **絵の中心と、字の中心は同じではない。** 焼いた 1 枚（1658 x 536）は、
+     上下は画像のちょうど中央だが、**左右は字が右へ 27.5px 寄っている**
+     （左の余白 57px に対し、右は 3px）。1.66% は 27.5 / 1658 で、
+     translate の % は自分の幅に対する比なので、これでちょうど打ち消せる。
+     下の .hero が 47%・-50% のままなのは、あちらが投稿と同じ組みだから。 */
+  .standby {
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(20px, 4svh, 38px);
+    padding: 24px;
+    text-align: center;
+  }
+  .standby .lockup {
+    position: static;
+    transform: translateX(-1.66%);
+    width: 53.9svmin;
+    max-width: 88vw;
+    height: auto;
+    filter: drop-shadow(0 0.2svmin 0.6svmin rgba(0, 0, 0, 0.28));
+  }
+  /* 準備中の一言。**名前より小さく、薄く。** 主役はワードマークのほう */
+  .standby p {
+    margin: 0;
+    font-size: clamp(14px, 2.8vw, 19px);
+    font-weight: 700;
+    letter-spacing: 0.28em;
+    text-indent: 0.28em;   /* 字間は最後の字のうしろにも付く。そのぶん左へ戻す */
+    color: var(--ink-muted);
+  }
+
   /* ---------- 名前だけで 1 画面 ---------- */
   /*
     ワードマークと record a day は、tools/social/instagram.py の logo_lockup が

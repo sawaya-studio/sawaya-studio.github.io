@@ -148,11 +148,22 @@ ${data.map(([name, href, face, meta, links]) =>
 </ul>`;
     },
 
-    /* 連絡先。中身は JSON で [ ["GitHub", "https://github.com/SawayaWorks"], … ] */
+    /* 連絡先。中身は JSON で [ ["GitHub", "https://github.com/sawaya-studio"], … ]
+
+       **行き先が住所の形をしていない行は、押せない字として出す。**
+       メールは「kento.sawaya at gmail.com」のように崩して書くことがある。
+       それを href に入れると、押しても飛べない壊れた link になるうえ、
+       崩して書いた意味（拾わせない）も無くなる。だから字としてだけ置く。 */
     links({ data = [] }) {
+      const LINKABLE = /^(https?:|mailto:|tel:|\/|#)/;
       return `<ul class="links">
-${data.map(([label, href, text]) =>
-  `  <li><b>${esc(label)}</b><span><a href="${esc(href)}"${/^https?:/.test(href) ? ' target="_blank" rel="noopener"' : ''}>${esc(text ?? href.replace(/^mailto:/, ''))}</a></span></li>`).join('\n')}
+${data.map(([label, href, text]) => {
+  const shown = esc(text ?? String(href).replace(/^mailto:/, ''));
+  const body = LINKABLE.test(href)
+    ? `<a href="${esc(href)}"${/^https?:/.test(href) ? ' target="_blank" rel="noopener"' : ''}>${shown}</a>`
+    : shown;
+  return `  <li><b>${esc(label)}</b><span>${body}</span></li>`;
+}).join('\n')}
 </ul>`;
     },
 

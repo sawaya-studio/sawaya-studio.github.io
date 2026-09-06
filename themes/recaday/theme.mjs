@@ -44,12 +44,18 @@ function captionHtml(attrs) {
 export default {
   /* ---------- 頁の外枠 ---------- */
   shell({ page, body, css, js }) {
+    /*
+      **言葉の切り替えは、両方の言葉があるときだけ出す。**
+      準備中の一枚のように片方しか無い頁に出しても、押して変わるものが無い。
+      頁の中に data-l があるかどうかで決める（front matter に旗を足さない）。
+    */
+    const bilingual = /data-l=/.test(body);
     return `<!doctype html>
 <html lang="${page.lang ?? 'ja'}">
 <head>
 ${head({ page, css })}
 
-<script>
+${bilingual ? `<script>
 /*
   どちらの言葉で出すかを、**組み上がる前に**決める。
   あとから差し替える作りだと、最初の一瞬だけもう片方が見える。
@@ -62,14 +68,14 @@ ${head({ page, css })}
   document.documentElement.dataset.lang = lang;
   document.documentElement.lang = lang;
 })();
-</script>
+</script>` : ''}
 </head>
 <body>
-
+${bilingual ? `
 <div class="lang" role="group" aria-label="Language">
   <button type="button" data-set="ja">日本語</button>
   <button type="button" data-set="en">English</button>
-</div>
+</div>` : ''}
 
 <script src="/assets/clouds.js" defer></script>
 <canvas id="sky" aria-hidden="true"></canvas>
@@ -111,6 +117,24 @@ ${js ? `<script src="${js}" defer></script>` : ""}
 
   /* ---------- ::: で呼べる部品 ---------- */
   blocks: {
+    /*
+      準備中の一枚。**ワードマークと、その下の一言だけ。**
+
+      配れるものがまだ無いので、置くものを増やさない。
+      増やすと「もう使えるのか」と思わせてしまう。
+      うしろは、ほかの頁と同じ 7:00 の空。
+
+          ::: standby
+          準備中
+          :::
+
+      中身を書きはじめるときの雛形は content/recaday/_下書き.md に残してある。
+    */
+    standby: ({ inner }) => `<section class="standby">
+  <img class="lockup" src="/assets/recaday-lockup.png" width="1658" height="536" alt="recaday — record a day">
+${inner}
+</section>`,
+
     /* 名前だけで 1 画面。ワードマークは焼いた 1 枚をそのまま置く。
        **CSS で組み直さないこと**（字間も 2 段の重心も、あちらで測って詰めてある） */
     hero({ attrs }) {

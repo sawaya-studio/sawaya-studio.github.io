@@ -70,7 +70,8 @@ appleIcon: /assets/sawaya-studio-icon.png
 <!-- [ 名前, 行き先, （出したい字。省くと行き先がそのまま出る）] -->
 ::: links
 [
-  ["GitHub", "https://github.com/sawaya-studio"]
+  ["GitHub", "https://github.com/sawaya-studio"],
+  ["Email", "kento.sawaya at gmail.com"]
 ]
 :::
 

@@ -4,40 +4,23 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>recaday</title>
-<meta name="description" content="ここに、検索結果と SNS に出る一行を書く。">
+<meta name="description" content="準備中です。">
 <meta property="og:title" content="recaday">
-<meta property="og:description" content="ここに、検索結果と SNS に出る一行を書く。">
+<meta property="og:description" content="準備中です。">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://sawayaworks.github.io/recaday/">
-<meta property="og:image" content="https://sawayaworks.github.io/assets/recaday-lockup.png">
+<meta property="og:url" content="https://sawaya-studio.github.io/recaday/">
+<meta property="og:image" content="https://sawaya-studio.github.io/assets/recaday-lockup.png">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="../assets/recaday-icon.png">
 <link rel="apple-touch-icon" href="../assets/recaday-icon.png">
-<link rel="canonical" href="https://sawayaworks.github.io/recaday/">
+<link rel="canonical" href="https://sawaya-studio.github.io/recaday/">
 
 <link rel="stylesheet" href="../assets/recaday.css">
 
-<script>
-/*
-  どちらの言葉で出すかを、**組み上がる前に**決める。
-  あとから差し替える作りだと、最初の一瞬だけもう片方が見える。
-  貯め場が使えない環境（私用の窓など）でも落ちないように、触るのは try の中。
-*/
-(function () {
-  var saved = null;
-  try { saved = localStorage.getItem('recaday-lang'); } catch (e) { /* 貯め場が無いだけ */ }
-  var lang = saved || ((navigator.language || 'en').toLowerCase().indexOf('ja') === 0 ? 'ja' : 'en');
-  document.documentElement.dataset.lang = lang;
-  document.documentElement.lang = lang;
-})();
-</script>
+
 </head>
 <body>
 
-<div class="lang" role="group" aria-label="Language">
-  <button type="button" data-set="ja">日本語</button>
-  <button type="button" data-set="en">English</button>
-</div>
 
 <script src="../assets/clouds.js" defer></script>
 <canvas id="sky" aria-hidden="true"></canvas>
@@ -66,181 +49,10 @@
 </svg>
 
 <main>
-<section class="hero">
+<section class="standby">
   <img class="lockup" src="../assets/recaday-lockup.png" width="1658" height="536" alt="recaday — record a day">
-  <a class="more" href="#read">
-    <span data-l="ja">どんなアプリか</span><span data-l="en">What it is</span>
-    <span aria-hidden="true">↓</span>
-  </a>
+<p>準備中</p>
 </section>
-<div class="body" id="read">
-<section class="plate">
-<p class="eyebrow">Burn-in vlog</p>
-<div data-l="ja">
-<h1>ここに、いちばん言いたい一行。</h1>
-<p>ここに、その下の 2〜3 行。</p>
-</div>
-<div data-l="en">
-<h1>The one line that matters.</h1>
-<p>Two or three lines under it.</p>
-</div>
-<div class="frame">
-  <div class="scene scene--dawn filter-skin"></div>
-  <div class="burn" data-font="bold">
-  <div class="clock">07:41</div>
-  <div data-l="ja" class="caption">ここにキャプション</div><div data-l="en" class="caption">Caption here</div>
-</div>
-</div>
-<ul class="chips">
-<li>ここに札</li>
-<li>ここに札</li>
-<li>ここに札</li>
-</ul>
-</section>
-<section class="plate">
-<p class="eyebrow">Record</p>
-<div data-l="ja">
-<h2>撮るところの見出し</h2>
-<p>ここに本文。</p>
-</div>
-<div data-l="en">
-<h2>Heading for recording</h2>
-<p>Body text here.</p>
-</div>
-<div class="cols">
-<ul class="tick">
-<li>ここに箇条書き</li>
-<li>ここに箇条書き</li>
-<li>ここに箇条書き</li>
-</ul>
-<div class="phone">
-  <div class="scene scene--park filter-skin"></div>
-  <div class="guide"></div>
-  <div class="burn" data-font="bold">
-  <div class="clock">08:26</div>
-</div>
-  <span class="phone-chip phone-chip--l"><span data-l="ja">音 ON</span><span data-l="en">Mic on</span></span>
-  <span class="phone-chip phone-chip--r"><span data-l="ja">タイマー 3s</span><span data-l="en">Timer 3s</span></span>
-  <div class="shutter"><i></i></div>
-</div>
-</div>
-</section>
-<section class="plate">
-<p class="eyebrow">Burn-in</p>
-<div data-l="ja">
-<h2>時刻の見出し</h2>
-<p>ここに本文。</p>
-</div>
-<div data-l="en">
-<h2>Heading for the burned-in time</h2>
-<p>Body text here.</p>
-</div>
-<div class="frame" id="demo-frame">
-  <div class="scene scene--dawn filter-skin" id="demo-scene"></div>
-  <div class="burn" data-font="bold" id="demo-burn">
-    <div class="clock" id="demo-clock">--:--</div>
-    <div class="caption" id="demo-caption"></div>
-  </div>
-</div>
-<div class="player">
-  <button class="play" id="demo-play" type="button" aria-label="Play">
-    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" id="demo-icon-path"/></svg>
-  </button>
-  <div class="track" aria-hidden="true"><div class="seg" style="flex:1"><span></span></div><div class="seg" style="flex:1"><span></span></div><div class="seg" style="flex:1"><span></span></div></div>
-  <span class="stamp" id="demo-stamp">--:--</span>
-</div>
-<script type="application/json" id="demo-clips">[{"start":25960,"scene":"dawn","ja":"キャプション 1","en":"Caption 1"},{"start":27710,"scene":"room","ja":"キャプション 2","en":"Caption 2"},{"start":30380,"scene":"park","ja":"キャプション 3","en":"Caption 3"}]</script>
-<p class="note">ここに、図についての注意書き。</p>
-<div data-l="ja">
-<h3>書体は 6 種類</h3>
-<p>ここに本文。</p>
-</div>
-<div data-l="en">
-<h3>Six typefaces</h3>
-<p>Body text here.</p>
-</div>
-<div class="picker" role="group" aria-label="Clock typeface">
-  <button class="pick pick--font" data-font="bold" aria-pressed="true" type="button">JetBrains Mono</button>
-  <button class="pick pick--font" data-font="thin" aria-pressed="false" type="button">IBM Plex Mono</button>
-  <button class="pick pick--font" data-font="retro" aria-pressed="false" type="button">Space Mono</button>
-  <button class="pick pick--font" data-font="digital" aria-pressed="false" type="button">Share Tech Mono</button>
-  <button class="pick pick--font" data-font="serif" aria-pressed="false" type="button">Cutive Mono</button>
-  <button class="pick pick--font" data-font="round" aria-pressed="false" type="button">M PLUS 1p</button>
-</div>
-</section>
-<section class="plate">
-<p class="eyebrow">Edit</p>
-<div data-l="ja">
-<h2>整えるところの見出し</h2>
-<p>ここに本文。</p>
-</div>
-<div data-l="en">
-<h2>Heading for editing</h2>
-<p>Body text here.</p>
-</div>
-<div class="frame">
-  <div class="scene scene--room filter-skin" id="filter-scene"></div>
-  <div class="burn" data-font="bold">
-  <div class="clock">07:41</div>
-  <div data-l="ja" class="caption">ここにキャプション</div><div data-l="en" class="caption">Caption here</div>
-</div>
-</div>
-<div class="picker" role="group" aria-label="Filter">
-  <button class="pick pick--filter" data-filter="none" aria-pressed="false" type="button"><span data-l="ja">なし</span><span data-l="en">None</span></button>
-  <button class="pick pick--filter" data-filter="skin" aria-pressed="true" type="button"><span data-l="ja">肌</span><span data-l="en">Skin</span></button>
-  <button class="pick pick--filter" data-filter="vivid" aria-pressed="false" type="button"><span data-l="ja">鮮やか</span><span data-l="en">Vivid</span></button>
-  <button class="pick pick--filter" data-filter="bright" aria-pressed="false" type="button"><span data-l="ja">明るく</span><span data-l="en">Bright</span></button>
-  <button class="pick pick--filter" data-filter="sepia" aria-pressed="false" type="button"><span data-l="ja">セピア</span><span data-l="en">Sepia</span></button>
-  <button class="pick pick--filter" data-filter="mono" aria-pressed="false" type="button"><span data-l="ja">白黒</span><span data-l="en">Mono</span></button>
-  <button class="pick pick--filter" data-filter="bold" aria-pressed="false" type="button"><span data-l="ja">2色</span><span data-l="en">Duotone</span></button>
-  <button class="pick pick--filter" data-filter="binary" aria-pressed="false" type="button"><span data-l="ja">2値</span><span data-l="en">Binary</span></button>
-</div>
-<p class="note">ここに、フィルターについての注意書き。</p>
-</section>
-<section class="plate">
-<p class="eyebrow">Export</p>
-<div data-l="ja">
-<h2>書き出すところの見出し</h2>
-<p>ここに本文。</p>
-</div>
-<div data-l="en">
-<h2>Heading for export</h2>
-<p>Body text here.</p>
-</div>
-<div class="joiner">
-  <div class="clip"><b>07:12</b><span data-l="ja">キャプション 1</span><span data-l="en">Caption 1</span></div>
-  <div class="clip"><b>07:41</b><span data-l="ja">キャプション 2</span><span data-l="en">Caption 2</span></div>
-  <div class="clip"><b>08:26</b><span data-l="ja">キャプション 3</span><span data-l="en">Caption 3</span></div>
-  <div class="arrow" aria-hidden="true">↓</div>
-  <div data-l="ja" class="result">ここに結果の一行</div><div data-l="en" class="result">The result, in one line</div>
-</div>
-</section>
-<section class="plate">
-<p class="eyebrow">Closed test</p>
-<div data-l="ja">
-<h2>いま試せます、の見出し</h2>
-<p>ここに本文。</p>
-</div>
-<div data-l="en">
-<h2>You can try it now</h2>
-<p>Body text here.</p>
-</div>
-<a class="act" href="../recaday/closed-test/"><span data-l="ja">参加のしかたを見る</span><span data-l="en">See how to join</span></a>
-</section>
-<section class="plate closing">
-<div data-l="ja">
-<p>ここに、しめの一言。</p>
-</div>
-<div data-l="en">
-<p>The closing line goes here.</p>
-</div>
-</section>
-<footer>
-<span data-l="ja">写真 / 動画 ・ vlog ・ 日記 ・ ライフログ</span>
-<span data-l="en">Video · vlog · diary · lifelog</span>
-<span><a href="../">sawaya studio</a></span>
-</footer>
-</div>
 </main>
 
 <script src="../assets/sky.js" defer></script>

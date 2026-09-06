@@ -1,4 +1,4 @@
-# sawayaworks.github.io
+# sawaya-studio.github.io
 
 公開ページ。`content/` の `.md` を書くと、頁ができます。
 
@@ -26,7 +26,7 @@ npm run serve     http://127.0.0.1:5199/ で見る
 | `/telop-studio/` | テロップスタジオの紹介 | `content/telop-studio/index.md` ／ テーマ `telop` |
 
 `/recaday/closed-test/` だけは `content/` を持ちません。
-[recaday の側](https://github.com/SawayaWorks/recaday) の `store/closed-test.html` を
+[recaday の側](https://github.com/sawaya-studio/recaday) の `store/closed-test.html` を
 そのまま持ってきたもので、**中身は変えていません**。変えたのは 3 つだけです。
 
 1. `doctype` / `charset` / `viewport` を足した（**無いと携帯で 980px 幅に縮んで出る**）
@@ -89,7 +89,7 @@ node tools/bake-clouds.mjs
 
 ## 素材の出どころ
 
-| 空・雲・ロゴ・時計の書体 | [recaday](https://github.com/SawayaWorks/recaday) から |
+| 空・雲・ロゴ・時計の書体 | [recaday](https://github.com/sawaya-studio/recaday) から |
 | テロップスタジオの組み | 「昭和レトロポップ見本帳」（ロゴを決めるための下調べ）から |
 | 看板の書体 | 851ゴチカクット（作者: 8:51:22 pm）。改造・再配布可・商用可 |
 | 見出しの書体 | RocknRoll One（SIL OFL）。見本帳が本命に挙げたもの |
