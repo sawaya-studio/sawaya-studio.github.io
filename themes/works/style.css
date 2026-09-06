@@ -84,15 +84,20 @@ hr{border:0;border-top:1px solid var(--line);margin:34px 0}
 /* ============================================================
    棚。**札そのものが、その道具の顔。**
    ============================================================ */
-.shelf{list-style:none;margin:0;padding:0;display:grid;gap:clamp(14px,2.4vw,22px)}
-@media (min-width:40rem){ .shelf{grid-template-columns:1fr 1fr} }
+/* **1 行につき 1 枚を、縦に並べる。** 横に 2 枚置くと、どちらも小さくなって
+   「その道具の顔」ではなく「小さな絵」になる。
+   幅いっぱいまで伸ばさないのは、**大きすぎると顔ではなく背景になる**から */
+.shelf{list-style:none;margin:0;padding:0;display:grid;
+  gap:clamp(18px,3vw,30px);max-width:400px}
 
 .shelf li{position:relative}
 
-/* 顔の入る枠。**角丸と影だけがこちらの持ちもので、中身は道具のもの** */
+/* 顔の入る枠。**角丸と影だけがこちらの持ちもので、中身は道具のもの**。
+   **正方形。** recaday のワードマークは、もともとインスタの投稿（正方形）に
+   合わせて焼いてあるので、この枠なら「短辺の 52%」がそのまま効く */
 .face{
   position:relative;
-  aspect-ratio:16/10;
+  aspect-ratio:1/1;
   container-type:size;
   border-radius:var(--radius);
   overflow:hidden;
@@ -129,13 +134,9 @@ hr{border:0;border-top:1px solid var(--line);margin:34px 0}
   position:absolute;inset:0;
   width:100%;height:100%;display:block;
 }
-/* ワードマーク。**投稿と同じ「枠の 52%」。**
+/* ワードマーク。**投稿とまったく同じ大きさ**（短辺の 52%）。
    53.9 は、焼いた 1 枚が光学中心へ寄せるぶんの余白を左右に持っているぶん
    （52 × 1.036）。ロゴのインク幅で 52% になる。
-
-   **短辺で取らないこと。** 投稿は正方形、closed-test の頁は縦長なので、
-   どちらも「短辺 = 幅」だった。この札は横長なので、短辺で取ると高さ基準になり、
-   ロゴが半分ほどの大きさに縮む。**幅で取る**のが、あちらと同じ見え方になる。
 
    置く高さも投稿と同じ。**ぴったり中央より少し上**にする。
    真ん中に置くと、下に沈んで見える。 */
@@ -143,10 +144,9 @@ hr{border:0;border-top:1px solid var(--line);margin:34px 0}
   position:absolute;
   top:47%;left:50%;
   transform:translate(-50%,-50%);
-  width:53.9cqw;
-  max-width:82%;
+  width:53.9cqmin;
   height:auto;
-  filter:drop-shadow(0 0.2cqw 0.6cqw rgba(0,0,0,.28));
+  filter:drop-shadow(0 0.2cqmin 0.6cqmin rgba(0,0,0,.28));
 }
 
 /* ---------- テロップスタジオの顔 ----------
@@ -164,17 +164,25 @@ hr{border:0;border-top:1px solid var(--line);margin:34px 0}
   padding:0 7cqh;
 }
 /* 看板。緑の箱に白い字、オレンジのぼかさない影、黒の縁。
+
    **太らせない。** ゴチカクットは1ウェイトしか無いので、900 を求めると
    ブラウザが勝手に太らせて、角と隙間が潰れる。900 は書体が読めなかったとき用。
-   **枠からはみ出させないこと。** 大きさは高さから取る。 */
+
+   **余白と角丸と影は、文字サイズに対する比で持つ。**
+   道具の側（16px のとき padding 1px 11px / 角丸 8px / 影 3px）と同じ比。
+   px で置くと、札の大きさが変わったときだけ看板の比率が崩れる。
+
+   **overflow:hidden を掛けないこと。** この書体は字のインクが送り幅より
+   わずかに外へ出るので、最後の一字（「オ」）が切り落とされる。 */
 .face--telop .brand{
-  max-width:100%;
   font-family:"Telop Logo",var(--ui);font-weight:900;font-synthesis-weight:none;
-  font-size:11cqh;line-height:1.4;
+  font-size:7.5cqh;line-height:1.4;
   color:#fff;background:#2fa45f;
-  border:2px solid #16211b;border-radius:9px;padding:0 4.5cqh 0.6cqh;
-  box-shadow:0.22em 0.22em 0 #f2913c;
-  white-space:nowrap;overflow:hidden;
+  border:2px solid #16211b;
+  border-radius:0.5em;
+  padding:0.06em 0.7em 0.1em;
+  box-shadow:0.19em 0.19em 0 #f2913c;
+  white-space:nowrap;
 }
 
 /* ---------- 顔を持たない道具 ---------- */
