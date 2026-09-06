@@ -37,12 +37,14 @@ appleIcon: /assets/sawaya-studio-icon.png
 ちょっとだけたのしく
 :::
 
+<br/>
+
 ::: lead
 かんたんに生活を彩るアプリを作っています
 :::
 
 
-:::
+::: <!-- top -->
 
 
 ::: section id=works

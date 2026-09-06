@@ -147,15 +147,29 @@ function block(lines, from, to, blocks, ctx) {
     // ---- 入れ物 / 部品 ----
     const cm = line.match(CONTAINER);
     if (cm) {
-      const head = cm[1].trim();
-      if (!head) { i++; continue; }  // 閉じだけが来た（対応が崩れている）ときは読み飛ばす
+      /*
+        閉じる側にも、どれを閉じたか印を書けるようにする。
+
+            ::: top
+            …
+            ::: <!-- top -->
+
+        **入れ子が深くなると、閉じの ::: がどれの相手か分からなくなる。**
+        印を書けないと、数えて確かめるしかない。
+        覚え書き（<!-- … -->）を外して、何も残らなければ「閉じ」とみなす。
+      */
+      const head = cm[1].replace(/<!--[\s\S]*?-->/g, '').trim();
+      if (!head) { i++; continue; }
       const name = head.split(/\s+/)[0];
       const attrs = parseAttrs(head.slice(name.length));
       // 対応する閉じを探す。**同じ名前の入れ子を数えること**
       let depth = 1, j = i + 1;
       while (j < to) {
         const m2 = lines[j].match(CONTAINER);
-        if (m2) { if (m2[1].trim()) depth++; else if (--depth === 0) break; }
+        if (m2) {
+          const h2 = m2[1].replace(/<!--[\s\S]*?-->/g, '').trim();
+          if (h2) depth++; else if (--depth === 0) break;
+        }
         j++;
       }
       const end = Math.min(j, to);

@@ -21,7 +21,9 @@
   ここが小さな取扱説明になってしまう。見せたいのは中身ではなく、顔のほう。
 */
 :root{
-  --paper:#faf9f7;
+  /* **試しにグレー。** 元は #faf9f7（ほとんど白）。
+     戻すときはここ 1 行 */
+  --paper:#eae9e5;
   --card:#ffffff;
   --ink:#1a1a1a;
   --sub:#6a6a6a;
@@ -113,7 +115,22 @@ hr{border:0;border-top:1px solid var(--line);margin:34px 0}
 /* 名乗り。**大きくしない。**「誰か」より「何を作ったか」を先に見せる。
    **大文字に変換しないこと。** 名前は全部小さい字（sawaya studio）で、
    ここで uppercase を掛けると SAWAYA STUDIO になってしまう */
-.top{padding:clamp(40px,9vw,84px) 0 0}
+/* 名乗りとキャッチの置き場。
+   **高さを、下の札（正方形）とそろえる。**
+   札は幅 --col の 1:1 なので、高さも --col。狭い画面では札が中身の幅まで縮むので、
+   こちらも同じだけ縮める（中身の幅 = 画面 - main の左右の余白 20px ずつ）。
+   中身は、その中で上下のまんなかに置く。 */
+.top{
+  padding:clamp(40px,9vw,84px) 0 0;
+  min-height:min(var(--col), calc(100vw - 40px));
+  /* **grid にしないこと。** 列の幅が中身なりに縮んで、
+     ロゴが 400px から 300px になった（実測）。
+     縦に積んで真ん中に寄せたいだけなので、flex で足りる。
+     flex なら、中身は横いっぱいに伸びたままになる。 */
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
 
 /* 名乗り。**画面のいちばん上、まんなかに置く。**
    焼いた 1 枚（assets/sawaya-studio.svg）なので、字間はあちらで決めてある。
@@ -121,7 +138,11 @@ hr{border:0;border-top:1px solid var(--line);margin:34px 0}
    **小さくしすぎると、ただの見出しに見える。**
    横に長い組み（比 8:1）なので、幅で 420px あたりまで取って、
    ようやく「ロゴが置いてある」と読める。 */
-.logo{margin:0 auto 34px}
+/* **左右の余白に auto を書かないこと。**
+   .top は flex なので、auto を書くと「伸ばす」が打ち消されて中身なりの幅になり、
+   ロゴが 400px から 300px に縮む（実測）。
+   横に伸びたこの箱の中で、svg のほうが margin:0 auto で真ん中に来る。 */
+.logo{margin:0 0 34px}
 .logo svg{
   display:block;margin:0 auto;
   /* **下の札と同じ幅にそろえる。** 狭い画面では、そちらに合わせて縮む */
@@ -145,17 +166,26 @@ hr{border:0;border-top:1px solid var(--line);margin:34px 0}
    見出しどうしの余白が入って、2 つの別の文に見える。
    字詰めは tools/kerning.mjs が 1 字ずつ入れているので、ここでは触らない。 */
 .catch{
-  margin:0 auto 16px;max-width:var(--col);
-  font-size:clamp(19px,3.6vw,25px);
-  font-weight:800;
-  line-height:1.95;
-  letter-spacing:.03em;
+  margin:0 auto 20px;max-width:var(--col);
+  /* **ロゴより小さくすること。** ロゴの字の高さと同じにすると、
+     並んだときにロゴが勝てず、名乗りが弱く見える。
+     キャッチらしさは大きさではなく、字間の開きで出す */
+  font-size:clamp(15px,2.9vw,19px);
+  /* **太くしない。** 太字にすると見出しの顔になる。
+     キャッチコピーは、細めの字を大きく開けて置くほうがそれらしく見える */
+  font-weight:500;
+  line-height:2.15;
+  letter-spacing:.16em;
+  /* **開けたぶんを、頭で戻す。**
+     字間は「字のうしろ」に足されるので、最後の 1 字のうしろにも空きが残る。
+     真ん中そろえだと、そのぶん左へ寄って見える */
+  text-indent:.16em;
   text-wrap:balance;
 }
 /* その下の一行。**キャッチより弱く。** 主役は上 */
 .lead{
   margin:0 auto;max-width:var(--col);
-  font-size:14px;
+  font-size:12.5px;
   line-height:1.95;
   letter-spacing:.02em;
   color:var(--sub);
