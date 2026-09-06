@@ -27,6 +27,15 @@
     "withJson": false
   },
   {
+    "name": "M PLUS 1",
+    "chars": "assets/fonts/MPLUS1-Variable.chars.txt",
+    "pages": [
+      "index.html"
+    ],
+    "classes": null,
+    "withJson": false
+  },
+  {
     "name": "851ゴチカクット",
     "chars": "assets/fonts/851Gkktt-logo.chars.txt",
     "pages": [

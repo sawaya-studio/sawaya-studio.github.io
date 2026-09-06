@@ -88,6 +88,8 @@ node tools/bake-clouds.mjs
 | 看板の書体 | 851ゴチカクット（作者: 8:51:22 pm）。改造・再配布可・商用可 |
 | 見出しの書体 | RocknRoll One（SIL OFL）。見本帳が本命に挙げたもの |
 | sawaya studio の欧字 | Saira（SIL OFL）。**この頁だけ。**元は tools/fonts-src/ |
+| sawaya studio の日本語 | M PLUS 1（SIL OFL）。Saira と組ませるために選んだ |
+| sawaya studio のロゴ | Saira を焼いた 1 枚（assets/sawaya-studio.svg） |
 | 時計の書体 | どれも SIL OFL。ライセンス文は `assets/fonts/OFL-*.txt` |
 
 **書体は、頁に出てくる字だけに絞ってあります**（`pyftsubset`）。
@@ -103,6 +105,14 @@ RocknRoll One は日本語ぶんで 950KB ありますが、絞ると 12KB。看
 ```
 node tools/build.mjs
 node tools/subset-fonts.mjs
+```
+
+ロゴ（`assets/sawaya-studio.svg`）は、**書体を読ませずに図として焼いて**あります。
+css の `letter-spacing` は「全部の字のうしろに同じ幅を足す」ことしかできませんが、
+ロゴは**対ごとに詰める**ものだからです。字を変えたら焼き直してください。
+
+```
+py -3.14 tools/make-logo.py
 ```
 
 **足りない字があるときは `node tools/build.mjs` が教えてくれます**

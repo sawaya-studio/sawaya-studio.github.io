@@ -5,6 +5,8 @@
   いまは中身を置ける形だけ用意してある。決まったら style.css を差し替える。
 */
 
+import fs from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import { esc, unwrapP, classifyList, head } from '../_lib.mjs';
 
 /*
@@ -71,6 +73,20 @@ ${js ? `<script src="${js}" defer></script>` : ''}
     top:     ({ inner }) => `<section class="top">\n${inner}\n</section>`,
     section: ({ attrs, inner }) =>
       `<section${attrs.id ? ` id="${esc(attrs.id)}"` : ''}>\n${inner}\n</section>`,
+
+    /*
+      名乗り。**焼いた 1 枚を、そのまま置く。**
+
+      css の letter-spacing は「全部の字のうしろに同じ幅を足す」ことしかできない。
+      ロゴは対ごとに詰めるものなので、tools/make-logo.py で測って詰めて、
+      図（svg）にしてある。書体が読めなかったときに別の顔で出ることもない。
+
+      色は currentColor なので、置いた所の字の色になる。
+    */
+    logo() {
+      const p = fileURLToPath(new URL('../../assets/sawaya-studio.svg', import.meta.url));
+      return `<p class="logo">${fs.readFileSync(p, 'utf8').trim()}</p>`;
+    },
 
     mark:    ({ inner }) => `<p class="mark">${unwrapP(inner)}</p>`,
     eyebrow: ({ inner }) => `<p class="eyebrow">${unwrapP(inner)}</p>`,

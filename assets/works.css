@@ -28,11 +28,16 @@
   --faint:#8f8f8f;
   --line:#e4e2dd;
   --radius:14px;
-  --ui:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans",
-       "Hiragino Kaku Gothic ProN","Noto Sans JP","Yu Gothic UI",Meiryo,sans-serif;
-  /* 欧字の札に使う書体。**この頁だけ。** 日本語は Saira に入っていないので、
-     日本語の見出しと本文は system のゴシックのまま（--ui）。 */
-  --label:"Saira",var(--ui);
+  /*
+    **欧字は Saira、日本語は M PLUS 1。**
+
+    書き分ける必要はない。**Saira には日本語が入っていない**ので、
+    この順に並べておくだけで、欧字は Saira、日本語は M PLUS 1 に落ちる。
+    どちらも可変 1 本（100〜900）なので、太さを変えてもファイルは増えない。
+  */
+  --ui:"Saira","M PLUS 1",-apple-system,BlinkMacSystemFont,"Segoe UI",
+       "Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic UI",Meiryo,sans-serif;
+  --label:var(--ui);
 }
 
 /* 欧字の書体。**Saira**（SIL OFL）。名乗りと、節の名前と、走る場所に使う。
@@ -42,6 +47,16 @@
 @font-face{
   font-family:"Saira";
   src:url("fonts/Saira-Variable.woff2") format("woff2-variations");
+  font-weight:100 900;
+  font-display:swap;
+}
+/* 日本語の書体。**M PLUS 1**（SIL OFL）。Saira と組ませるために選んだ。
+   角ばった骨格が Saira に近く、同じく可変 1 本で太さが揃う。
+   recaday のキャプションが M PLUS 1p（同じ M+ の系列）なので、
+   site の日本語が 2 系統に散らない。 */
+@font-face{
+  font-family:"M PLUS 1";
+  src:url("fonts/MPLUS1-Variable.woff2") format("woff2-variations");
   font-weight:100 900;
   font-display:swap;
 }
@@ -85,6 +100,16 @@ hr{border:0;border-top:1px solid var(--line);margin:34px 0}
    **大文字に変換しないこと。** 名前は全部小さい字（sawaya studio）で、
    ここで uppercase を掛けると SAWAYA STUDIO になってしまう */
 .top{padding:clamp(40px,9vw,84px) 0 0}
+
+/* 名乗り。**画面のいちばん上に置く。**
+   焼いた 1 枚（assets/sawaya-studio.svg）なので、字間はあちらで決めてある。
+   大きくしすぎないのは、「誰か」より「何を作ったか」を先に見せたいから。 */
+.logo{margin:0 0 26px}
+.logo svg{
+  display:block;margin:0 auto;
+  width:clamp(178px,32vw,248px);height:auto;
+  color:var(--ink);
+}
 .mark{font-family:var(--label);font-size:11.5px;font-weight:600;
       letter-spacing:.22em;color:var(--faint);margin:0 0 14px}
 

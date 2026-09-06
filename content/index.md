@@ -22,8 +22,9 @@ description: ここに、検索結果と SNS に出る一行を書く。
 
 ::: top
 
-::: mark
-{{site.name}}
+<!-- 名乗り。焼いた 1 枚（assets/sawaya-studio.svg）。
+     字を変えたら  py -3.14 tools/make-logo.py -->
+::: logo
 :::
 
 # ここに、いちばん言いたい一行。

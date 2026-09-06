@@ -82,6 +82,28 @@ const JOBS = [
   },
   {
     /*
+      sawaya studio の日本語（M PLUS 1、SIL OFL）。**この頁だけ。**
+
+      Saira と組ませるために選んだ。角ばった幾何学的な骨格が Saira の顔に近く、
+      同じく**可変 1 本**（100〜900）で太さが揃う。
+      recaday のキャプションが M PLUS 1p（同じ M+ の系列）なので、
+      **site の日本語が 2 系統に散らない。**
+
+      並べる順は css で「Saira → M PLUS 1」。
+      **Saira には日本語が入っていない**ので、欧字は Saira、日本語は M PLUS 1 に
+      自然と分かれる。切り替える書き分けは要らない。
+
+      元（4.2MB）は重いので git に入れていない。無ければ tools/get-fonts.mjs が取ってくる。
+    */
+    name: "M PLUS 1",
+    from: "tools/fonts-src/MPLUS1[wght].ttf",
+    url: "https://raw.githubusercontent.com/google/fonts/main/ofl/mplus1/MPLUS1%5Bwght%5D.ttf",
+    to: "assets/fonts/MPLUS1-Variable.woff2",
+    pages: ["index.html"],
+    extra: ASCII,
+  },
+  {
+    /*
       看板の書体（851ゴチカクット）。**看板に出る字だけ。**
       頁ぜんぶを拾うと、本文の字まで入って重くなる（本文には使わない書体）。
       だから class="brand" の中だけを見る。
@@ -118,8 +140,17 @@ let failed = false;
 for (const job of JOBS) {
   const from = path.isAbsolute(job.from) || /^[A-Za-z]:/.test(job.from)
     ? job.from : path.join(ROOT, job.from);
+  // **重い元は git に入れていない**（M PLUS 1 は 4.2MB）。無ければ取ってくる
+  if (!fs.existsSync(from) && job.url) {
+    console.log(`  ${job.name} の元を取ってきます…`);
+    fs.mkdirSync(path.dirname(from), { recursive: true });
+    try {
+      execFileSync('curl', ['-sL', '--max-time', '120', '-o', from, job.url], { stdio: 'inherit' });
+    } catch (e) { /* 下で「無い」と言う */ }
+  }
   if (!fs.existsSync(from)) {
-    console.error(`× ${job.name} の元が無い:\n  ${job.from}`);
+    console.error(`× ${job.name} の元が無い:\n  ${from}`);
+    if (job.url) console.error(`  取ってくる先: ${job.url}`);
     failed = true;
     continue;
   }
