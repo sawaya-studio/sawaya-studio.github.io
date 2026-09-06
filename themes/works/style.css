@@ -6,13 +6,19 @@
   だから地は何も主張しない。無彩色の紙と、1 本の罫だけ。
   代わりに、**棚に並ぶ札そのものが、その道具の顔**になっている。
 
-    recaday の札 …… 7:00 の空と、まんなかに焼き込まれた時刻
-    テロップの札 …… 方眼紙と、緑の看板と、台本の行
+  **札の組み方は 1 つだけ。**
 
-  どちらも、その道具の中で使っている値をそのまま持ってきている
-  （空は skyTable.ts の 7:00、焼き込みの比率は theme.ts の clockStyle、
-  方眼と緑とオレンジは道具の ui/public/index.html）。
-  **札の中に説明の字を置かないこと。** 置いた瞬間に、見せる頁ではなくなる。
+      うしろ … その道具の「地」。見ただけでどの道具か分かるもの
+      まんなか … その道具のロゴ
+
+    recaday の札 …… 7:00 の空と流れる雲、まんなかにワードマーク
+    テロップの札 …… 方眼紙、まんなかに看板
+
+  地も字も、その道具の中で使っている値をそのまま持ってきている
+  （空は skyTable.ts の 7:00、方眼と緑とオレンジは道具の ui/public/index.html）。
+
+  **アプリの画面は持ちこまないこと。** 行や札やボタンを並べると、
+  ここが小さな取扱説明になってしまう。見せたいのは中身ではなく、顔のほう。
 */
 :root{
   --paper:#faf9f7;
@@ -27,13 +33,7 @@
   --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
 }
 
-/* 札の中で使う書体。**どちらも、その道具に入っているものと同じ 1 本**を
-   使う字だけに絞って置いてある */
-@font-face{
-  font-family:"Clock Bold";
-  src:url("/assets/fonts/JetBrainsMono-ExtraBold.woff2") format("woff2");
-  font-display:swap;
-}
+/* 看板の書体。**道具に入っているものと同じ 1 本**を、使う字だけに絞って置いてある */
 @font-face{
   font-family:"Telop Logo";
   src:url("/assets/fonts/851Gkktt-logo.woff2") format("woff2");
@@ -116,9 +116,9 @@ hr{border:0;border-top:1px solid var(--line);margin:34px 0}
 .shelf a:focus-visible{outline:none}
 
 /* ---------- recaday の顔 ----------
-   空は skyTable.ts の 7:00 の行（zenith / mid / horizon）。
-   焼き込みは theme.ts の clockStyle：数字の高さ＝短辺 × 0.118、
-   文字サイズはそれを書体の大文字の高さ（JetBrains Mono ExtraBold = 0.73）で割る。 */
+   うしろ … 7:00 の空と、流れる雲
+   まんなか … ワードマーク */
+
 /* 地の色。**空が描けない環境でも、ここが残る**（skyTable.ts の 7:00 の 3 色） */
 .face--recaday{
   background:linear-gradient(to bottom,#5D8197 0%,#7097AD 52%,#CAC4A8 100%);
@@ -129,62 +129,53 @@ hr{border:0;border-top:1px solid var(--line);margin:34px 0}
   position:absolute;inset:0;
   width:100%;height:100%;display:block;
 }
-.face--recaday .clock{
-  position:absolute;top:50%;left:0;right:0;
-  transform:translateY(-50%);
-  text-align:center;
-  color:#fff;
-  font-family:"Clock Bold",ui-monospace,monospace;
-  font-size:calc(11.8cqh / 0.73);
-  line-height:1.32;
-  font-variant-numeric:tabular-nums;
-  text-shadow:0 2px 1.2cqh rgba(0,0,0,.45);
+/* ワードマーク。**投稿と同じ「枠の 52%」。**
+   53.9 は、焼いた 1 枚が光学中心へ寄せるぶんの余白を左右に持っているぶん
+   （52 × 1.036）。ロゴのインク幅で 52% になる。
+
+   **短辺で取らないこと。** 投稿は正方形、closed-test の頁は縦長なので、
+   どちらも「短辺 = 幅」だった。この札は横長なので、短辺で取ると高さ基準になり、
+   ロゴが半分ほどの大きさに縮む。**幅で取る**のが、あちらと同じ見え方になる。
+
+   置く高さも投稿と同じ。**ぴったり中央より少し上**にする。
+   真ん中に置くと、下に沈んで見える。 */
+.face--recaday .lockup{
+  position:absolute;
+  top:47%;left:50%;
+  transform:translate(-50%,-50%);
+  width:53.9cqw;
+  max-width:82%;
+  height:auto;
+  filter:drop-shadow(0 0.2cqw 0.6cqw rgba(0,0,0,.28));
 }
 
 /* ---------- テロップスタジオの顔 ----------
-   方眼も緑もオレンジも、道具の ui/public/index.html と同じ値。
-   **緑は押せるものだけ、オレンジは押せないものだけ**という決まりも持ちこむ。 */
+   うしろ … 方眼紙
+   まんなか … 看板
+
+   方眼も緑もオレンジも、道具の ui/public/index.html と同じ値。 */
 .face--telop{
   background-color:#fbf4e4;
   background-image:
     linear-gradient(#eee5cf 1px,transparent 1px),
     linear-gradient(90deg,#eee5cf 1px,transparent 1px);
   background-size:32px 32px;
-  display:flex;flex-direction:column;justify-content:center;
-  gap:4.5cqh;padding:0 7cqh;
+  display:grid;place-items:center;
+  padding:0 7cqh;
 }
 /* 看板。緑の箱に白い字、オレンジのぼかさない影、黒の縁。
-   **枠からはみ出させないこと。** 大きさは高さから取るので、
-   横に長い名前でも収まるところまで小さくしてある */
+   **太らせない。** ゴチカクットは1ウェイトしか無いので、900 を求めると
+   ブラウザが勝手に太らせて、角と隙間が潰れる。900 は書体が読めなかったとき用。
+   **枠からはみ出させないこと。** 大きさは高さから取る。 */
 .face--telop .brand{
-  align-self:flex-start;max-width:100%;
+  max-width:100%;
   font-family:"Telop Logo",var(--ui);font-weight:900;font-synthesis-weight:none;
-  font-size:7.2cqh;line-height:1.4;
+  font-size:11cqh;line-height:1.4;
   color:#fff;background:#2fa45f;
-  border:2px solid #16211b;border-radius:7px;padding:0 3.5cqh 0.4cqh;
-  box-shadow:0.32em 0.32em 0 #f2913c;
+  border:2px solid #16211b;border-radius:9px;padding:0 4.5cqh 0.6cqh;
+  box-shadow:0.22em 0.22em 0 #f2913c;
   white-space:nowrap;overflow:hidden;
 }
-/* 台本の行。**本文は、行の種類によらず必ず同じ x から始まる** */
-.face--telop .rows{display:grid;gap:2.2cqh}
-.face--telop .row{
-  display:grid;grid-template-columns:26cqh 1fr;align-items:center;gap:3.5cqh;
-  background:#fff;border:1px solid #e6dcc2;border-radius:5px;
-  padding:2cqh 3.5cqh;
-}
-/* 何の行かの札。**折り返させない。** 2 行になると行の高さが揃わなくなる */
-.face--telop .kind{
-  font-size:4.4cqh;font-weight:700;line-height:1.3;text-align:center;
-  border-radius:4px;padding:0.5cqh 0;border:1px solid transparent;
-  white-space:nowrap;
-}
-.face--telop .kind.speech{background:#e8f5ec;color:#1f7a46;border-color:#cfe8d8}
-.face--telop .kind.gap   {background:#fdeedd;color:#9a5a1c;border-color:#f7dcc1}
-.face--telop .kind.telop {background:#e6e9fd;color:#3b45a0;border-color:#ccd2f7}
-/* 字は読ませない。**行があることだけ分かればよい** */
-.face--telop .line{height:4.4cqh;border-radius:2px;background:#e9e4d6}
-.face--telop .line.short{width:52%}
-.face--telop .line.mid{width:78%}
 
 /* ---------- 顔を持たない道具 ---------- */
 .face--plain{

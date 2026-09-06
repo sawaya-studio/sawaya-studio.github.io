@@ -8,27 +8,42 @@
 import { esc, unwrapP, classifyList, head } from '../_lib.mjs';
 
 /*
-  札の顔。**どれも、その道具の中で使っている値をそのまま持ってきている。**
+  札の顔。
+  ==========================================================================
+  **どの札も、組み方は 1 つだけ。**
+
+      うしろ … その道具の「地」。見ただけでどの道具か分かるもの
+      まんなか … その道具のロゴ
+
+  **アプリの画面は持ちこまない。** 行や札やボタンを並べると、
+  ここが小さな取扱説明になってしまう。ここで見せたいのは中身ではなく、
+  **その道具がどんな顔をしているか**だけ。
+
+  地も字も、その道具の中で使っている値をそのまま持ってきている。
   形は style.css の .face--* 側にある。ここは中身だけ。
 */
 const FACE = {
   /*
-    7:00 の空と、まんなかに焼き込まれた時刻。それだけで recaday だと分かる。
+    うしろ … 7:00 の空と、流れる雲
+    まんなか … ワードマーク
 
     **空は本物を敷く。** アプリの SkyBackdrop.tsx を写した /assets/sky.js が、
     closed-test の頁と同じ雲（tools/sky/bake.py が焼いた 1 枚）を引いて描く。
-    ここを CSS の縞で真似ていたことがあるが、**縞は雲にならない。**
+    CSS の縞で真似ていたことがあるが、**縞は雲にならない。**
+
+    ワードマークは tools/social/instagram.py の logo_lockup が焼いた 1 枚を
+    そのまま置いている（インスタの投稿と同じ組み）。**CSS で組み直さないこと。**
+    あちらは字間を「ロゴのインク幅の 94%」になるまで描いて測って詰め直し、
+    2 段の重心も光学中心へ寄せている。web で近い値を手で入れると必ず食い違う。
   */
   recaday: () => '<canvas data-sky></canvas>' +
-                 '<div class="clock">07:41</div>',
+    '<img class="lockup" src="/assets/recaday-lockup.png" width="1658" height="536" alt="">',
 
-  // 方眼紙と、緑の看板と、台本の行。**字は読ませない。行があることだけ分かればよい**
-  telop: () => `<div class="brand">テロップスタジオ</div>
-    <div class="rows">
-      <div class="row"><span class="kind speech">セリフ</span><span class="line mid"></span></div>
-      <div class="row"><span class="kind gap">無音</span><span class="line short"></span></div>
-      <div class="row"><span class="kind telop">テロップ</span><span class="line mid"></span></div>
-    </div>`,
+  /*
+    うしろ … 方眼紙
+    まんなか … 看板（緑の箱に白い字、オレンジのぼかさない影、黒の縁）
+  */
+  telop: () => '<div class="brand">テロップスタジオ</div>',
 
   // まだ顔を持たない道具。色だけ置く
   plain: () => '<i></i>',
