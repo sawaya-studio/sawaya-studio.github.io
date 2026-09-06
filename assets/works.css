@@ -107,7 +107,10 @@ hr{border:0;border-top:1px solid var(--line);margin:34px 0}
    **小さくしすぎると、ただの見出しに見える。**
    横に長い組み（比 8:1）なので、幅で 420px あたりまで取って、
    ようやく「ロゴが置いてある」と読める。 */
-.logo{margin:0 0 34px}
+/* **段落の決まりから外すこと。** .logo も <p> なので、放っておくと
+   p{margin:0 auto;max-width:46ch} が効く。そこへ margin を 0 で書くと、
+   **auto の左右余白まで打ち消して**、46ch の狭い箱ごと左へ寄る（実測 13px ずれていた）。 */
+.logo{margin:0 auto 34px;max-width:none}
 .logo svg{
   display:block;margin:0 auto;
   width:clamp(258px,58vw,420px);height:auto;
