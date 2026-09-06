@@ -1,11 +1,18 @@
 /*
   Sawaya Studio。
   ==========================================================================
-  **ここの見た目はまだ決まっていない。**（コンセプトとデザインは別途相談）
+  **この頁は、何かを言葉で説明しない。**
 
-  いまは「何も主張しない地」にしてある。無彩色・生成りの紙・1 本の罫だけ。
-  各アプリのカードだけがその道具の色を持つので、**ページ側は黒子**になる。
-  決まったら、この 1 枚を差し替えれば頁ぜんぶが変わる。
+  だから地は何も主張しない。無彩色の紙と、1 本の罫だけ。
+  代わりに、**棚に並ぶ札そのものが、その道具の顔**になっている。
+
+    recaday の札 …… 7:00 の空と、まんなかに焼き込まれた時刻
+    テロップの札 …… 方眼紙と、緑の看板と、台本の行
+
+  どちらも、その道具の中で使っている値をそのまま持ってきている
+  （空は skyTable.ts の 7:00、焼き込みの比率は theme.ts の clockStyle、
+  方眼と緑とオレンジは道具の ui/public/index.html）。
+  **札の中に説明の字を置かないこと。** 置いた瞬間に、見せる頁ではなくなる。
 */
 :root{
   --paper:#faf9f7;
@@ -14,11 +21,25 @@
   --sub:#6a6a6a;
   --faint:#8f8f8f;
   --line:#e4e2dd;
-  --radius:12px;
+  --radius:14px;
   --ui:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans",
        "Hiragino Kaku Gothic ProN","Noto Sans JP","Yu Gothic UI",Meiryo,sans-serif;
   --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
 }
+
+/* 札の中で使う書体。**どちらも、その道具に入っているものと同じ 1 本**を
+   使う字だけに絞って置いてある */
+@font-face{
+  font-family:"Clock Bold";
+  src:url("/assets/fonts/JetBrainsMono-ExtraBold.woff2") format("woff2");
+  font-display:swap;
+}
+@font-face{
+  font-family:"Telop Logo";
+  src:url("/assets/fonts/851Gkktt-logo.woff2") format("woff2");
+  font-display:swap;
+}
+
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
 body{
@@ -32,8 +53,8 @@ body{
   -webkit-font-smoothing:antialiased;
 }
 
-main{max-width:680px;margin:0 auto;padding:0 20px 88px}
-section{margin-top:clamp(38px,7vw,72px)}
+main{max-width:860px;margin:0 auto;padding:0 20px 88px}
+section{margin-top:clamp(34px,6vw,64px)}
 
 h1{font-size:clamp(24px,5vw,36px);line-height:1.5;font-weight:800;
    letter-spacing:-.02em;margin:0 0 16px;text-wrap:balance}
@@ -46,59 +67,147 @@ a{color:var(--ink)}
 strong{font-weight:700}
 hr{border:0;border-top:1px solid var(--line);margin:34px 0}
 
-/* 名乗り。**大きくしない。**「誰か」より「何を作ったか」を先に読ませる */
-.top{padding:clamp(46px,10vw,96px) 0 0}
+/* 名乗り。**大きくしない。**「誰か」より「何を作ったか」を先に見せる */
+.top{padding:clamp(40px,9vw,84px) 0 0}
 .mark{font-family:var(--mono);font-size:11.5px;font-weight:600;
       letter-spacing:.22em;text-transform:uppercase;color:var(--faint);margin:0 0 14px}
 
-.eyebrow{display:flex;align-items:center;gap:10px;margin:0 0 14px;
+.eyebrow{display:flex;align-items:center;gap:10px;margin:0 0 16px;
   font-family:var(--mono);font-size:10.5px;font-weight:600;letter-spacing:.18em;
   text-transform:uppercase;color:var(--faint)}
 .eyebrow::after{content:"";flex:1;height:1px;background:var(--line)}
 
 .note{font-size:12.5px;line-height:1.85;color:var(--sub)}
 
-/* ---------- 道具の一覧 ---------- */
-/* カードは、その道具の色を1本の帯だけで出す。
-   **地までその色にしない。** 並べたとき、どれも自己主張して読めなくなる */
-.works{list-style:none;margin:0;padding:0;display:grid;gap:12px}
-@media (min-width:34rem){ .works{grid-template-columns:1fr 1fr} }
-.work{
-  position:relative;
-  background:var(--card);
-  border:1px solid var(--line);
-  border-radius:var(--radius);
-  padding:20px 20px 18px;
-  overflow:hidden;
-  transition:border-color .14s ease, transform .14s ease;
-}
-.work::before{content:"";position:absolute;inset:0 auto 0 0;width:4px;
-  background:var(--tint,var(--line))}
-.work:hover{border-color:#cfccc5;transform:translateY(-1px)}
-.work a{text-decoration:none;color:inherit}
-.work a::after{content:"";position:absolute;inset:0}  /* カードのどこを押しても飛ぶ */
-.work a:focus-visible{outline:none}
-.work:has(a:focus-visible){outline:2px solid var(--ink);outline-offset:3px}
-.work h3{font-size:16px;margin:0 0 3px}
-.work p{font-size:13px;line-height:1.8;color:var(--sub);margin:0;max-width:none}
-.work .meta{margin-top:10px;font-family:var(--mono);font-size:10.5px;
-  letter-spacing:.1em;color:var(--faint);text-transform:uppercase}
+/* ============================================================
+   棚。**札そのものが、その道具の顔。**
+   ============================================================ */
+.shelf{list-style:none;margin:0;padding:0;display:grid;gap:clamp(14px,2.4vw,22px)}
+@media (min-width:40rem){ .shelf{grid-template-columns:1fr 1fr} }
 
-/* ---------- 札 ---------- */
-.chips{display:flex;flex-wrap:wrap;gap:6px;margin:0;padding:0;list-style:none}
-.chips li{font-size:12px;font-weight:600;padding:5px 11px;border-radius:99px;
-  background:#fff;border:1px solid var(--line);color:var(--sub)}
+.shelf li{position:relative}
+
+/* 顔の入る枠。**角丸と影だけがこちらの持ちもので、中身は道具のもの** */
+.face{
+  position:relative;
+  aspect-ratio:16/10;
+  container-type:size;
+  border-radius:var(--radius);
+  overflow:hidden;
+  border:1px solid var(--line);
+  box-shadow:0 1px 2px rgba(26,26,26,.05);
+  transition:transform .16s ease, box-shadow .16s ease;
+}
+.shelf li:hover .face{transform:translateY(-2px);box-shadow:0 10px 26px rgba(26,26,26,.13)}
+.shelf li:has(a:focus-visible) .face{outline:2px solid var(--ink);outline-offset:3px}
+
+/* 札の下の名前。**顔の中には字を置かない**ので、名前はここに出る */
+.shelf .name{
+  display:flex;align-items:baseline;gap:9px;
+  margin:11px 2px 0;
+}
+.shelf .name b{font-size:15.5px;font-weight:700;letter-spacing:-.01em}
+.shelf .name span{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--faint);margin-left:auto;white-space:nowrap}
+.shelf a{text-decoration:none;color:inherit}
+.shelf a::after{content:"";position:absolute;inset:0}  /* 札のどこを押しても飛ぶ */
+.shelf a:focus-visible{outline:none}
+
+/* ---------- recaday の顔 ----------
+   空は skyTable.ts の 7:00 の行（zenith / mid / horizon）。
+   焼き込みは theme.ts の clockStyle：数字の高さ＝短辺 × 0.118、
+   文字サイズはそれを書体の大文字の高さ（JetBrains Mono ExtraBold = 0.73）で割る。 */
+/* 地の色。**空が描けない環境でも、ここが残る**（skyTable.ts の 7:00 の 3 色） */
+.face--recaday{
+  background:linear-gradient(to bottom,#5D8197 0%,#7097AD 52%,#CAC4A8 100%);
+}
+/* 空そのもの。**closed-test の頁と同じもの**（/assets/sky.js が描く）。
+   縞で真似ていたことがあるが、**縞は雲にならない。** */
+.face--recaday canvas{
+  position:absolute;inset:0;
+  width:100%;height:100%;display:block;
+}
+.face--recaday .clock{
+  position:absolute;top:50%;left:0;right:0;
+  transform:translateY(-50%);
+  text-align:center;
+  color:#fff;
+  font-family:"Clock Bold",ui-monospace,monospace;
+  font-size:calc(11.8cqh / 0.73);
+  line-height:1.32;
+  font-variant-numeric:tabular-nums;
+  text-shadow:0 2px 1.2cqh rgba(0,0,0,.45);
+}
+
+/* ---------- テロップスタジオの顔 ----------
+   方眼も緑もオレンジも、道具の ui/public/index.html と同じ値。
+   **緑は押せるものだけ、オレンジは押せないものだけ**という決まりも持ちこむ。 */
+.face--telop{
+  background-color:#fbf4e4;
+  background-image:
+    linear-gradient(#eee5cf 1px,transparent 1px),
+    linear-gradient(90deg,#eee5cf 1px,transparent 1px);
+  background-size:32px 32px;
+  display:flex;flex-direction:column;justify-content:center;
+  gap:4.5cqh;padding:0 7cqh;
+}
+/* 看板。緑の箱に白い字、オレンジのぼかさない影、黒の縁。
+   **枠からはみ出させないこと。** 大きさは高さから取るので、
+   横に長い名前でも収まるところまで小さくしてある */
+.face--telop .brand{
+  align-self:flex-start;max-width:100%;
+  font-family:"Telop Logo",var(--ui);font-weight:900;font-synthesis-weight:none;
+  font-size:7.2cqh;line-height:1.4;
+  color:#fff;background:#2fa45f;
+  border:2px solid #16211b;border-radius:7px;padding:0 3.5cqh 0.4cqh;
+  box-shadow:0.32em 0.32em 0 #f2913c;
+  white-space:nowrap;overflow:hidden;
+}
+/* 台本の行。**本文は、行の種類によらず必ず同じ x から始まる** */
+.face--telop .rows{display:grid;gap:2.2cqh}
+.face--telop .row{
+  display:grid;grid-template-columns:26cqh 1fr;align-items:center;gap:3.5cqh;
+  background:#fff;border:1px solid #e6dcc2;border-radius:5px;
+  padding:2cqh 3.5cqh;
+}
+/* 何の行かの札。**折り返させない。** 2 行になると行の高さが揃わなくなる */
+.face--telop .kind{
+  font-size:4.4cqh;font-weight:700;line-height:1.3;text-align:center;
+  border-radius:4px;padding:0.5cqh 0;border:1px solid transparent;
+  white-space:nowrap;
+}
+.face--telop .kind.speech{background:#e8f5ec;color:#1f7a46;border-color:#cfe8d8}
+.face--telop .kind.gap   {background:#fdeedd;color:#9a5a1c;border-color:#f7dcc1}
+.face--telop .kind.telop {background:#e6e9fd;color:#3b45a0;border-color:#ccd2f7}
+/* 字は読ませない。**行があることだけ分かればよい** */
+.face--telop .line{height:4.4cqh;border-radius:2px;background:#e9e4d6}
+.face--telop .line.short{width:52%}
+.face--telop .line.mid{width:78%}
+
+/* ---------- 顔を持たない道具 ---------- */
+.face--plain{
+  background:var(--card);
+  display:grid;place-items:center;
+}
+.face--plain i{
+  display:block;width:26cqh;height:26cqh;border-radius:6px;
+  background:var(--tint,var(--line));
+}
 
 /* ---------- 連絡先 ---------- */
-.links{list-style:none;margin:0;padding:0;display:grid;gap:2px}
+.links{list-style:none;margin:0;padding:0;display:grid;gap:2px;max-width:34rem}
 .links li{display:grid;grid-template-columns:7.5rem 1fr;gap:10px;
   padding:9px 0;border-bottom:1px solid var(--line);font-size:14px}
 .links li:last-child{border-bottom:none}
 .links b{font-weight:600;color:var(--sub);font-size:12.5px}
 
-footer{border-top:1px solid var(--line);margin-top:clamp(48px,9vw,96px);
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:0;padding:0;list-style:none}
+.chips li{font-size:12px;font-weight:600;padding:5px 11px;border-radius:99px;
+  background:#fff;border:1px solid var(--line);color:var(--sub)}
+
+footer{border-top:1px solid var(--line);margin-top:clamp(44px,8vw,88px);
   padding:20px 20px 40px;font-size:12px;color:var(--faint)}
-.footin{max-width:680px;margin:0 auto;display:flex;flex-wrap:wrap;gap:12px;
+.footin{max-width:860px;margin:0 auto;display:flex;flex-wrap:wrap;gap:12px;
   align-items:center;justify-content:space-between}
 
 @media (prefers-reduced-motion:reduce){

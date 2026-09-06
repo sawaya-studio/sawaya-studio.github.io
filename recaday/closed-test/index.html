@@ -328,8 +328,14 @@
   */
   .mask {
     position: absolute;
-    background: #5A6472;
+    /*
+      **地に溶かすこと。** 濃い帯を置くと、そこだけが目に飛びこんで
+      「何か隠した」ほうが主役になる。元の絵は白くぼかしてあったので、
+      同じ見え方にそろえる（画面の地の色に寄せて、縁をぼかす）。
+    */
+    background: #EDEEF1;
     border-radius: 2px;
+    filter: blur(1.5px);
     pointer-events: none;
   }
 

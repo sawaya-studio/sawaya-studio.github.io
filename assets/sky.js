@@ -12,12 +12,17 @@
     <canvas id="sky" data-clouds="/assets/clouds.png" aria-hidden="true"></canvas>
     <script src="/assets/sky.js" defer></script>
 
+  **画面いっぱいの 1 枚とは限らない。** data-sky を付けた canvas にも同じものが掛かる
+  （トップの札の中など）。#sky と [data-sky] の両方を拾って、1 枚ずつ同じものを回す。
+    <canvas data-sky data-clouds="/assets/clouds.png" aria-hidden="true"></canvas>
+
   色は skyTable.ts の 7:00（朝）の行で止めてある。**この site はずっと朝。**
   描けない環境では何もしない。地の色（--sky-fallback）が残るだけで、読むぶんには困らない。
 */
 (function () {
-  var canvas = document.getElementById('sky');
-  if (!canvas) return;
+
+/* 1 枚ぶん。**中身は元のまま。** 変えたのは「どの canvas に掛けるか」だけ */
+function mount(canvas) {
   var gl = canvas.getContext('webgl', { antialias: false, alpha: false, depth: false });
   if (!gl) return; // 描けなければ地の色のまま。読むぶんには困らない
 
@@ -236,4 +241,7 @@
       draw(last);
     })(start);
   }
+}
+
+document.querySelectorAll('#sky, [data-sky]').forEach(mount);
 })();

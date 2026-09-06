@@ -6,11 +6,16 @@ description: ここに、検索結果と SNS に出る一行を書く。
 ---
 
 <!--
-  Sawaya Studio の頁。**中身も見た目も、これから決める。**
+  Sawaya Studio の頁。**中身はこれから書く。** ここは骨だけ。
 
-  ・見た目（コンセプトとデザイン）は別途相談。決まったら themes/works/style.css を差し替える
-  ・載せるのは「なぜ作っているか」と「連絡先・リンク」
+  **この頁は、コンセプトを言葉で説明しない。見せて伝える。**
+  だから地は何も主張せず、棚に並ぶ札そのものがその道具の顔になっている
+  （空と焼き込みの時刻／方眼紙と緑の看板と台本の行）。
+  **札の中に説明の字を置かないこと。** 置いた瞬間に、見せる頁ではなくなる。
+
   ・作り直すのは  node tools/build.mjs        （見ながら書くなら --watch）
+  ・札の顔を足したいときは、themes/works/theme.mjs の FACE と
+    themes/works/style.css の .face--* に 1 つずつ書く
 -->
 
 ::: main
@@ -23,37 +28,18 @@ description: ここに、検索結果と SNS に出る一行を書く。
 
 # ここに、いちばん言いたい一行。
 
-ここに、その下の 2〜3 行。
-
 :::
 
 
 ::: section id=works
 
-::: eyebrow
-作ったもの
-:::
-
-<!-- [ 名前, 行き先, 一行の説明, 走る場所, その道具の色 ] -->
-::: works
+<!-- [ 名前, 行き先, 顔, 走る場所 ]  顔は recaday / telop / plain -->
+::: shelf
 [
-  ["recaday", "/recaday/", "ここに一行の説明", "iOS / Android", "#F2D357"],
-  ["テロップスタジオ", "/telop-studio/", "ここに一行の説明", "Android → iOS → PC", "#2fa45f"]
+  ["recaday", "/recaday/", "recaday", "iOS / Android"],
+  ["テロップスタジオ", "/telop-studio/", "telop", "Android → iOS → PC"]
 ]
 :::
-
-:::
-
-
-::: section id=why
-
-::: eyebrow
-なぜ作っているか
-:::
-
-## ここに見出し。
-
-ここに本文。
 
 :::
 
