@@ -403,15 +403,24 @@
     flex-direction: column;
     gap: 7px;
   }
+  /*
+    **押す所が 1 つしか無い段に、番号を振らないこと。**
+    丸の 1 と、字の頭の 1 が、どれも 1 のまま並ぶ。
+    対応づける相手がいない番号は、読む手がかりにならない。
+    2 つ以上あるときだけ .spot と .n を付ける（付けると下の段組みに変わる）。
+  */
   .notes li {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 9px;
+    display: block;
     padding: 0;
     font-size: 13px;
     font-weight: 500;
     line-height: 1.65;
     color: var(--ink);
+  }
+  .notes li:has(.n) {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 9px;
   }
   .notes .n {
     width: 17px;
@@ -532,7 +541,6 @@
           <span class="skip-tag" style="left:50.0%;top:30.0%" data-l="ja">ここは無視</span>
           <span class="skip-tag" style="left:50.0%;top:30.0%" data-l="en">Ignore this</span>
           <span class="ring" style="left:46.4%;top:13.0%;width:27.5%;height:7.2%"></span>
-          <span class="spot" style="left:73.9%;top:13.0%">1</span>
           <svg class="point" viewBox="0 0 40 40" aria-hidden="true" style="left:73.5%;top:20.5%">
             <g fill="none" stroke-linecap="round" stroke-linejoin="round">
               <g stroke="#FFFFFF" stroke-width="11" opacity="0.95">
@@ -545,9 +553,9 @@
           </svg>
         </div>
         <ul class="notes">
-          <li data-l="ja"><span class="n">1</span><span>「このコンテンツにアクセスする権限がありません」は<b>無視して</b>、
+          <li data-l="ja"><span>「このコンテンツにアクセスする権限がありません」は<b>無視して</b>、
             上の <em>グループに参加</em> を押してください。</span></li>
-          <li data-l="en"><span class="n">1</span><span><b>Ignore</b> the message in the middle of the page
+          <li data-l="en"><span><b>Ignore</b> the message in the middle of the page
             and press <em>Join group</em> at the top.</span></li>
         </ul>
         <p class="caution" data-l="en">The screenshot is in Japanese. Google Groups follows your own
@@ -571,7 +579,6 @@
         <div class="real">
           <img id="shot-play" src="shot-play.png" width="858" height="1396" alt="The Google Play testing page on a phone. Become a tester sits at the bottom." />
           <span class="ring" style="left:4.3%;top:79.4%;width:40.5%;height:8.0%"></span>
-          <span class="spot" style="left:44.8%;top:79.4%">1</span>
           <svg class="point" viewBox="0 0 40 40" aria-hidden="true" style="left:45.5%;top:88.3%">
             <g fill="none" stroke-linecap="round" stroke-linejoin="round">
               <g stroke="#FFFFFF" stroke-width="11" opacity="0.95">
@@ -584,14 +591,11 @@
           </svg>
         </div>
         <ul class="notes">
-          <li data-l="ja"><span class="n">1</span><span><em>Become a tester</em> を押します。</span></li>
-          <li data-l="en"><span class="n">1</span><span>Press <em>Become a tester</em>.</span></li>
+          <li data-l="ja"><span><em>Become a tester</em> を押します。</span></li>
+          <li data-l="en"><span>Press <em>Become a tester</em>.</span></li>
         </ul>
-        <p class="caution" data-l="ja">このページは<b>英語で出ます</b>（日本語には切り替わりません）。
-          ストアで「アイテムが見つかりません」と出たときは、
-          数分おいてから開き直してください。</p>
-        <p class="caution" data-l="en">If the store says the item cannot be found,
-          wait a few minutes and open it again.</p>
+        <p class="caution" data-l="ja">このページは<b>英語で出ます</b>（日本語には切り替わりません）。</p>
+        <p class="caution" data-l="en">This page is in English only.</p>
       </div>
     </li>
 
@@ -611,7 +615,6 @@
         <div class="real">
           <img id="shot-tester" src="shot-tester.png" width="858" height="917" alt="The testing page after opting in. The download link sits in the second paragraph." />
           <span class="ring" style="left:28.0%;top:79.8%;width:49.0%;height:5.8%"></span>
-          <span class="spot" style="left:77.0%;top:79.8%">1</span>
           <svg class="point" viewBox="0 0 40 40" aria-hidden="true" style="left:77.5%;top:86.5%">
             <g fill="none" stroke-linecap="round" stroke-linejoin="round">
               <g stroke="#FFFFFF" stroke-width="11" opacity="0.95">
@@ -624,15 +627,21 @@
           </svg>
         </div>
         <ul class="notes">
-          <li data-l="ja"><span class="n">1</span><span><em>download it on Google Play</em> を押すと、
+          <li data-l="ja"><span><em>download it on Google Play</em> を押すと、
             ストアが開きます。そこからインストールしてください。</span></li>
-          <li data-l="en"><span class="n">1</span><span>Press <em>download it on Google Play</em>.
+          <li data-l="en"><span>Press <em>download it on Google Play</em>.
             The store opens — install it from there.</span></li>
         </ul>
-        <p class="caution" data-l="ja"><b>You are a tester.</b> になっていないときは、手順 2 がまだです。
-          先にそちらを終えてください。</p>
-        <p class="caution" data-l="en">If it does not say <b>You are a tester.</b>, step 2 is not done yet.
-          Finish that first.</p>
+        <p class="caution" data-l="ja"><b>テスターになってすぐは、まだダウンロードできません。</b>
+          Google Play に配られるまで少し時間がかかります（たいてい数分ですが、
+          数時間かかることもあります）。ストアで<b>「アイテムが見つかりません」</b>と出たときは、
+          しばらくおいてから開き直してください。<br>
+          <b>You are a tester.</b> になっていないときは、手順 2 がまだです。先にそちらを終えてください。</p>
+        <p class="caution" data-l="en"><b>It is not downloadable right away.</b>
+          It takes a while for Google Play to hand out the app — usually a few minutes,
+          sometimes a few hours. If the store says <b>the item cannot be found</b>,
+          wait and open it again.<br>
+          If it does not say <b>You are a tester.</b>, step 2 is not done yet. Finish that first.</p>
       </div>
     </li>
 
