@@ -20,6 +20,8 @@ npm run serve     http://127.0.0.1:5199/ で見る
 
 ## 頁
 
+| 道 | 何の頁 | 元 |
+|---|---|---|
 | `/` | sawaya studio | `content/index.md` ／ テーマ `works` |
 | `/recaday/` | recaday の紹介 | `content/recaday/index.md` ／ テーマ `recaday` |
 | `/recaday/closed-test/` | クローズドテストの案内 | **手で書いた頁**（作り直しの対象外） |
@@ -89,6 +91,8 @@ node tools/bake-clouds.mjs
 
 ## 素材の出どころ
 
+| もの | 出どころ |
+|---|---|
 | 空・雲・ロゴ・時計の書体 | [recaday](https://github.com/sawaya-studio/recaday) から |
 | テロップスタジオの組み | 「昭和レトロポップ見本帳」（ロゴを決めるための下調べ）から |
 | 看板の書体 | 851ゴチカクット（作者: 8:51:22 pm）。改造・再配布可・商用可 |
