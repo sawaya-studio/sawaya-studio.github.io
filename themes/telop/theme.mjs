@@ -15,7 +15,7 @@
   部品の一覧は content/_書き方.md にある。
 */
 
-import { esc, unwrapP, classifyList, head } from '../_lib.mjs';
+import { esc, unwrapP, classifyList, head, social, socialRow } from '../_lib.mjs';
 // 属性に書いた **太字** や [名前](行き先) も効かせる（本文と同じ書き方でよいように）
 import { inline } from '../../tools/md.mjs';
 
@@ -65,8 +65,13 @@ ${js ? `<script src="${js}" defer></script>` : ''}
       増やすと「もう使えるのか」と思わせてしまう。
     */
     standby: ({ inner }) => `<div class="standby">
-${inner}
+${socialRow(inner)}
 </div>`,
+
+    /* 社の口。行き先は site.json の accounts に置く（content/_書き方.md 参照） */
+    youtube:   (a) => social('youtube', a),
+    instagram: (a) => social('instagram', a),
+
 
     /* 表紙。中に ::: eyebrow / # 見出し / ::: lede を置く */
     cover: ({ inner }) => `<header>\n${inner}\n</header>`,

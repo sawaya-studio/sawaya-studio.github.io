@@ -146,6 +146,35 @@
     color: var(--ink-muted);
   }
 
+
+  /* ---------- 社の口 ----------
+     空の上に置くので、**塗りは薄く、縁だけ。**
+     ここは名前を見せる頁で、押させる頁ではない。
+     濃い箱を置くと、そちらが主役になる。 */
+  .socials {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+  }
+  .standby .social {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 18px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--ink);
+    text-decoration: none;
+    background: rgba(255, 255, 255, 0.42);
+    border: 1px solid rgba(255, 255, 255, 0.72);
+    border-radius: 999px;
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+  }
+  .standby .social:hover { background: rgba(255, 255, 255, 0.62); }
+  .standby .social:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+
   /* ---------- 名前だけで 1 画面 ---------- */
   /*
     ワードマークと record a day は、tools/social/instagram.py の logo_lockup が

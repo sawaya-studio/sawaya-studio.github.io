@@ -73,3 +73,46 @@ ${page.icon ? `<link rel="icon" href="${page.icon}">\n<link rel="apple-touch-ico
 ${extra}
 <link rel="stylesheet" href="${css}">`;
 }
+
+/*
+  社の口（YouTube / Instagram）。
+  ==========================================================================
+  **行き先は site.json の accounts に置く。** .md には
+
+      ::: youtube
+      :::
+
+  と書くだけでよい。どの道具の口を出すかは、頁の theme で決まる。
+
+  **まだ持っていない口は、site.json を空のままにしておく。**
+  そうすれば頁に出ない。持ったときに site.json へ 1 行書けば出る。
+  .md の側を消して回る必要がない。
+
+  出ないときは、**なぜ出ないかを組み上がった頁に残す**（黙って消えないこと）。
+*/
+const SOCIAL_LABEL = { youtube: 'YouTube', instagram: 'Instagram' };
+
+export function social(kind, { attrs = {}, ctx = {} }) {
+  const url = attrs.href || ctx?.site?.accounts?.[ctx.theme]?.[kind] || '';
+  if (!url) return `<!-- ${kind}: site.json の accounts.${ctx.theme ?? '?'} に行き先がありません -->`;
+  const label = attrs.label || SOCIAL_LABEL[kind] || kind;
+  return `<a class="social social--${kind}" href="${esc(url)}"`
+    + ` target="_blank" rel="noopener">${esc(label)}</a>`;
+}
+
+/*
+  並んだ社の口を、1 本の行にまとめる。
+  ::: youtube と ::: instagram は別々の部品なので、そのまま置くと縦に積まれる。
+  **2 つ以上あるときは横に並べる。** 縦に積むと、button が 2 つある画面に見えて、
+  「準備中の頁」から「何かさせたい頁」に変わってしまう。
+*/
+export function socialRow(html) {
+  const links = String(html).match(/<a class="social[\s\S]*?<\/a>/g);
+  if (!links || links.length < 2) return html;
+  let first = true;
+  return String(html).replace(/<a class="social[\s\S]*?<\/a>/g, () => {
+    if (!first) return '';
+    first = false;
+    return `<div class="socials">${links.join('')}</div>`;
+  });
+}

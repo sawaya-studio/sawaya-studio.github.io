@@ -11,7 +11,7 @@
   部品の一覧は content/_書き方.md にある。
 */
 
-import { t, has, esc, unwrapP, classifyList, dataScript, head } from '../_lib.mjs';
+import { t, has, esc, unwrapP, classifyList, dataScript, head, social, socialRow } from '../_lib.mjs';
 
 /* 焼き込みの枠。**比率はアプリと同じ**（src/theme.ts の clockStyle / CLOCK_FONTS）。
    ここでは書体の名前だけを扱う。実際の数値は style.css の .burn[data-font] に置いてある */
@@ -132,8 +132,13 @@ ${js ? `<script src="${js}" defer></script>` : ""}
     */
     standby: ({ inner }) => `<section class="standby">
   <img class="lockup" src="/assets/recaday-lockup.png" width="1658" height="536" alt="recaday — record a day">
-${inner}
+${socialRow(inner)}
 </section>`,
+
+    /* 社の口。行き先は site.json の accounts に置く（content/_書き方.md 参照） */
+    youtube:   (a) => social('youtube', a),
+    instagram: (a) => social('instagram', a),
+
 
     /* 名前だけで 1 画面。ワードマークは焼いた 1 枚をそのまま置く。
        **CSS で組み直さないこと**（字間も 2 段の重心も、あちらで測って詰めてある） */

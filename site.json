@@ -1,4 +1,16 @@
 {
   "name": "sawaya studio",
-  "origin": "https://sawaya-studio.github.io"
+  "origin": "https://sawaya-studio.github.io",
+
+  "//accounts": "道具ごとの社の口。**空の口は頁に出ない。** 持ったら URL を書けば出る（鍵は頁の theme 名）",
+  "accounts": {
+    "recaday": {
+      "instagram": "https://www.instagram.com/recaday_app/",
+      "youtube": ""
+    },
+    "telop": {
+      "instagram": "",
+      "youtube": ""
+    }
+  }
 }

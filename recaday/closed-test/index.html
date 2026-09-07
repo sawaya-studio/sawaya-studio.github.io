@@ -443,6 +443,27 @@
     padding: 1px 5px;
     white-space: nowrap;
   }
+  /*
+    **待ってほしいことだけを、大きく出す。**
+    ここは「押しても出ない」に当たった人が読むところ。
+    小さい灰の字に混ぜると読み飛ばされ、壊れていると思われる。
+
+    金（--go-fill）はこの頁では「押す所」の色なので、使わない。
+    同じ色にすると、札そのものが押せるものに見える。
+  */
+  .warn {
+    margin: 0;
+    padding: 11px 14px;
+    background: #FFF1EC;
+    border: 2px solid #C8452C;
+    border-radius: var(--plate-radius);
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.75;
+    color: #8E2C1A;
+  }
+  .warn b { font-size: 15px; }
+
   .caution {
     margin: 0;
     font-size: 11.5px;
@@ -632,16 +653,16 @@
           <li data-l="en"><span>Press <em>download it on Google Play</em>.
             The store opens — install it from there.</span></li>
         </ul>
-        <p class="caution" data-l="ja"><b>テスターになってすぐは、まだダウンロードできません。</b>
-          Google Play に配られるまで少し時間がかかります（たいてい数分ですが、
-          数時間かかることもあります）。ストアで<b>「アイテムが見つかりません」</b>と出たときは、
-          しばらくおいてから開き直してください。<br>
-          <b>You are a tester.</b> になっていないときは、手順 2 がまだです。先にそちらを終えてください。</p>
-        <p class="caution" data-l="en"><b>It is not downloadable right away.</b>
-          It takes a while for Google Play to hand out the app — usually a few minutes,
-          sometimes a few hours. If the store says <b>the item cannot be found</b>,
-          wait and open it again.<br>
-          If it does not say <b>You are a tester.</b>, step 2 is not done yet. Finish that first.</p>
+        <p class="warn" data-l="ja">テスター登録後、すぐにはダウンロードできないことがあります。<br>
+          Google Play に反映されるまで時間がかかることがあります。（最大で数時間かかることがあります）
+          アイテムが見つからないときは、お手数ですが、時間を置いてからお試しください。</p>
+        <p class="warn" data-l="en">You may not be able to download it right after joining the test.<br>
+          It can take a while for Google Play to update (sometimes a few hours).
+          If you cannot find the item, please wait and try again.</p>
+        <p class="caution" data-l="ja"><b>You are a tester.</b> になっていないときは、手順 2 がまだです。
+          先にそちらを終えてください。</p>
+        <p class="caution" data-l="en">If it does not say <b>You are a tester.</b>, step 2 is not done yet.
+          Finish that first.</p>
       </div>
     </li>
 

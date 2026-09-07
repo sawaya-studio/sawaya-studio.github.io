@@ -30,4 +30,12 @@ appleIcon: /telop-studio/icon.png
 
 準備中
 
+<!-- 社の口。**行き先は site.json の accounts に書く。**
+     空にしてあるものは、ここに置いても頁に出ない（YouTube はまだ無い） -->
+::: youtube
+:::
+
+::: instagram
+:::
+
 :::

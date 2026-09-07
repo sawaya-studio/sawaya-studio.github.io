@@ -152,6 +152,24 @@ body{
 }
 .standby .en{font-size:clamp(10px,1.6vw,12px)}
 
+
+/* ---------- 社の口 ----------
+   看板と同じ組み（白い紙に黒の縁と硬い影）。**看板より小さくすること。**
+   主役は看板のほうで、これは覗き口 */
+.socials{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+.standby .social{
+  display:inline-flex;align-items:center;
+  font-family:var(--display);font-size:14px;
+  background:var(--paper);color:var(--ink);
+  border:2px solid var(--ink);border-radius:10px;
+  padding:8px 18px;text-decoration:none;
+  box-shadow:var(--shadow-s);
+  transition:transform .1s, box-shadow .1s;
+}
+.standby .social:hover{background:var(--mustard)}
+/* **押すと沈む。** 影のぶんだけ動かすと、指の下で紙が凹んだように見える */
+.standby .social:active{transform:translate(3px,3px);box-shadow:none}
+
 /* ---------- 表紙 ---------- */
 header{padding:54px 0 30px;text-align:center}
 /* 小さい札。**からし色に黒の縁と硬い影。** 丸くするのは、下の章の丸番号と揃えるため */
