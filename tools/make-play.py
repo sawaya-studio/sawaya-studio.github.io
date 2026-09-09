@@ -46,6 +46,7 @@ OUT_DIR = os.path.join(ROOT, "assets/play")
 # **themes/works/style.css の --ink / --paper と同じ値にすること**
 GROUND = (0x1A, 0x1A, 0x18)   # 地（--ink）
 INK = (0xF7, 0xF7, 0xF6)      # 字（--paper）
+PAPER = (0xF7, 0xF7, 0xF6)    # 明るい地に置くときの、地の色
 
 # ---- アイコン ----
 ICON_SIDE = 512
@@ -87,8 +88,11 @@ def load(weight):
     return font, data, tmp
 
 
-def wordmark(px_w):
+def wordmark(px_w, fill=INK):
     """ロゴを、ink の囲みぴったりに切った RGBA で返す（幅 px_w）。
+
+    **地に合わせて fill を変えること。** 暗い地には紙の色、明るい地には墨の色。
+    片方の色で焼いたものを両方に使い回すと、片方で消える。
 
     並べ方は make-logo.py と同じ。**書体の kern を HarfBuzz に効かせ**、
     そのうえで全体の字間（TRACKING）と対ごとの詰め（PAIRS）を足す。
@@ -128,7 +132,7 @@ def wordmark(px_w):
         base = size * 2
         for ch, ox in zip(HEAD_TEXT, xs):
             if ch != " ":
-                d.text((pad + ox * k, base), ch, font=f, fill=INK + (255,), anchor="ls")
+                d.text((pad + ox * k, base), ch, font=f, fill=tuple(fill) + (255,), anchor="ls")
     finally:
         os.remove(tmp)
 
@@ -176,12 +180,29 @@ def header():
     return out
 
 
+def logo():
+    """ロゴだけの 1 枚（地は紙の色）。
+
+    **携帯や、ほかの場に持っていくためのもの。**
+    site の中では assets/sawaya-studio.svg（図）を使うこと。
+    png は大きさが決まってしまうので、頁には置かない。
+    """
+    w = 2048
+    mark = wordmark(int(w * 0.78), GROUND)  # 明るい地なので、字は墨の色
+    h = int(mark.height / 0.42)             # 上下は、字の高さの倍ほど空ける
+    img = Image.new("RGB", (w, h), PAPER)
+    img.paste(mark, ((w - mark.width) // 2, (h - mark.height) // 2), mark)
+    out = os.path.join(OUT_DIR, "logo-2048.png")
+    img.save(out)
+    return out
+
+
 def main():
     if not os.path.exists(SRC):
         sys.exit("元の書体が無い: " + SRC)
     os.makedirs(OUT_DIR, exist_ok=True)
 
-    for out in (icon(), header()):
+    for out in (icon(), header(), logo()):
         im = Image.open(out)
         kb = os.path.getsize(out) / 1024
         # **1MB を超えたら Play が受け取らない**ので、ここで気づけるようにする
