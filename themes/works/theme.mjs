@@ -7,7 +7,7 @@
 
 import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { esc, unwrapP, classifyList, head } from '../_lib.mjs';
+import { esc, unwrapP, classifyList, head, bi, LANG_SCRIPT } from '../_lib.mjs';
 // 日本語の字詰め。**約物は枠の半分しか墨が無い**ので、そこを詰める
 import { kernText } from '../../tools/kerning.mjs';
 
@@ -49,16 +49,33 @@ const FACE = {
   */
   telop: () => '<div class="brand">テロップスタジオ</div>',
 
+  /*
+    うしろ … 白い紙
+    まんなか … タイル 4 つのしるし
+
+    値は道具の theme/index.ts から（白・黒・原色の青 #0026e6）。
+    **角を丸めないこと。** この道具が作るのは四角いタイルで、
+    道具の形もそれにそろえてある。1 か所でも丸めると別のアプリの顔になる。
+  */
+  mosaic: () => '<svg class="tiles" viewBox="0 0 100 100" aria-hidden="true">'
+    + '<rect x="14" y="14" width="72" height="72" fill="#000000"/>'
+    + '<rect x="19.5" y="19.5" width="28" height="28" fill="#0026e6"/>'
+    + '<rect x="52" y="19.5" width="28" height="28" fill="#ffffff"/>'
+    + '<rect x="52" y="52" width="28" height="28" fill="#0026e6"/>'
+    + '</svg>',
+
   // まだ顔を持たない道具。色だけ置く
   plain: () => '<i></i>',
 };
 
 export default {
   shell({ page, body, css, js }) {
+    const lang = page.lang ?? 'ja';
     return `<!doctype html>
-<html lang="${page.lang ?? 'ja'}">
+<html lang="${lang}" data-lang="${lang}">
 <head>
 ${head({ page, css })}
+${LANG_SCRIPT}
 </head>
 <body>
 ${body}
@@ -72,6 +89,10 @@ ${js ? `<script src="${js}" defer></script>` : ''}
 
   blocks: {
     main:    ({ inner }) => `<main>\n${inner}\n</main>`,
+
+    /* 言葉。**両方を組んでおいて、片方を伏せる**（決めるのは頭の script） */
+    ja: ({ inner }) => `<div data-l="ja">\n${inner}\n</div>`,
+    en: ({ inner }) => `<div data-l="en">\n${inner}\n</div>`,
     top:     ({ inner }) => `<section class="top">\n${inner}\n</section>`,
     section: ({ attrs, inner }) =>
       `<section${attrs.id ? ` id="${esc(attrs.id)}"` : ''}>\n${inner}\n</section>`,
@@ -140,10 +161,10 @@ ${js ? `<script src="${js}" defer></script>` : ''}
 ${data.map(([name, href, face, meta, links]) =>
   `  <li>
     <div class="face face--${esc(face || 'plain')}" aria-hidden="true">${FACE[face] ? FACE[face]() : FACE.plain()}</div>
-    <div class="name"><b><a href="${esc(href)}">${esc(name)}</a></b>${meta ? `<span>${esc(meta)}</span>` : ''}</div>${
+    <div class="name"><b><a href="${esc(href)}">${bi(name)}</a></b>${meta ? `<span>${bi(meta)}</span>` : ''}</div>${
     Array.isArray(links) && links.length ? `
     <div class="more">${links.map(([label, to]) =>
-      `<a href="${esc(to)}"${/^https?:/.test(to) ? ' target="_blank" rel="noopener"' : ''}>${esc(label)}</a>`).join('')}</div>` : ''}
+      `<a href="${esc(to)}"${/^https?:/.test(to) ? ' target="_blank" rel="noopener"' : ''}>${bi(label)}</a>`).join('')}</div>` : ''}
   </li>`).join('\n')}
 </ul>`;
     },
@@ -162,7 +183,7 @@ ${data.map(([label, href, text]) => {
   const body = LINKABLE.test(href)
     ? `<a href="${esc(href)}"${/^https?:/.test(href) ? ' target="_blank" rel="noopener"' : ''}>${shown}</a>`
     : shown;
-  return `  <li><b>${esc(label)}</b><span>${body}</span></li>`;
+  return `  <li><b>${bi(label)}</b><span>${body}</span></li>`;
 }).join('\n')}
 </ul>`;
     },

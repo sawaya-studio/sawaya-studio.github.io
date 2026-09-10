@@ -11,7 +11,7 @@
   部品の一覧は content/_書き方.md にある。
 */
 
-import { t, has, esc, unwrapP, classifyList, dataScript, head, social, socialRow } from '../_lib.mjs';
+import { t, has, esc, unwrapP, classifyList, dataScript, head, social, socialRow, LANG_SCRIPT } from '../_lib.mjs';
 
 /* 焼き込みの枠。**比率はアプリと同じ**（src/theme.ts の clockStyle / CLOCK_FONTS）。
    ここでは書体の名前だけを扱う。実際の数値は style.css の .burn[data-font] に置いてある */
@@ -45,33 +45,33 @@ export default {
   /* ---------- 頁の外枠 ---------- */
   shell({ page, body, css, js }) {
     /*
-      **言葉の切り替えは、両方の言葉があるときだけ出す。**
-      準備中の一枚のように片方しか無い頁に出しても、押して変わるものが無い。
-      頁の中に data-l があるかどうかで決める（front matter に旗を足さない）。
+      **どちらの言葉で出すかは、端末の設定で決まる**（themes/_lib.mjs の LANG_SCRIPT）。
+      切り替えの札はふつう出さない。**押して選ばせるより、黙って合っているほうがよい。**
+
+      front matter に `langSwitch: true` と書いた頁だけ、手で選べる札を出す。
+      closed test のように「日本語の端末で英語の案内を見たい」が実際に起きる
+      頁のためのもの。**押した選びは覚える**（貯め場が無い環境でも落ちないように、
+      触るのは try の中）。
     */
-    const bilingual = /data-l=/.test(body);
+    const lang = page.lang ?? 'ja';
+    const swi = page.langSwitch === true || page.langSwitch === 'true';
     return `<!doctype html>
-<html lang="${page.lang ?? 'ja'}">
+<html lang="${lang}" data-lang="${lang}">
 <head>
 ${head({ page, css })}
-
-${bilingual ? `<script>
-/*
-  どちらの言葉で出すかを、**組み上がる前に**決める。
-  あとから差し替える作りだと、最初の一瞬だけもう片方が見える。
-  貯め場が使えない環境（私用の窓など）でも落ちないように、触るのは try の中。
-*/
+${LANG_SCRIPT}
+${swi ? `<script>
 (function () {
   var saved = null;
   try { saved = localStorage.getItem('recaday-lang'); } catch (e) { /* 貯め場が無いだけ */ }
-  var lang = saved || ((navigator.language || 'en').toLowerCase().indexOf('ja') === 0 ? 'ja' : 'en');
-  document.documentElement.dataset.lang = lang;
-  document.documentElement.lang = lang;
+  if (!saved) return;
+  document.documentElement.dataset.lang = saved;
+  document.documentElement.lang = saved;
 })();
 </script>` : ''}
 </head>
 <body>
-${bilingual ? `
+${swi ? `
 <div class="lang" role="group" aria-label="Language">
   <button type="button" data-set="ja">日本語</button>
   <button type="button" data-set="en">English</button>

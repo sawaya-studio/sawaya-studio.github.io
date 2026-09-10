@@ -1,9 +1,10 @@
 <!doctype html>
-<html lang="ja">
+<html lang="ja" data-lang="ja">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>テロップスタジオ</title>
+<meta name="title-en" content="telop studio">
 <meta name="description" content="準備中です。">
 <meta property="og:title" content="テロップスタジオ">
 <meta property="og:description" content="準備中です。">
@@ -16,13 +17,28 @@
 <link rel="canonical" href="https://sawaya-studio.github.io/telop-studio/">
 
 <link rel="stylesheet" href="../assets/telop.css">
+<script>
+(function () {
+  var l = (navigator.language || 'en').toLowerCase().indexOf('ja') === 0 ? 'ja' : 'en';
+  document.documentElement.dataset.lang = l;
+  document.documentElement.lang = l;
+  // 頁の名前も入れ替える（tab とブックマークに出るもの）
+  var m = document.querySelector('meta[name="title-en"]');
+  if (l === 'en' && m && m.content) document.title = m.content;
+})();
+</script>
 </head>
 <body>
 
 <div class="standby">
 <span class="brand brand--xl">テロップスタジオ</span>
     <span class="en">TELOP STUDIO</span>
+<div data-l="ja">
 <p>準備中</p>
+</div>
+<div data-l="en">
+<p>COMING SOON</p>
+</div>
 <!-- youtube: site.json の accounts.telop に行き先がありません -->
 <!-- instagram: site.json の accounts.telop に行き先がありません -->
 </div>

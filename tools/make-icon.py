@@ -185,6 +185,54 @@ def recaday():
           % (os.path.relpath(R_OUT, ROOT), os.path.getsize(R_OUT) / 1024, PNG_SIDE, PNG_SIDE))
 
 
+
+# ---- オートモザイク ---------------------------------------------------------
+
+M_SVG = os.path.join(ROOT, "assets/auto-mosaic-icon.svg")
+M_PNG = os.path.join(ROOT, "assets/auto-mosaic-icon.png")
+# 道具の theme/index.ts の値。**混ぜものをしないこと**
+M_KEY = "#0026E6"
+M_INK = "#000000"
+M_PAPER = "#FFFFFF"
+
+
+def auto_mosaic():
+    """オートモザイクのアイコン。**タイル 4 つ。**
+
+    道具のアイコン（mobile/assets/icon-512.png）と同じ組みだが、
+    **黒を四角いっぱいに広げてある。** あちらは白い余白の中に黒い四角が
+    浮いていて、16px まで縮めると縁の黒が消えてタイルだけが散る。
+
+    **角は丸めない。** この道具が作るのは四角いタイル。
+    """
+    # 100 の中で … 縁 8、タイル 39、あいだ 6
+    B, T, G = 8, 39, 6
+    tiles = [(B, B, M_KEY), (B + T + G, B, M_PAPER), (B + T + G, B + T + G, M_KEY)]
+
+    rows = ['<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" '
+            'role="img" aria-label="auto mosaic">',
+            '  <rect width="100" height="100" fill="%s"/>' % M_INK]
+    for x, y, c in tiles:
+        rows.append('  <rect x="%d" y="%d" width="%d" height="%d" fill="%s"/>'
+                    % (x, y, T, T, c))
+    rows.append('</svg>')
+    with open(M_SVG, "w", encoding="utf-8", newline="\n") as fh:
+        fh.write("\n".join(rows) + "\n")
+
+    # PNG。**縮めてぼかさないこと。** 直線しか無いので、そのままの大きさで描く
+    k = PNG_SIDE / 100.0
+    img = Image.new("RGB", (PNG_SIDE, PNG_SIDE), M_INK)
+    d = ImageDraw.Draw(img)
+    for x, y, c in tiles:
+        d.rectangle([round(x * k), round(y * k),
+                     round((x + T) * k) - 1, round((y + T) * k) - 1], fill=c)
+    img.save(M_PNG)
+
+    for f in (M_SVG, M_PNG):
+        print("%s  %.1f KB" % (os.path.relpath(f, ROOT), os.path.getsize(f) / 1024))
+
+
 if __name__ == "__main__":
     main()
     recaday()
+    auto_mosaic()

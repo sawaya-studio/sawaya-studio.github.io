@@ -8,7 +8,10 @@
 <meta property="og:title" content="recaday クローズドテスト">
 <meta property="og:description" content="Google グループに入って、Google Play からインストールするだけです。">
 <meta property="og:type" content="website">
-<meta property="og:image" content="https://sawaya-studio.github.io/assets/recaday-lockup.png">
+<meta property="og:image" content="https://sawaya-studio.github.io/assets/cards/recaday-1200x630.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="RECADAY — record a day">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="../../assets/recaday-icon.png">
 <link rel="apple-touch-icon" href="../../assets/recaday-icon.png">
@@ -242,7 +245,7 @@
   }
 
   .act {
-    grid-column: 2;
+    grid-column: 1 / -1;
     margin-top: 14px;
     display: inline-flex;
     align-items: center;
@@ -275,8 +278,16 @@
      こちらで足しているのは金色の枠と番号と矢印だけ。
      顔写真と連絡先のメールは伏せてある（この頁は誰の手にも渡るため）。
      ============================================================ */
+  /*
+    **図と button は、札の幅いっぱいに取る。**
+    番号の列（22px）とその隙間（14px）のぶんだけ、中身が右へ寄っていた。
+    左 55px / 右 19px で、札の中で中央がずれて見える。
+
+    番号は見出しに付くものなので、**見出しだけ番号の隣**に置き、
+    その下は札の縁に揃える。
+  */
   .how {
-    grid-column: 2;
+    grid-column: 1 / -1;
     margin-top: 14px;
     display: flex;
     flex-direction: column;

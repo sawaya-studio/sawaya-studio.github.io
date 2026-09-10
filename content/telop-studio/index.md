@@ -2,6 +2,7 @@
 theme: telop
 lang: ja
 title: テロップスタジオ
+titleEn: telop studio
 description: 準備中です。
 image: /telop-studio/icon.png
 twitterCard: summary
@@ -17,7 +18,9 @@ appleIcon: /telop-studio/icon.png
 
   組みは「昭和レトロポップ見本帳」と同じ（地はクリームの方眼紙、
   看板は緑の箱に白い字・オレンジのぼかさない影・黒の縁）。
-  夜はネオン看板に切り替わる。
+
+  **日本語と英語は、両方を書いておく。** どちらを出すかは、見る人の端末の
+  言葉の設定で自動で決まる（切り替えの札は出さない）。
 
   中身を足すときに使える部品は content/_書き方.md、
   手順は content/_手順.md にある。
@@ -28,10 +31,15 @@ appleIcon: /telop-studio/icon.png
 ::: brand name="テロップスタジオ" en="TELOP STUDIO" size=xl
 :::
 
+::: ja
 準備中
+:::
 
-<!-- 社の口。**行き先は site.json の accounts に書く。**
-     空にしてあるものは、ここに置いても頁に出ない（YouTube はまだ無い） -->
+::: en
+COMING SOON
+:::
+
+<!-- 社の口。行き先は site.json の accounts に書く（いまは空なので出ない） -->
 ::: youtube
 :::
 

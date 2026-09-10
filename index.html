@@ -1,9 +1,10 @@
 <!doctype html>
-<html lang="ja">
+<html lang="ja" data-lang="ja">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>sawaya studio</title>
+
 <meta name="description" content="sawaya studio top ページ">
 <meta property="og:title" content="sawaya studio">
 <meta property="og:description" content="sawaya studio top ページ">
@@ -15,6 +16,16 @@
 <link rel="canonical" href="https://sawaya-studio.github.io/">
 
 <link rel="stylesheet" href="./assets/works.css">
+<script>
+(function () {
+  var l = (navigator.language || 'en').toLowerCase().indexOf('ja') === 0 ? 'ja' : 'en';
+  document.documentElement.dataset.lang = l;
+  document.documentElement.lang = l;
+  // 頁の名前も入れ替える（tab とブックマークに出るもの）
+  var m = document.querySelector('meta[name="title-en"]');
+  if (l === 'en' && m && m.content) document.title = m.content;
+})();
+</script>
 </head>
 <body>
 <main>
@@ -33,26 +44,46 @@
   <path d="M6835.171246152092 -624.9830121992932V-743.0H6971.581689659104V-624.9830121992932ZM6836.907194162582 0.0V-510.0H6969.845741648614V0.0Z"/>
   <path d="M7411.735948010489 8.0Q7345.679740052446 8.0 7302.0856230760455 0.06601299737772237Q7258.491506099646 -7.867974005244555 7233.1614411127575 -25.867974005244555Q7207.83137612587 -43.867974005244555 7196.1993501311135 -73.93398700262227Q7184.567324136358 -104.0 7181.067324136358 -148.93398700262227Q7177.567324136358 -193.86797400524455 7177.567324136358 -255.86797400524455Q7177.567324136358 -317.86797400524455 7181.067324136358 -362.36797400524455Q7184.567324136358 -406.86797400524455 7196.1993501311135 -436.9339870026223Q7207.83137612587 -467.0 7233.1614411127575 -485.0Q7258.491506099646 -503.0 7302.0856230760455 -510.5Q7345.679740052446 -518.0 7411.735948010489 -518.0Q7477.792155968533 -518.0 7521.386272944932 -510.5Q7564.980389921332 -503.0 7590.31045490822 -485.0Q7615.640519895109 -467.0 7627.3385588872425 -436.9339870026223Q7639.036597879375 -406.86797400524455 7642.536597879375 -362.36797400524455Q7646.036597879375 -317.86797400524455 7646.036597879375 -255.86797400524455Q7646.036597879375 -193.86797400524455 7642.536597879375 -148.93398700262227Q7639.036597879375 -104.0 7627.3385588872425 -73.93398700262227Q7615.640519895109 -43.867974005244555 7590.31045490822 -25.867974005244555Q7564.980389921332 -7.867974005244555 7521.386272944932 0.06601299737772237Q7477.792155968533 8.0 7411.735948010489 8.0ZM7411.735948010489 -98.6012997377722Q7449.435298141603 -98.6012997377722 7470.520921217649 -103.70522175350587Q7491.606544293695 -108.80914376923954 7500.38040132254 -124.5830007980846Q7509.154258351386 -140.35685782692966 7511.02223235663 -172.03659787937522Q7512.890206361874 -203.71633793182076 7512.890206361874 -255.86797400524455Q7512.890206361874 -308.1516360734238 7511.02223235663 -339.3313761258694Q7509.154258351386 -370.5111161783149 7500.38040132254 -386.28497320715996Q7491.606544293695 -402.058830236005 7470.520921217649 -406.7287652491164Q7449.435298141603 -411.3987002622278 7411.735948010489 -411.3987002622278Q7374.036597879375 -411.3987002622278 7352.950974803329 -406.7287652491164Q7331.865351727283 -402.058830236005 7323.157507695816 -386.28497320715996Q7314.449663664348 -370.5111161783149 7312.581689659104 -339.3313761258694Q7310.713715653859 -308.1516360734238 7310.713715653859 -255.86797400524455Q7310.713715653859 -203.71633793182076 7312.581689659104 -172.03659787937522Q7314.449663664348 -140.35685782692966 7323.157507695816 -124.5830007980846Q7331.865351727283 -108.80914376923954 7352.950974803329 -103.70522175350587Q7374.036597879375 -98.6012997377722 7411.735948010489 -98.6012997377722Z"/>
 </svg></p>
+<div data-l="ja">
 <h1 class="catch">ちょっとだけおしゃれに<br>
 ちょっとだけたのしく</h1>
+</div>
+<div data-l="en">
+<h1 class="catch">a little more beautiful<br>
+a little more fun</h1>
+</div>
 <br/>
+<div data-l="ja">
 <p class="lead">かんたんに生活を彩るアプリを作っています</p>
+</div>
+<div data-l="en">
+<p class="lead">Small apps that add a little colour to the day</p>
+</div>
 </section>
 <section id="works">
 <ul class="shelf">
   <li>
     <div class="face face--recaday" aria-hidden="true"><canvas data-sky></canvas><img class="lockup" src="./assets/recaday-lockup.png" width="1658" height="536" alt=""></div>
-    <div class="name"><b><a href="./recaday/closed-test/">recaday</a></b><span>Android (iOS 対応予定)</span></div>
+    <div class="name"><b><a href="./recaday/closed-test/">recaday</a></b><span><span data-l="ja">Android (iOS 対応予定)</span><span data-l="en">Android (iOS to follow)</span></span></div>
     <div class="more"><a href="https://www.instagram.com/recaday_app/" target="_blank" rel="noopener">Instagram</a></div>
   </li>
   <li>
+    <div class="face face--mosaic" aria-hidden="true"><svg class="tiles" viewBox="0 0 100 100" aria-hidden="true"><rect x="14" y="14" width="72" height="72" fill="#000000"/><rect x="19.5" y="19.5" width="28" height="28" fill="#0026e6"/><rect x="52" y="19.5" width="28" height="28" fill="#ffffff"/><rect x="52" y="52" width="28" height="28" fill="#0026e6"/></svg></div>
+    <div class="name"><b><a href="./auto-mosaic/"><span data-l="ja">オートモザイク</span><span data-l="en">auto mosaic</span></a></b><span><span data-l="ja">未リリース (iOS / Android 対応予定)</span><span data-l="en">Not released yet (iOS / Android)</span></span></div>
+  </li>
+  <li>
     <div class="face face--telop" aria-hidden="true"><div class="brand">テロップスタジオ</div></div>
-    <div class="name"><b><a href="./telop-studio/">テロップスタジオ</a></b><span>未リリース (iOS / Android / PC 対応予定)</span></div>
+    <div class="name"><b><a href="./telop-studio/"><span data-l="ja">テロップスタジオ</span><span data-l="en">telop studio</span></a></b><span><span data-l="ja">未リリース (iOS / Android / PC 対応予定)</span><span data-l="en">Not released yet (iOS / Android / PC)</span></span></div>
   </li>
 </ul>
 </section>
 <section id="contact">
+<div data-l="ja">
 <p class="eyebrow">連絡先</p>
+</div>
+<div data-l="en">
+<p class="eyebrow">Contact</p>
+</div>
 <ul class="links">
   <li><b>GitHub</b><span><a href="https://github.com/sawaya-studio" target="_blank" rel="noopener">https://github.com/sawaya-studio</a></span></li>
   <li><b>Email</b><span>kento.sawaya at gmail.com</span></li>
@@ -62,7 +93,8 @@
 <footer>
   <div class="footin">
 <span>sawaya studio</span>
-<span>あなたの生活によりそう</span>
+<span data-l="ja">あなたの生活によりそう</span>
+<span data-l="en">Close to your everyday</span>
   </div>
 </footer>
 <script src="./assets/clouds.js" defer></script>

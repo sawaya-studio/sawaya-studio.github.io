@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ja" data-lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>オートモザイク</title>
+<meta name="title-en" content="auto mosaic">
+<meta name="description" content="準備中です。">
+<meta property="og:title" content="オートモザイク">
+<meta property="og:description" content="準備中です。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://sawaya-studio.github.io/auto-mosaic/">
+
+<link rel="icon" href="../assets/auto-mosaic-icon.png">
+<link rel="apple-touch-icon" href="../assets/auto-mosaic-icon.png">
+<link rel="canonical" href="https://sawaya-studio.github.io/auto-mosaic/">
+
+<link rel="stylesheet" href="../assets/auto-mosaic.css">
+<script>
+(function () {
+  var l = (navigator.language || 'en').toLowerCase().indexOf('ja') === 0 ? 'ja' : 'en';
+  document.documentElement.dataset.lang = l;
+  document.documentElement.lang = l;
+  // 頁の名前も入れ替える（tab とブックマークに出るもの）
+  var m = document.querySelector('meta[name="title-en"]');
+  if (l === 'en' && m && m.content) document.title = m.content;
+})();
+</script>
+</head>
+<body>
+<main class="standby">
+  <svg class="mark" viewBox="0 0 100 100" role="img" aria-label="auto mosaic">
+  <rect x="14" y="14" width="72" height="72" fill="currentColor"/>
+  <rect x="19.5" y="19.5" width="28" height="28" fill="var(--key)"/>
+  <rect x="52"   y="19.5" width="28" height="28" fill="var(--paper)"/>
+  <rect x="52"   y="52"   width="28" height="28" fill="var(--key)"/>
+</svg>
+  <p class="brand">auto mosaic</p>
+<div data-l="ja">
+<p class="note">準備中</p>
+</div>
+<div data-l="en">
+<p class="note">COMING SOON</p>
+</div>
+<!-- youtube: site.json の accounts.auto-mosaic に行き先がありません -->
+<!-- instagram: site.json の accounts.auto-mosaic に行き先がありません -->
+</main>
+
+</body>
+</html>

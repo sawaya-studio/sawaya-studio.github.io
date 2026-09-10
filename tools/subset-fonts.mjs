@@ -104,6 +104,20 @@ const JOBS = [
   },
   {
     /*
+      オートモザイクの書体（IBM Plex Sans JP、SIL OFL）。**この頁だけ。**
+
+      道具が同梱しているものと同じ（auto-mosaic/mobile/theme/index.ts の FONT.bold）。
+      **端末の書体に任せない**のは道具の側の決めごとで、頁もそれに合わせる。
+      元は 4.5MB あるので、頁に出る字だけに絞る。
+    */
+    name: 'IBM Plex Sans JP',
+    from: 'E:/claude_workspace/auto-mosaic/mobile/node_modules/@expo-google-fonts/ibm-plex-sans-jp/700Bold/IBMPlexSansJP_700Bold.ttf',
+    to: 'assets/fonts/IBMPlexSansJP-Bold.woff2',
+    pages: ['auto-mosaic/index.html'],
+    extra: ASCII,
+  },
+  {
+    /*
       看板の書体（851ゴチカクット）。**看板に出る字だけ。**
       頁ぜんぶを拾うと、本文の字まで入って重くなる（本文には使わない書体）。
       だから class="brand" の中だけを見る。

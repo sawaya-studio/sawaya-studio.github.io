@@ -1,22 +1,35 @@
 <!doctype html>
-<html lang="ja">
+<html lang="ja" data-lang="ja">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>recaday</title>
+
 <meta name="description" content="準備中です。">
 <meta property="og:title" content="recaday">
 <meta property="og:description" content="準備中です。">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://sawaya-studio.github.io/recaday/">
-<meta property="og:image" content="https://sawaya-studio.github.io/assets/recaday-lockup.png">
+<meta property="og:image" content="https://sawaya-studio.github.io/assets/cards/recaday-1200x630.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="RECADAY — record a day">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="../assets/recaday-icon.png">
 <link rel="apple-touch-icon" href="../assets/recaday-icon.png">
 <link rel="canonical" href="https://sawaya-studio.github.io/recaday/">
 
 <link rel="stylesheet" href="../assets/recaday.css">
-
+<script>
+(function () {
+  var l = (navigator.language || 'en').toLowerCase().indexOf('ja') === 0 ? 'ja' : 'en';
+  document.documentElement.dataset.lang = l;
+  document.documentElement.lang = l;
+  // 頁の名前も入れ替える（tab とブックマークに出るもの）
+  var m = document.querySelector('meta[name="title-en"]');
+  if (l === 'en' && m && m.content) document.title = m.content;
+})();
+</script>
 
 </head>
 <body>
@@ -51,7 +64,12 @@
 <main>
 <section class="standby">
   <img class="lockup" src="../assets/recaday-lockup.png" width="1658" height="536" alt="recaday — record a day">
+<div data-l="ja">
 <p>準備中</p>
+</div>
+<div data-l="en">
+<p>COMING SOON</p>
+</div>
 <!-- youtube: site.json の accounts.recaday に行き先がありません -->
 <a class="social social--instagram" href="https://www.instagram.com/recaday_app/" target="_blank" rel="noopener">Instagram</a>
 </section>

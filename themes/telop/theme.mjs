@@ -15,7 +15,7 @@
   部品の一覧は content/_書き方.md にある。
 */
 
-import { esc, unwrapP, classifyList, head, social, socialRow } from '../_lib.mjs';
+import { esc, unwrapP, classifyList, head, social, socialRow, LANG_SCRIPT } from '../_lib.mjs';
 // 属性に書いた **太字** や [名前](行き先) も効かせる（本文と同じ書き方でよいように）
 import { inline } from '../../tools/md.mjs';
 
@@ -30,10 +30,12 @@ function ticker(text) {
 
 export default {
   shell({ page, body, css, js }) {
+    const lang = page.lang ?? 'ja';
     return `<!doctype html>
-<html lang="${page.lang ?? 'ja'}">
+<html lang="${lang}" data-lang="${lang}">
 <head>
 ${head({ page, css })}
+${LANG_SCRIPT}
 </head>
 <body>
 ${ticker(page.tickerTop ?? '')}
@@ -48,6 +50,10 @@ ${js ? `<script src="${js}" defer></script>` : ''}
   blocks: {
     /* ---------- 骨格 ---------- */
     main: ({ inner }) => `<div class="wrap">\n${inner}\n</div>`,
+
+    /* 言葉。**両方を組んでおいて、片方を伏せる**（決めるのは頭の script） */
+    ja: ({ inner }) => `<div data-l="ja">\n${inner}\n</div>`,
+    en: ({ inner }) => `<div data-l="en">\n${inner}\n</div>`,
 
     /* 上の帯（頁の名札）。**シールのように貼りつく** */
     topbar({ attrs }) {

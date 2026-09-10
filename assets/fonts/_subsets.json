@@ -36,6 +36,15 @@
     "withJson": false
   },
   {
+    "name": "IBM Plex Sans JP",
+    "chars": "assets/fonts/IBMPlexSansJP-Bold.chars.txt",
+    "pages": [
+      "auto-mosaic/index.html"
+    ],
+    "classes": null,
+    "withJson": false
+  },
+  {
     "name": "851ゴチカクット",
     "chars": "assets/fonts/851Gkktt-logo.chars.txt",
     "pages": [

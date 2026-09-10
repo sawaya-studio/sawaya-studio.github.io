@@ -1,3 +1,7 @@
+/* 言葉の出し分け（themes/_lib.mjs の LANG_SCRIPT が決める） */
+:root[data-lang="ja"] [data-l="en"],
+:root[data-lang="en"] [data-l="ja"] { display: none !important; }
+
 /*
   sawaya studio。
   ==========================================================================
@@ -300,6 +304,19 @@ hr{border:0;border-top:1px solid var(--line);margin:34px 0}
   width:53.9cqmin;
   height:auto;
   filter:drop-shadow(0 0.2cqmin 0.6cqmin rgba(0,0,0,.28));
+}
+
+/* ---------- オートモザイクの顔 ----------
+   うしろ … 白い紙
+   まんなか … タイル 4 つのしるし
+
+   **角を丸めない。** 道具が作るのは四角いタイルで、道具の形もそれに合わせてある。 */
+.face--mosaic{background:#fff}
+.face--mosaic .tiles{
+  position:absolute;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  width:46cqmin;height:auto;
 }
 
 /* ---------- テロップスタジオの顔 ----------
