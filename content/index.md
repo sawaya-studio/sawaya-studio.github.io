@@ -76,10 +76,10 @@ Small apps that add a little colour to the day
   ["recaday", "/recaday/closed-test/", "recaday",
     ["Android (iOS 対応予定)", "Android (iOS to follow)"],
     [["Instagram", "https://www.instagram.com/recaday_app/"]]],
-  [["オートモザイク", "auto mosaic"], "/auto-mosaic/", "mosaic",
-    ["未リリース (iOS / Android 対応予定)", "Not released yet (iOS / Android)"]],
   [["テロップスタジオ", "telop studio"], "/telop-studio/", "telop",
-    ["未リリース (iOS / Android / PC 対応予定)", "Not released yet (iOS / Android / PC)"]]
+    ["未リリース (iOS / Android / PC 対応予定)", "Not released yet (iOS / Android / PC)"]],
+  [["オートモザイク", "auto mosaic"], "/auto-mosaic/", "mosaic",
+    ["未リリース (iOS / Android 対応予定)", "Not released yet (iOS / Android)"]]
 ]
 :::
 
