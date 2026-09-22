@@ -175,6 +175,105 @@
   .standby .social:hover { background: rgba(255, 255, 255, 0.62); }
   .standby .social:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
 
+  /* ---------- 絵を 1 枚 ----------
+     動画（.take）と同じ幅・同じ丸み。**縁と地と影は、こちらにだけ残っている。**
+     動画のほうは硝子を外したので、いまは揃っていない。並べて置くときに
+     揃えるかどうかは、そのとき決める（絵は動かないぶん、縁が要る気もする）。 */
+  .shot {
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    padding: clamp(20px, 5svh, 44px) 20px;
+  }
+  .shot__i {
+    display: block;
+    width: min(300px, 74vw);
+    height: auto;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.28);
+    border: 1px solid rgba(255, 255, 255, 0.72);
+    box-shadow: 0 2px 18px rgba(30, 36, 48, 0.16);
+  }
+
+  /* ---------- 焼いた 1 本 ----------
+     ::: reel と置き場所は同じ。**絵だけを、消音で、繰り返し流す。**
+     枠も名札も出さないので、上の空の中に絵が浮いているように見える。
+
+     **名前は .take。.clip ではない。** .clip は下の「書き出しの図」が
+     先に使っていて、あちらには曇り硝子の地と白い縁が付いている。
+     同じ名前にすると、**あとに書いたあちらが勝って、外したはずの硝子が戻る。**
+     （padding も奪われるので、下の余白まで消える）
+
+     **大きさは画面に合わせる。** ただし 9:16 の縦なので、広い画面で
+     詰まるのは横ではなく**縦**。横だけで決めると、窓が低いときに
+     下が画面から出る。だから 3 つのうち、いちばん小さいものを採る。
+
+       ・74vw          … 細い画面。左右に必ず余白を残す
+       ・画面の高さ     … 上下の余白ぶんを引いて、9/16 を掛けて幅に直す
+       ・440px         … 頭打ち。**これ以上は大きくしない**
+                         （上のワードマークより主役になる）
+
+     引いている 160px は、上下の padding の目一杯（64 + 88）ぶん。
+     padding を触ったら、ここも一緒に直すこと。 */
+  .take {
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    padding: clamp(28px, 7svh, 64px) 20px clamp(40px, 9svh, 88px);
+  }
+  .take__box {
+    position: relative;
+    width: min(74vw, calc((100svh - 160px) * 9 / 16), 440px);
+  }
+  .take__v {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 9 / 16;
+    object-fit: cover;
+    border-radius: 18px;
+    /* **枠は付けない。** 曇り硝子の地も、白い縁も、影も置かない。
+       置くと「板に載った動画」に見える。**絵だけが空に浮いていること。**
+       読み込むまでの地も透かしたまま（空がそのまま出る）。 */
+    background: transparent;
+    cursor: pointer;
+  }
+  /* 音の口。**絵の上に小さく。** ほかの押す口と同じ、薄い塗りと縁だけ */
+  .take__sound {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    color: var(--ink);
+    background: rgba(255, 255, 255, 0.52);
+    border: 1px solid rgba(255, 255, 255, 0.78);
+    border-radius: 999px;
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    cursor: pointer;
+  }
+  .take__sound:hover { background: rgba(255, 255, 255, 0.7); }
+  .take__sound:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+  .take__ico { width: 18px; height: 18px; fill: currentColor; }
+  /* 消音のあいだは斜線つき。音が出ているあいだは波 */
+  .take__ico--on { display: none; }
+  .take__box.is-sound .take__ico--off { display: none; }
+  .take__box.is-sound .take__ico--on { display: block; }
+  /* 字は読み上げにだけ渡す（絵の上に字を置くと、絵が読みにくくなる） */
+  .take__sound span {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+
   /* ---------- 名前だけで 1 画面 ---------- */
   /*
     ワードマークと record a day は、tools/social/instagram.py の logo_lockup が
@@ -665,4 +764,3 @@
     html { scroll-behavior: auto; }
     .act, .pick { transition: none; }
   }
-

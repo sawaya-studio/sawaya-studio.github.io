@@ -11,7 +11,7 @@
   部品の一覧は content/_書き方.md にある。
 */
 
-import { t, has, esc, unwrapP, classifyList, dataScript, head, social, socialRow, LANG_SCRIPT } from '../_lib.mjs';
+import { t, has, esc, unwrapP, classifyList, dataScript, head, social, socialRow, imageSize, LANG_SCRIPT } from '../_lib.mjs';
 
 /* 焼き込みの枠。**比率はアプリと同じ**（src/theme.ts の clockStyle / CLOCK_FONTS）。
    ここでは書体の名前だけを扱う。実際の数値は style.css の .burn[data-font] に置いてある */
@@ -138,6 +138,82 @@ ${socialRow(inner)}
     /* 社の口。行き先は site.json の accounts に置く（content/_書き方.md 参照） */
     youtube:   (a) => social('youtube', a),
     instagram: (a) => social('instagram', a),
+
+    /*
+      絵を 1 枚。
+      ======================================================================
+          ::: image src="/assets/recaday-shot.png" alt="…"
+          :::
+
+      **幅と高さは file から読む。** 人が手で写すと、いつか写し間違える。
+      読めるのは png / jpeg / gif / webp / svg（themes/_lib.mjs の imageSize）。
+      **avif と heic は読めない**ので、そのときだけ w= と h= を書く。
+      w= h= を書けば、いつでもそちらが勝つ（切り抜いて見せたいときなど）。
+
+      alt も書く。読み上げと、絵が出なかったときのため。
+      round= で丸みを変えられる（既定 18px）。
+    */
+    image({ attrs }) {
+      const src = attrs.src || '';
+      if (!src) return `<!-- image: src がありません -->`;
+      let w = attrs.w, h = attrs.h;
+      if (!w || !h) {
+        const size = imageSize(src);
+        if (!size) {
+          return `<!-- image: 大きさが読めない。w= と h= を書いてください（${esc(src)}） -->`;
+        }
+        w = size.w; h = size.h;
+      }
+      const alt = esc(attrs.alt || '');
+      const round = attrs.round ? ` style="border-radius:${esc(attrs.round)}"` : '';
+      return `<figure class="shot">
+  <img class="shot__i"${round} src="${esc(src)}" width="${esc(w)}" height="${esc(h)}"
+    alt="${alt}" loading="lazy" decoding="async">
+</figure>`;
+    },
+
+    /*
+      焼いた 1 本を、そのまま流す。
+      ======================================================================
+          ::: video src="/assets/recaday-vlog.mp4" poster="/assets/recaday-vlog.jpg"
+          :::
+
+      ::: reel（Instagram の embed）との違い。
+        ・向こうの名札も「いいね」の帯も出ない。**絵だけ。**
+        ・消音のまま、勝手に流れて、繰り返す。
+        ・**音を出したまま勝手に流すことは、どの browser でもできない。**
+          規約ではなく browser の作りなので、逃げ道は無い。
+        ・file は site の中に置く。**Instagram の CDN の URL は期限が切れる**
+          ので、あちらを直に指してはいけない（ある日、黙って消える）。
+
+      poster は無くてもよい（無いと、読み込むまで地の色が出る）。
+      ratio は既定で 9/16。横長を置くときだけ書く。
+      「動きを減らす」設定の人には勝手に流さない（themes/recaday/page.js）。
+    */
+    video({ attrs }) {
+      const src = attrs.src || '';
+      if (!src) return `<!-- video: src がありません -->`;
+      const poster = attrs.poster ? ` poster="${esc(attrs.poster)}"` : '';
+      const ratio = attrs.ratio ? ` style="aspect-ratio:${esc(attrs.ratio)}"` : '';
+      return `<figure class="take">
+  <div class="take__box">
+    <video class="take__v"${ratio} src="${esc(src)}"${poster}
+      autoplay muted loop playsinline preload="metadata"></video>
+    <button class="take__sound" type="button" aria-pressed="false">
+      <svg class="take__ico take__ico--off" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M4 9h3.2L12 4.6v14.8L7.2 15H4z"/>
+        <path d="M16 9.5l5 5m0-5l-5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <svg class="take__ico take__ico--on" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M4 9h3.2L12 4.6v14.8L7.2 15H4z"/>
+        <path d="M15.8 8.8a4.6 4.6 0 0 1 0 6.4M18.6 6a8.6 8.6 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <span data-l="ja" data-on="音を消す" data-off="音を出す">音を出す</span>
+      <span data-l="en" data-on="Mute" data-off="Sound on">Sound on</span>
+    </button>
+  </div>
+</figure>`;
+    },
 
 
     /* 名前だけで 1 画面。ワードマークは焼いた 1 枚をそのまま置く。

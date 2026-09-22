@@ -7,6 +7,45 @@
 (function () {
   'use strict';
 
+  /* ---------- 焼いた 1 本 ----------
+     最初は**消音で勝手に流れて、繰り返す**（音付きで勝手に流すことは
+     browser が許さない）。押したら音が出る。絵そのものも押せる。
+
+     **「動きを減らす」に従う。** autoplay は属性なので css では止められない。
+     その設定の人には、勝手に流さず操作の口を出す。 */
+  document.querySelectorAll('.take__box').forEach(function (box) {
+    var v = box.querySelector('.take__v');
+    if (!v) return;
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      v.autoplay = false;
+      v.loop = false;
+      v.controls = true;
+      v.pause();
+      return;
+    }
+
+    var b = box.querySelector('.take__sound');
+    if (!b) return;
+
+    function paint() {
+      var on = !v.muted;
+      b.setAttribute('aria-pressed', String(on));
+      box.classList.toggle('is-sound', on);
+      b.querySelectorAll('span').forEach(function (s) {
+        s.textContent = on ? s.dataset.on : s.dataset.off;
+      });
+    }
+    function toggle() {
+      v.muted = !v.muted;
+      if (!v.muted) { var p = v.play(); if (p && p.catch) p.catch(function () {}); }
+      paint();
+    }
+    b.addEventListener('click', toggle);
+    v.addEventListener('click', toggle);
+    paint();
+  });
+
   /* ---------- 言葉の切り替え。押したら覚える ---------- */
   var titleEl = document.querySelector('meta[name="title-en"]');
   var TITLE = { ja: document.title, en: titleEl ? titleEl.content : document.title };

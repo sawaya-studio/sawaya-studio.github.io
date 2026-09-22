@@ -2,6 +2,9 @@
   テーマが共通で使う小道具。
 */
 
+// 絵の大きさは file から読む（w= h= の写し間違いを無くすため）。中身は隣の file
+export { imageSize } from './_image-size.mjs';
+
 export function esc(s) {
   return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;')
     .replace(/>/g, '&gt;').replace(/"/g, '&quot;');

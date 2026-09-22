@@ -38,12 +38,23 @@ icon: /assets/recaday-icon.png
 COMING SOON
 :::
 
-<!-- 社の口。**行き先は site.json の accounts に書く。**
-     空にしてあるものは、ここに置いても頁に出ない（YouTube はまだ無い） -->
-::: youtube
-:::
-
-::: instagram
-:::
 
 :::
+
+<!--
+  準備中の一枚の下。**スクロールして初めて出る位置。**
+  上の ::: standby は min-height:100svh なので、次に置いたものは
+  最初の画面には入らず、指を動かして初めて見える。
+
+  ここから下は、これから書くところ。
+-->
+
+<!-- 動画。**file は assets/videos/ の下に置く。** -->
+
+::: video src="/assets/videos/recaday_縦動画テスト_20260909-032219.mp4"
+:::
+
+<!-- ためしに 1 枚。**幅と高さは書いていない**（file から読む）
+::: image src="/assets/cards/recaday-1200x630.png" alt="recaday — record a day"
+:::
+ -->

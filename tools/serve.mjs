@@ -28,6 +28,8 @@ const TYPE = {
   '.jpg': 'image/jpeg',
   '.svg': 'image/svg+xml',
   '.woff2': 'font/woff2',
+  '.mp4': 'video/mp4',
+  '.webm': 'video/webm',
   '.ttf': 'font/ttf',
   '.json': 'application/json; charset=utf-8',
   '.txt': 'text/plain; charset=utf-8',
@@ -92,6 +94,51 @@ http.createServer((req, res) => {
   if (p.endsWith('/')) p += 'index.html';
   const file = path.join(ROOT, p);
   if (!file.startsWith(ROOT)) { res.writeHead(403).end(); return; }
+
+  /*
+    動画は**途中から返せるようにする。**
+    ------------------------------------------------------------------
+    browser は動画を読むとき、まず「頭の少しだけ」を求めてくる（Range）。
+    ここがそれに答えず、丸ごとを chunked で返していると、browser は
+    **長さも分からず、頭出しもできない**ので、待ったまま動かなくなる。
+    絵が出ない・押しても流れない、の正体はこれ。
+
+    GitHub Pages は初めからこれに答えるので、**手元だけの話。**
+  */
+  const movie = /\.(mp4|webm)$/i.test(file);
+  if (movie) {
+    return fs.stat(file, (err, st) => {
+      if (err || !st.isFile()) {
+        res.writeHead(404, { 'content-type': 'text/plain; charset=utf-8' }).end('404 ' + p);
+        return;
+      }
+      const type = TYPE[path.extname(file).toLowerCase()] || 'application/octet-stream';
+      const base = { 'content-type': type, 'accept-ranges': 'bytes', 'cache-control': 'no-store' };
+      const m = /^bytes=(\d*)-(\d*)$/.exec(req.headers.range || '');
+
+      if (!m) {   // 求められていないので、丸ごと。長さは必ず添える
+        res.writeHead(200, { ...base, 'content-length': st.size });
+        return fs.createReadStream(file).pipe(res);
+      }
+
+      // bytes=1000-  … 1000 から終わりまで / bytes=-1000 … 終わりの 1000
+      let start = m[1] === '' ? st.size - Number(m[2]) : Number(m[1]);
+      let end = m[1] === '' || m[2] === '' ? st.size - 1 : Number(m[2]);
+      start = Math.max(0, start);
+      end = Math.min(st.size - 1, end);
+      if (start > end) {   // 筋の通らない求めは、file の長さを教えて突き返す
+        res.writeHead(416, { ...base, 'content-range': `bytes */${st.size}` }).end();
+        return;
+      }
+      res.writeHead(206, {
+        ...base,
+        'content-range': `bytes ${start}-${end}/${st.size}`,
+        'content-length': end - start + 1,
+      });
+      fs.createReadStream(file, { start, end }).pipe(res);
+    });
+  }
+
   fs.readFile(file, (err, buf) => {
     if (err) {
       const alt = file + '.html';

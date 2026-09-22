@@ -3,3 +3,4 @@ node_modules/
 Thumbs.db
 tools/fonts-src/*.ttf
 tools/fonts-src/*.otf
+tools/videos-src/*.mp4
