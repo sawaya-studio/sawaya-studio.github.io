@@ -73,7 +73,7 @@ Small apps that add a little colour to the day
      字は ["日本語", "English"] と 2 つ並べて書けます -->
 ::: shelf
 [
-  ["recaday", "/recaday/closed-test/", "recaday",
+  ["recaday", "/recaday/", "recaday",
     ["Android (iOS 対応予定)", "Android (iOS to follow)"],
     [["Instagram", "https://www.instagram.com/recaday_app/"]]],
   [["テロップスタジオ", "telop studio"], "/telop-studio/", "telop",

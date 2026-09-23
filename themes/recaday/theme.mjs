@@ -189,13 +189,18 @@ ${socialRow(inner)}
       poster は無くてもよい（無いと、読み込むまで地の色が出る）。
       ratio は既定で 9/16。横長を置くときだけ書く。
       「動きを減らす」設定の人には勝手に流さない（themes/recaday/page.js）。
+
+      id= を書くと、そこへ飛べるようになる。**::: hero の「↓」の行き先。**
+      名前の画面のすぐ下に動画を置くときは、飛び先を body（#read）のままに
+      しておくと、**押した人が動画を飛び越してしまう。**
     */
     video({ attrs }) {
       const src = attrs.src || '';
       if (!src) return `<!-- video: src がありません -->`;
+      const id = attrs.id ? ` id="${esc(attrs.id)}"` : '';
       const poster = attrs.poster ? ` poster="${esc(attrs.poster)}"` : '';
       const ratio = attrs.ratio ? ` style="aspect-ratio:${esc(attrs.ratio)}"` : '';
-      return `<figure class="take">
+      return `<figure class="take"${id}>
   <div class="take__box">
     <video class="take__v"${ratio} src="${esc(src)}"${poster}
       autoplay muted loop playsinline preload="metadata"></video>
