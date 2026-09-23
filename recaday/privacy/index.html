@@ -78,10 +78,17 @@
 <h2>3. カメラとマイク</h2>
 <p>映像を撮影するためにカメラへの、音声を収録するためにマイクへのアクセス許可を求めます。撮影中以外にこれらを使うことはありません。</p>
 <h2>4. 位置情報</h2>
-<p>本アプリは位置情報を取得しません。撮影した映像に位置情報を書き込むこともありません。</p>
+<p>本アプリは端末の位置情報（GPS など）を取得しません。撮影した映像に位置情報を書き込むこともありません。</p>
+<p>ただし、広告を配信する Google AdMob は、IP アドレスから端末の<strong>おおよその地域</strong>を推定することがあります（次項）。</p>
 <h2>5. 広告について</h2>
 <p>本アプリは Google の AdMob による広告を表示します。動画の書き出しを待っているあいだ、進捗の下に広告を 1 枠表示します。</p>
-<p>広告を配信し、表示の回数を調整し、不正を防ぐために、AdMob は端末の広告識別子などの情報を取得することがあります。</p>
+<p>広告の配信と効果の測定、表示の回数の調整、不正の防止のために、AdMob は次の情報を取得することがあります。</p>
+<ul>
+<li>端末の広告識別子などの端末 ID</li>
+<li>IP アドレス（おおよその地域の推定に使われることがあります）</li>
+<li>表示された広告や、アプリの起動・タップなどの操作の記録</li>
+<li>アプリと広告 SDK の動作に関する情報（起動にかかった時間、クラッシュの記録など）</li>
+</ul>
 <p><strong>欧州経済領域・英国・スイスでは、広告のための情報の利用について同意を求める画面を表示します</strong>（Google のユーザーメッセージングプラットフォーム）。同意された場合は利用者の興味関心に基づく広告を、同意されない場合はそれに基づかない広告を表示します。同意の内容はアプリ内からいつでも変更できます。</p>
 <p><strong>iOS では、さらに「トラッキングの許可」を求める画面を表示します</strong>（App Tracking Transparency）。許可された場合にかぎり、広告識別子（IDFA）を用いて広告が最適化されます。<strong>許可しなくても本アプリの機能は何も変わりません。</strong></p>
 <p><strong>Android にこの画面はありません。</strong> 広告識別子の扱いは端末の設定（「広告 ID を削除する」など）に従います。</p>
@@ -117,10 +124,17 @@
 <h2>3. Camera and microphone</h2>
 <p>The app asks for camera access to record video and microphone access to record sound. Neither is used at any time other than while recording.</p>
 <h2>4. Location</h2>
-<p>The app does not collect location data, and does not write location data into the videos you record.</p>
+<p>The app does not access your device's location (such as GPS), and does not write location data into the videos you record.</p>
+<p>However, Google AdMob, which serves the ads, may estimate your device's <strong>general location</strong> from its IP address (see the next section).</p>
 <h2>5. Advertising</h2>
 <p>The app shows ads through Google AdMob. While you wait for a video to export, one ad is shown below the progress.</p>
-<p>To serve those ads, cap how often they appear and prevent fraud, AdMob may collect information such as your device's advertising identifier.</p>
+<p>To serve and measure those ads, cap how often they appear and prevent fraud, AdMob may collect:</p>
+<ul>
+<li>Device identifiers, such as your device's advertising identifier</li>
+<li>Your IP address, which may be used to estimate your general location</li>
+<li>The ads you have seen, and interactions such as app launches and taps</li>
+<li>Information about how the app and the ad SDK perform, such as launch time and crash logs</li>
+</ul>
 <p><strong>In the European Economic Area, the UK and Switzerland the app shows a consent screen</strong> (Google's User Messaging Platform) asking whether your information may be used for advertising. If you consent, you see ads based on your interests; if you do not, you see ads that are not. You can change your choice at any time from within the app.</p>
 <p><strong>On iOS the app also asks for permission to track</strong> (App Tracking Transparency). Only if you allow it is the advertising identifier (IDFA) used to tailor ads. <strong>Declining changes nothing about how the app works.</strong></p>
 <p><strong>On Android there is no such prompt.</strong> The advertising identifier follows your device settings, such as "Delete advertising ID".</p>
