@@ -65,12 +65,12 @@ Record a day! Make a vlog!
 :::
 
 ::: ja
-# 簡単に vlog が作れるアプリです！
+## 簡単に vlog が作れるアプリです！
 このページで流れている動画のような vlog を簡単に作れます。
 時間を自分で調べて入れる必要はありません！
 :::
 ::: en
-# Making a vlog, the easy way.
+## Making a vlog, the easy way.
 You can make a vlog like the one playing on this page.
 No need to look up the time and type it in yourself.
 :::
