@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="ja" data-lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>サポート — recaday</title>
+<meta name="title-en" content="Support — recaday">
+<meta name="description" content="recaday の問い合わせ先と、よくある質問。困ったときはここから連絡してください。">
+<meta property="og:title" content="サポート — recaday">
+<meta property="og:description" content="recaday の問い合わせ先と、よくある質問。困ったときはここから連絡してください。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://sawaya-studio.github.io/recaday/support/">
+
+<link rel="icon" href="../../assets/recaday-icon.png">
+<link rel="apple-touch-icon" href="../../assets/recaday-icon.png">
+<link rel="canonical" href="https://sawaya-studio.github.io/recaday/support/">
+
+<link rel="stylesheet" href="../../assets/recaday.css">
+<script>
+(function () {
+  var l = (navigator.language || 'en').toLowerCase().indexOf('ja') === 0 ? 'ja' : 'en';
+  document.documentElement.dataset.lang = l;
+  document.documentElement.lang = l;
+  // 頁の名前も入れ替える（tab とブックマークに出るもの）
+  var m = document.querySelector('meta[name="title-en"]');
+  if (l === 'en' && m && m.content) document.title = m.content;
+})();
+</script>
+
+</head>
+<body>
+
+
+<script src="../../assets/clouds.js" defer></script>
+<canvas id="sky" aria-hidden="true"></canvas>
+
+<svg width="0" height="0" aria-hidden="true" style="position:absolute">
+  <defs>
+    <!-- 2色: 明るさだけ残して、暗部→中間→明部に 3 色を置く（src/filters.ts の bold と同じ考え方） -->
+    <filter id="duotone-bold" color-interpolation-filters="sRGB">
+      <feColorMatrix type="matrix" values="0.2126 0.7152 0.0722 0 0  0.2126 0.7152 0.0722 0 0  0.2126 0.7152 0.0722 0 0  0 0 0 1 0"/>
+      <feComponentTransfer>
+        <feFuncR type="table" tableValues="0.05 1.00 0.92"/>
+        <feFuncG type="table" tableValues="0.15 0.42 1.00"/>
+        <feFuncB type="table" tableValues="0.00 0.00 0.28"/>
+      </feComponentTransfer>
+    </filter>
+    <!-- 2値: しきい値 0.46 のあたりで白と黒に分ける -->
+    <filter id="binary" color-interpolation-filters="sRGB">
+      <feColorMatrix type="matrix" values="0.2126 0.7152 0.0722 0 0  0.2126 0.7152 0.0722 0 0  0.2126 0.7152 0.0722 0 0  0 0 0 1 0"/>
+      <feComponentTransfer>
+        <feFuncR type="table" tableValues="0 0 0 0 0.06 0.94 1 1 1 1 1"/>
+        <feFuncG type="table" tableValues="0 0 0 0 0.06 0.94 1 1 1 1 1"/>
+        <feFuncB type="table" tableValues="0 0 0 0 0.06 0.94 1 1 1 1 1"/>
+      </feComponentTransfer>
+    </filter>
+  </defs>
+</svg>
+
+<main>
+<div class="body" id="read">
+<section class="plate">
+<p class="eyebrow">Support</p>
+<div data-l="ja">
+<h1>サポート</h1>
+<p>recaday についてのお問い合わせは、次のメールアドレスへお願いします。</p>
+<p><a href="mailto:oh.hage.san@gmail.com">oh.hage.san@gmail.com</a></p>
+<p>一人で作っているため、返信までに数日いただくことがあります。</p>
+<p>不具合のときは、<strong>お使いの機種と OS の版</strong>、<strong>何をしたときに起きたか</strong>を書いて
+いただけると、こちらで同じことを起こして直せます。</p>
+</div>
+<div data-l="en">
+<h1>Support</h1>
+<p>For anything about recaday, please write to:</p>
+<p><a href="mailto:oh.hage.san@gmail.com">oh.hage.san@gmail.com</a></p>
+<p>recaday is made by one person, so a reply may take a few days.</p>
+<p>If something is broken, please include <strong>your device and OS version</strong> and
+<strong>what you were doing when it happened</strong>. That is usually enough to reproduce
+it and fix it.</p>
+</div>
+</section>
+<section class="plate">
+<p class="eyebrow">FAQ</p>
+<div data-l="ja">
+<h2>よくある質問</h2>
+<h3>撮った動画はどこへ行きますか</h3>
+<p><strong>端末の中だけです。</strong> 開発者へ送られることはありません。書き出した 1 本は、
+写真ライブラリへ保存できます。</p>
+<h3>焼き込まれる時刻がずれます</h3>
+<p>取り込んだ動画は、ファイルに残っている<strong>撮影日時</strong>を読んで焼き込みます。
+その日時が読めない動画では、取り込むときに時刻を訊きます。</p>
+<p>旅先で撮った動画を家で取り込んだ場合、iPhone で撮ったものは<strong>撮った土地の時刻</strong>で
+焼かれます。Android で撮ったものは時差が残っていないため、取り込んだ場所の時刻に
+なります。</p>
+<h3>書き出しが途中で止まります</h3>
+<p>端末の空き容量を確かめてください。ほかのアプリを閉じてから、もう一度お試しください。
+それでも止まる場合は、クリップの本数を減らすと通ることがあります。</p>
+<h3>広告を消せますか</h3>
+<p>いまのところ消す方法はありません。書き出しを待っているあいだに 1 枠だけ表示されます。</p>
+<h3>言語を変えたい</h3>
+<p>アプリの中の設定から選べます。端末の言語とは別に選べます。</p>
+<h3>対応している OS</h3>
+<p>iOS 16.4 以降、Android 8.0 以降です。</p>
+</div>
+<div data-l="en">
+<h2>Frequently asked</h2>
+<h3>Where do my videos go?</h3>
+<p><strong>They stay on your device.</strong> Nothing is sent to the developer. The finished
+video can be saved to your photo library.</p>
+<h3>The burned-in time looks wrong</h3>
+<p>For videos you import, the app reads the <strong>capture time</strong> stored in the file.
+When a file does not carry one, the app asks you for the time instead.</p>
+<p>If you import a video you shot while travelling, one shot on an iPhone keeps
+<strong>the time where you shot it</strong>. A video shot on Android carries no time zone,
+so it falls back to the time zone you imported it in.</p>
+<h3>Exporting stops partway</h3>
+<p>Check the free space on your device and close other apps, then try again.
+If it still stops, exporting fewer clips at once often works.</p>
+<h3>Can I remove the ads?</h3>
+<p>Not at the moment. One ad is shown while you wait for a video to export.</p>
+<h3>Changing the language</h3>
+<p>You can choose it inside the app, separately from your device language.</p>
+<h3>Supported systems</h3>
+<p>iOS 16.4 and later, Android 8.0 and later.</p>
+</div>
+</section>
+<section class="plate">
+<div data-l="ja">
+<h2>プライバシー</h2>
+<p>撮った映像と音声の扱い、広告について書いたものは
+<a href="../../recaday/privacy/">プライバシーポリシー</a>にあります。</p>
+</div>
+<div data-l="en">
+<h2>Privacy</h2>
+<p>How your video and audio are handled, and what the ads collect, is written in
+the <a href="../../recaday/privacy/">privacy policy</a>.</p>
+</div>
+</section>
+<footer>
+<span data-l="ja"><a href="../../recaday/">recaday</a> ・ <a href="../../recaday/privacy/">プライバシーポリシー</a></span>
+<span data-l="en"><a href="../../recaday/">recaday</a> · <a href="../../recaday/privacy/">Privacy</a></span>
+<span><a href="../../">sawaya studio</a></span>
+</footer>
+</div>
+</main>
+
+<script src="../../assets/sky.js" defer></script>
+<script src="../../assets/recaday.js" defer></script>
+
+</body>
+</html>

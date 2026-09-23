@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="ja" data-lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>プライバシーポリシー — recaday</title>
+<meta name="title-en" content="Privacy Policy — recaday">
+<meta name="description" content="recaday が利用者の情報をどう扱うかの説明。撮った映像も音声も端末の中だけに 残ります。">
+<meta property="og:title" content="プライバシーポリシー — recaday">
+<meta property="og:description" content="recaday が利用者の情報をどう扱うかの説明。撮った映像も音声も端末の中だけに 残ります。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://sawaya-studio.github.io/recaday/privacy/">
+
+<link rel="icon" href="../../assets/recaday-icon.png">
+<link rel="apple-touch-icon" href="../../assets/recaday-icon.png">
+<link rel="canonical" href="https://sawaya-studio.github.io/recaday/privacy/">
+
+<link rel="stylesheet" href="../../assets/recaday.css">
+<script>
+(function () {
+  var l = (navigator.language || 'en').toLowerCase().indexOf('ja') === 0 ? 'ja' : 'en';
+  document.documentElement.dataset.lang = l;
+  document.documentElement.lang = l;
+  // 頁の名前も入れ替える（tab とブックマークに出るもの）
+  var m = document.querySelector('meta[name="title-en"]');
+  if (l === 'en' && m && m.content) document.title = m.content;
+})();
+</script>
+
+</head>
+<body>
+
+
+<script src="../../assets/clouds.js" defer></script>
+<canvas id="sky" aria-hidden="true"></canvas>
+
+<svg width="0" height="0" aria-hidden="true" style="position:absolute">
+  <defs>
+    <!-- 2色: 明るさだけ残して、暗部→中間→明部に 3 色を置く（src/filters.ts の bold と同じ考え方） -->
+    <filter id="duotone-bold" color-interpolation-filters="sRGB">
+      <feColorMatrix type="matrix" values="0.2126 0.7152 0.0722 0 0  0.2126 0.7152 0.0722 0 0  0.2126 0.7152 0.0722 0 0  0 0 0 1 0"/>
+      <feComponentTransfer>
+        <feFuncR type="table" tableValues="0.05 1.00 0.92"/>
+        <feFuncG type="table" tableValues="0.15 0.42 1.00"/>
+        <feFuncB type="table" tableValues="0.00 0.00 0.28"/>
+      </feComponentTransfer>
+    </filter>
+    <!-- 2値: しきい値 0.46 のあたりで白と黒に分ける -->
+    <filter id="binary" color-interpolation-filters="sRGB">
+      <feColorMatrix type="matrix" values="0.2126 0.7152 0.0722 0 0  0.2126 0.7152 0.0722 0 0  0.2126 0.7152 0.0722 0 0  0 0 0 1 0"/>
+      <feComponentTransfer>
+        <feFuncR type="table" tableValues="0 0 0 0 0.06 0.94 1 1 1 1 1"/>
+        <feFuncG type="table" tableValues="0 0 0 0 0.06 0.94 1 1 1 1 1"/>
+        <feFuncB type="table" tableValues="0 0 0 0 0.06 0.94 1 1 1 1 1"/>
+      </feComponentTransfer>
+    </filter>
+  </defs>
+</svg>
+
+<main>
+<div class="body" id="read">
+<section class="plate">
+<p class="eyebrow">Privacy</p>
+<div data-l="ja">
+<h1>プライバシーポリシー</h1>
+<p>最終更新日: 2026年9月23日</p>
+<p>recaday（以下「本アプリ」）における、利用者の情報の取り扱いについて説明します。</p>
+<h2>1. 撮影した映像と音声</h2>
+<p>本アプリで撮影した映像・音声、および書き出した動画は、<strong>すべて利用者の端末内に保存されます。</strong> 開発者はこれらを取得も送信も保管もしません。本アプリは利用者のデータを送信するための通信を一切行いません。</p>
+<p>書き出した動画を端末の写真ライブラリへ保存するために、写真・動画へのアクセス許可を求めます。この許可は保存のためだけに使います。</p>
+<h2>2. 端末内に保存される情報</h2>
+<p>次の情報が端末内にのみ保存されます。開発者は参照できません。</p>
+<ul>
+<li>作成したプロジェクト（日付、題名、クリップの並び、編集の設定）</li>
+<li>選んだ表示言語</li>
+</ul>
+<p>本アプリを削除すると、これらは端末から消えます。</p>
+<h2>3. カメラとマイク</h2>
+<p>映像を撮影するためにカメラへの、音声を収録するためにマイクへのアクセス許可を求めます。撮影中以外にこれらを使うことはありません。</p>
+<h2>4. 位置情報</h2>
+<p>本アプリは位置情報を取得しません。撮影した映像に位置情報を書き込むこともありません。</p>
+<h2>5. 広告について</h2>
+<p>本アプリは Google の AdMob による広告を表示します。動画の書き出しを待っているあいだ、進捗の下に広告を 1 枠表示します。</p>
+<p>広告を配信し、表示の回数を調整し、不正を防ぐために、AdMob は端末の広告識別子などの情報を取得することがあります。</p>
+<p><strong>欧州経済領域・英国・スイスでは、広告のための情報の利用について同意を求める画面を表示します</strong>（Google のユーザーメッセージングプラットフォーム）。同意された場合は利用者の興味関心に基づく広告を、同意されない場合はそれに基づかない広告を表示します。同意の内容はアプリ内からいつでも変更できます。</p>
+<p><strong>iOS では、さらに「トラッキングの許可」を求める画面を表示します</strong>（App Tracking Transparency）。許可された場合にかぎり、広告識別子（IDFA）を用いて広告が最適化されます。<strong>許可しなくても本アプリの機能は何も変わりません。</strong></p>
+<p><strong>Android にこの画面はありません。</strong> 広告識別子の扱いは端末の設定（「広告 ID を削除する」など）に従います。</p>
+<p>取得される情報とその取り扱いについては、Google のポリシーをご確認ください。</p>
+<ul>
+<li><a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google のプライバシーポリシー</a></li>
+<li><a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener">広告における Google のデータ利用</a></li>
+</ul>
+<h2>6. 第三者への提供</h2>
+<p>開発者が利用者の情報を第三者へ提供することはありません。前項の広告配信を除き、本アプリから外部へ送られる情報はありません。</p>
+<h2>7. 子どもの利用について</h2>
+<p>本アプリは 13 歳未満の子どもを対象としていません。</p>
+<h2>8. 本ポリシーの変更</h2>
+<p>本ポリシーを変更する場合は、本ページを更新し、最終更新日を改めます。</p>
+<h2>9. お問い合わせ</h2>
+<p>本アプリについてのお問い合わせは、次のメールアドレスへお願いします。</p>
+<p><a href="mailto:oh.hage.san@gmail.com">oh.hage.san@gmail.com</a></p>
+</div>
+<div data-l="en">
+<h1>Privacy Policy</h1>
+<p>Last updated: September 23, 2026</p>
+<p>This policy explains how recaday ("the app") handles your information.</p>
+<h2>1. Video and audio you record</h2>
+<p>Everything you record with the app, and every video you export, <strong>stays on your device.</strong> The developer does not receive, transmit or store any of it. The app makes no network requests to send your data anywhere.</p>
+<p>The app asks for permission to add to your photo library so it can save the video you export. That permission is used for saving only.</p>
+<h2>2. Information stored on your device</h2>
+<p>The following is stored on your device only. The developer cannot see it.</p>
+<ul>
+<li>Your projects (date, title, the order of clips, editing settings)</li>
+<li>Your chosen display language</li>
+</ul>
+<p>Deleting the app removes all of it from your device.</p>
+<h2>3. Camera and microphone</h2>
+<p>The app asks for camera access to record video and microphone access to record sound. Neither is used at any time other than while recording.</p>
+<h2>4. Location</h2>
+<p>The app does not collect location data, and does not write location data into the videos you record.</p>
+<h2>5. Advertising</h2>
+<p>The app shows ads through Google AdMob. While you wait for a video to export, one ad is shown below the progress.</p>
+<p>To serve those ads, cap how often they appear and prevent fraud, AdMob may collect information such as your device's advertising identifier.</p>
+<p><strong>In the European Economic Area, the UK and Switzerland the app shows a consent screen</strong> (Google's User Messaging Platform) asking whether your information may be used for advertising. If you consent, you see ads based on your interests; if you do not, you see ads that are not. You can change your choice at any time from within the app.</p>
+<p><strong>On iOS the app also asks for permission to track</strong> (App Tracking Transparency). Only if you allow it is the advertising identifier (IDFA) used to tailor ads. <strong>Declining changes nothing about how the app works.</strong></p>
+<p><strong>On Android there is no such prompt.</strong> The advertising identifier follows your device settings, such as "Delete advertising ID".</p>
+<p>Please see Google's policies for what is collected and how it is handled.</p>
+<ul>
+<li><a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google Privacy Policy</a></li>
+<li><a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener">How Google uses data from partner sites and apps</a></li>
+</ul>
+<h2>6. Sharing with third parties</h2>
+<p>The developer does not share your information with third parties. Apart from the advertising described above, nothing is sent from the app.</p>
+<h2>7. Children</h2>
+<p>The app is not directed at children under 13.</p>
+<h2>8. Changes to this policy</h2>
+<p>If this policy changes, this page will be updated and the date above revised.</p>
+<h2>9. Contact</h2>
+<p>For questions about the app, please contact:</p>
+<p><a href="mailto:oh.hage.san@gmail.com">oh.hage.san@gmail.com</a></p>
+</div>
+</section>
+<footer>
+<span data-l="ja"><a href="../../recaday/">recaday</a> ・ <a href="../../recaday/support/">サポート</a></span>
+<span data-l="en"><a href="../../recaday/">recaday</a> · <a href="../../recaday/support/">Support</a></span>
+<span><a href="../../">sawaya studio</a></span>
+</footer>
+</div>
+</main>
+
+<script src="../../assets/sky.js" defer></script>
+<script src="../../assets/recaday.js" defer></script>
+
+</body>
+</html>
