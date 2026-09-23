@@ -340,6 +340,23 @@
     padding: 20px 20px 22px;
   }
 
+  /* ---------- 読む頁の板 ----------
+     プライバシーポリシーやサポートのように、**長い字を読ませる頁**で使う
+     （`::: plate class=read`）。
+
+     見せる頁の板は薄いガラスでよい。字が 2〜3 行しかなく、下の空が透けるほうが
+     きれいだから。**読ませる頁では逆になる** —— 字が続くと、透けた空の濃淡が
+     行ごとに変わって読みにくい。
+
+     **塗りを白に寄せ、ぼかしを強める。** 縁と丸みは触らない（同じ site の
+     ものだと分かるように）。 */
+  .plate.read {
+    background: rgba(255, 255, 255, 0.93);
+    backdrop-filter: blur(8px) saturate(1.02);
+    -webkit-backdrop-filter: blur(8px) saturate(1.02);
+  }
+  .plate.read a { color: #1D4E77; }
+
   h1 {
     margin: 0 0 12px;
     font-size: clamp(21px, 5.2vw, 28px);

@@ -22,7 +22,7 @@ icon: /assets/recaday-icon.png
 
 ::: body
 
-::: plate
+::: plate class=read
 
 ::: eyebrow
 Privacy
@@ -91,7 +91,7 @@ recaday（以下「本アプリ」）における、利用者の情報の取り�
 
 本アプリについてのお問い合わせは、次のメールアドレスへお願いします。
 
-[oh.hage.san@gmail.com](mailto:oh.hage.san@gmail.com)
+[kento.sawaya@gmail.com](mailto:kento.sawaya@gmail.com)
 :::
 
 ::: en
@@ -157,7 +157,7 @@ If this policy changes, this page will be updated and the date above revised.
 
 For questions about the app, please contact:
 
-[oh.hage.san@gmail.com](mailto:oh.hage.san@gmail.com)
+[kento.sawaya@gmail.com](mailto:kento.sawaya@gmail.com)
 :::
 
 :::

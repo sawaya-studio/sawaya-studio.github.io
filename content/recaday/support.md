@@ -22,7 +22,7 @@ icon: /assets/recaday-icon.png
 
 ::: body
 
-::: plate
+::: plate class=read
 
 ::: eyebrow
 Support
@@ -33,12 +33,14 @@ Support
 
 recaday についてのお問い合わせは、次のメールアドレスへお願いします。
 
-[oh.hage.san@gmail.com](mailto:oh.hage.san@gmail.com)
+[kento.sawaya@gmail.com](mailto:kento.sawaya@gmail.com)
 
-一人で作っているため、返信までに数日いただくことがあります。
+返信までに数日いただくことがあります。
 
 不具合のときは、**お使いの機種と OS の版**、**何をしたときに起きたか**を書いて
-いただけると、こちらで同じことを起こして直せます。
+いただけると、問題の特定をスムーズに進めることができます。
+
+ご協力いただけると嬉しいです。
 :::
 
 ::: en
@@ -46,19 +48,21 @@ recaday についてのお問い合わせは、次のメールアドレスへお
 
 For anything about recaday, please write to:
 
-[oh.hage.san@gmail.com](mailto:oh.hage.san@gmail.com)
+[kento.sawaya@gmail.com](mailto:kento.sawaya@gmail.com)
 
-recaday is made by one person, so a reply may take a few days.
+A reply may take a few days.
 
-If something is broken, please include **your device and OS version** and
-**what you were doing when it happened**. That is usually enough to reproduce
-it and fix it.
+When something goes wrong, please include **your device and OS version** and
+**what you were doing when it happened**. That makes it much quicker to track
+the problem down.
+
+Thank you for taking the time.
 :::
 
 :::
 
 
-::: plate
+::: plate class=read
 
 ::: eyebrow
 FAQ
@@ -69,17 +73,9 @@ FAQ
 
 ### 撮った動画はどこへ行きますか
 
-**端末の中だけです。** 開発者へ送られることはありません。書き出した 1 本は、
-写真ライブラリへ保存できます。
+**端末の中のアプリ内のフォルダに保存されています。**
+保存されている動画については、タイムライン状になっている画面から長押しでアクセス可能な場所に保存することができます。
 
-### 焼き込まれる時刻がずれます
-
-取り込んだ動画は、ファイルに残っている**撮影日時**を読んで焼き込みます。
-その日時が読めない動画では、取り込むときに時刻を訊きます。
-
-旅先で撮った動画を家で取り込んだ場合、iPhone で撮ったものは**撮った土地の時刻**で
-焼かれます。Android で撮ったものは時差が残っていないため、取り込んだ場所の時刻に
-なります。
 
 ### 書き出しが途中で止まります
 
@@ -88,11 +84,13 @@ FAQ
 
 ### 広告を消せますか
 
-いまのところ消す方法はありません。書き出しを待っているあいだに 1 枠だけ表示されます。
+いまのところ消す方法はありません。
+要望が多い場合に機能追加をしたいと考えています。
 
 ### 言語を変えたい
 
 アプリの中の設定から選べます。端末の言語とは別に選べます。
+起動時の画面右上の地球儀のマークのボタンから設定変更が可能です。
 
 ### 対応している OS
 
@@ -104,17 +102,9 @@ iOS 16.4 以降、Android 8.0 以降です。
 
 ### Where do my videos go?
 
-**They stay on your device.** Nothing is sent to the developer. The finished
-video can be saved to your photo library.
-
-### The burned-in time looks wrong
-
-For videos you import, the app reads the **capture time** stored in the file.
-When a file does not carry one, the app asks you for the time instead.
-
-If you import a video you shot while travelling, one shot on an iPhone keeps
-**the time where you shot it**. A video shot on Android carries no time zone,
-so it falls back to the time zone you imported it in.
+**They are kept in the app's own folder on your device.**
+From the timeline screen, press and hold a video to save it somewhere you can
+reach from outside the app.
 
 ### Exporting stops partway
 
@@ -123,11 +113,13 @@ If it still stops, exporting fewer clips at once often works.
 
 ### Can I remove the ads?
 
-Not at the moment. One ad is shown while you wait for a video to export.
+Not at the moment.
+If enough people ask for it, I would like to add a way to.
 
 ### Changing the language
 
 You can choose it inside the app, separately from your device language.
+Tap the globe button at the top right of the first screen.
 
 ### Supported systems
 
@@ -137,7 +129,7 @@ iOS 16.4 and later, Android 8.0 and later.
 :::
 
 
-::: plate
+::: plate class=read
 
 ::: ja
 ## プライバシー
