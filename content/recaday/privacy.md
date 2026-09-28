@@ -56,13 +56,20 @@ recaday（以下「本アプリ」）における、利用者の情報の取り�
 
 ## 4. 位置情報
 
-本アプリは位置情報を取得しません。撮影した映像に位置情報を書き込むこともありません。
+本アプリは端末の位置情報（GPS など）を取得しません。撮影した映像に位置情報を書き込むこともありません。
+
+ただし、広告を配信する Google AdMob は、IP アドレスから端末の**おおよその地域**を推定することがあります（次項）。
 
 ## 5. 広告について
 
 本アプリは Google の AdMob による広告を表示します。動画の書き出しを待っているあいだ、進捗の下に広告を 1 枠表示します。
 
-広告を配信し、表示の回数を調整し、不正を防ぐために、AdMob は端末の広告識別子などの情報を取得することがあります。
+広告の配信と効果の測定、表示の回数の調整、不正の防止のために、AdMob は次の情報を取得することがあります。
+
+- 端末の広告識別子などの端末 ID
+- IP アドレス（おおよその地域の推定に使われることがあります）
+- 表示された広告や、アプリの起動・タップなどの操作の記録
+- アプリと広告 SDK の動作に関する情報（起動にかかった時間、クラッシュの記録など）
 
 **欧州経済領域・英国・スイスでは、広告のための情報の利用について同意を求める画面を表示します**（Google のユーザーメッセージングプラットフォーム）。同意された場合は利用者の興味関心に基づく広告を、同意されない場合はそれに基づかない広告を表示します。同意の内容はアプリ内からいつでも変更できます。
 
@@ -122,13 +129,20 @@ The app asks for camera access to record video and microphone access to record s
 
 ## 4. Location
 
-The app does not collect location data, and does not write location data into the videos you record.
+The app does not access your device's location (such as GPS), and does not write location data into the videos you record.
+
+However, Google AdMob, which serves the ads, may estimate your device's **general location** from its IP address (see the next section).
 
 ## 5. Advertising
 
 The app shows ads through Google AdMob. While you wait for a video to export, one ad is shown below the progress.
 
-To serve those ads, cap how often they appear and prevent fraud, AdMob may collect information such as your device's advertising identifier.
+To serve and measure those ads, cap how often they appear and prevent fraud, AdMob may collect:
+
+- Device identifiers, such as your device's advertising identifier
+- Your IP address, which may be used to estimate your general location
+- The ads you have seen, and interactions such as app launches and taps
+- Information about how the app and the ad SDK perform, such as launch time and crash logs
 
 **In the European Economic Area, the UK and Switzerland the app shows a consent screen** (Google's User Messaging Platform) asking whether your information may be used for advertising. If you consent, you see ads based on your interests; if you do not, you see ads that are not. You can change your choice at any time from within the app.
 
