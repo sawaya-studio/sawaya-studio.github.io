@@ -7,7 +7,7 @@
 
 import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { esc, unwrapP, classifyList, head, bi, LANG_SCRIPT } from '../_lib.mjs';
+import { esc, unwrapP, classifyList, head, bi, badges, LANG_SCRIPT } from '../_lib.mjs';
 // 日本語の字詰め。**約物は枠の半分しか墨が無い**ので、そこを詰める
 import { kernText } from '../../tools/kerning.mjs';
 
@@ -158,10 +158,12 @@ ${js ? `<script src="${js}" defer></script>` : ''}
        ============================================================ */
     shelf({ data = [] }) {
       return `<ul class="shelf">
-${data.map(([name, href, face, meta, links]) =>
+${data.map(([name, href, face, meta, links, stores]) =>
   `  <li>
     <div class="face face--${esc(face || 'plain')}" aria-hidden="true">${FACE[face] ? FACE[face]() : FACE.plain()}</div>
     <div class="name"><b><a href="${esc(href)}">${bi(name)}</a></b>${meta ? `<span>${bi(meta)}</span>` : ''}</div>${
+    Array.isArray(stores) && stores.length ? `
+    ${badges(stores)}` : ''}${
     Array.isArray(links) && links.length ? `
     <div class="more">${links.map(([label, to]) =>
       `<a href="${esc(to)}"${/^https?:/.test(to) ? ' target="_blank" rel="noopener"' : ''}>${bi(label)}</a>`).join('')}</div>` : ''}

@@ -68,14 +68,19 @@ Small apps that add a little colour to the day
 
 ::: section id=works
 
-<!-- [ 名前, 行き先, 顔, 走る場所, ほかの行き先 ]
+<!-- [ 名前, 行き先, 顔, 走る場所, ほかの行き先, ストアの札 ]
+     ストアの札は  ["app-store", URL]  の形。URL を ["日本語のとき", "英語のとき"] と
+     2 つ並べると、言葉で行き先が変わる。Google Play が来たら隣に足す
      顔は recaday / telop / mosaic / plain
      字は ["日本語", "English"] と 2 つ並べて書けます -->
 ::: shelf
 [
   ["recaday", "/recaday/", "recaday",
-    ["Android (iOS 対応予定)", "Android (iOS to follow)"],
-    [["Instagram", "https://www.instagram.com/recaday_app/"]]],
+    null,
+    [[["Android closed test ページ", "Android closed test"], "/recaday/closed-test/"],
+     ["Instagram", "https://www.instagram.com/recaday_app/"]],
+    [["app-store", ["https://apps.apple.com/jp/app/recaday-%E6%99%82%E5%88%BB%E5%85%A5%E3%82%8A-vlog-%E3%81%8B%E3%82%93%E3%81%9F%E3%82%93%E4%BD%9C%E6%88%90/id6815089116",
+                    "https://apps.apple.com/app/id6815089116"]]]],
   [["テロップスタジオ", "telop studio"], "/telop-studio/", "telop",
     ["未リリース (iOS / Android / PC 対応予定)", "Not released yet (iOS / Android / PC)"]],
   [["オートモザイク", "auto mosaic"], "/auto-mosaic/", "mosaic",

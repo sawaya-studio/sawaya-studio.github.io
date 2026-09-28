@@ -300,6 +300,13 @@
     height: auto;
     filter: drop-shadow(0 0.2svmin 0.6svmin rgba(0, 0, 0, 0.28));
   }
+  /* ストアの札の置き場。動画のすぐ下に、札だけを真ん中に置く。
+     **下はたっぷり空ける。** 札のすぐ下に板が来ると、札が板の飾りに見える */
+  .store-row {
+    --badge: 20px;
+    padding: 36px 16px 72px;
+  }
+
   /* 下に続きがあるという合図。**名前だけの画面で終わらせないこと** */
   .more {
     position: absolute;

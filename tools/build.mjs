@@ -106,7 +106,8 @@ async function loadTheme(name) {
     見にいって、**書体がぜんぶ system のゴシックに落ちる**（黙って起こる）。
     `url(#…)` は頁の中の図を指しているので、ここを通らない（引用符が無い）。
   */
-  const css = read('style.css')
+  // ストアの札（themes/_badges.css）は、**どのテーマにも足す**
+  const css = (read('style.css') + fs.readFileSync(path.join(ROOT, 'themes/_badges.css'), 'utf8'))
     .replace(/(url\(")\/assets\//g, '$1')
     .replace(/(url\(")\/(?!\/)/g, '$1../');
   const js = read('page.js');

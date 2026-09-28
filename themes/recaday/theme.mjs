@@ -11,7 +11,7 @@
   部品の一覧は content/_書き方.md にある。
 */
 
-import { t, has, esc, unwrapP, classifyList, dataScript, head, social, socialRow, imageSize, LANG_SCRIPT } from '../_lib.mjs';
+import { t, has, esc, unwrapP, classifyList, dataScript, head, social, socialRow, imageSize, badges, LANG_SCRIPT } from '../_lib.mjs';
 
 /* 焼き込みの枠。**比率はアプリと同じ**（src/theme.ts の clockStyle / CLOCK_FONTS）。
    ここでは書体の名前だけを扱う。実際の数値は style.css の .burn[data-font] に置いてある */
@@ -231,6 +231,16 @@ ${socialRow(inner)}
     <span aria-hidden="true">↓</span>
   </a>
 </section>`;
+    },
+
+    /* ストアの黒い札。**札だけを置く。まわりに字を足さない。**
+       ::: store app-store=https://apps.apple.com/app/id…
+       言葉で行き先を変えるなら  app-store:ja=… app-store:en=…
+       （Google Play が来たら google-play=… を足す。横に並ぶ） */
+    store({ attrs }) {
+      const kinds = [...new Set(Object.keys(attrs).map((k) => k.replace(/:(ja|en)$/, '')))];
+      const list = kinds.map((k) => [k, [attrs[`${k}:ja`] ?? attrs[k], attrs[`${k}:en`] ?? attrs[k]]]);
+      return `<div class="store-row">${badges(list)}</div>`;
     },
 
     /* 読むところの入れ物。ガラスの板はこの中に並べる */

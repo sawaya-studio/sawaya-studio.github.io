@@ -246,6 +246,14 @@ hr{border:0;border-top:1px solid var(--line);margin:34px 0}
 .shelf .name b{font-size:15.5px;font-weight:700;letter-spacing:-.01em}
 .shelf .name span{font-family:var(--label);font-size:10.5px;letter-spacing:.1em;
   text-transform:uppercase;color:var(--faint);white-space:nowrap}
+/* 札の下に置く、ストアの黒い札。名前と Instagram のあいだ。
+   **札そのものより上に置くこと**（下の .more と同じわけ）。
+   Google Play の札が来たら、同じ高さで横に並ぶ */
+.shelf .badges{position:relative;z-index:1;--badge:14px;margin-top:12px}
+.shelf a.badge{color:#fff}
+.shelf a.badge::after{content:none}
+.shelf .badges + .more{margin-top:10px}
+
 /* 札の下に置く、ほかの行き先（Instagram など）。
 
    **札そのものより上に置くこと。** 札は「どこを押しても飛ぶ」ようにしてあり、
@@ -256,7 +264,12 @@ hr{border:0;border-top:1px solid var(--line);margin:34px 0}
   display:flex;justify-content:center;flex-wrap:wrap;gap:14px;
   margin-top:7px;
 }
+/* **並べた行き先は、それぞれ自分の上だけを押せるようにする。**
+   札の当たり判定（.shelf a::after）は、いちばん近い position の付いた箱を覆う。
+   a に position が無いと、それぞれの判定が .more ぜんぶに広がり、
+   最後の 1 つ（Instagram）が手前の行き先をまるごと塞ぐ */
 .shelf .more a{
+  position:relative;
   font-family:var(--label);
   font-size:11px;letter-spacing:.1em;text-transform:uppercase;
   color:var(--faint);

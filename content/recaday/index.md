@@ -50,6 +50,13 @@ icon: /assets/recaday-icon.png
 :::
 
 
+<!-- ストアの黒い札。**札だけ。まわりに字を足さない。**
+     日本語なら日本の App Store、英語なら国の付かない URL（見る人の国の App Store が開く）。
+     Google Play が来たら  google-play=…  を足す（横に並ぶ）。 -->
+::: store app-store:ja=https://apps.apple.com/jp/app/recaday-%E6%99%82%E5%88%BB%E5%85%A5%E3%82%8A-vlog-%E3%81%8B%E3%82%93%E3%81%9F%E3%82%93%E4%BD%9C%E6%88%90/id6815089116 app-store:en=https://apps.apple.com/app/id6815089116
+:::
+
+
 <!-- ========== 3. 説明 ==========
      ここから下が「こんなアプリです」。**1 つの話につき、板 1 枚。**
      話が増えたら板を足し、要らない板は丸ごと消す。 -->
