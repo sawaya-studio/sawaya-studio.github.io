@@ -24,7 +24,7 @@
       theme.mjs   頁の外枠と、::: で呼べる部品
 
   style.css と page.js は、**テーマごとに 1 本ずつ /assets/ へ書き出す**
-  （assets/recaday.css など）。頁はそれを読むだけ。
+  （assets/recaday.<印>.css など。印は中身から作る）。頁はそれを読むだけ。
 
   page.js は、中身が注記だけのときは読みこまない（空のファイルを取りに行かせない）。
 
@@ -34,6 +34,7 @@
 */
 
 import fs from 'node:fs';
+import crypto from 'node:crypto';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
@@ -112,30 +113,41 @@ async function loadTheme(name) {
     .replace(/(url\(")\/(?!\/)/g, '$1../');
   const js = read('page.js');
   fs.mkdirSync(path.join(ROOT, 'assets'), { recursive: true });
-  fs.writeFileSync(path.join(ROOT, `assets/${name}.css`), css);
+
+  /*
+    **名前に中身の印を入れて書き出す**（assets/recaday.1a2b3c4d.css）。
+
+    印が無いと、直したあとも古い css を持ったままの端末がある。
+    **Instagram のアプリの中の browser がそう。** 頁は新しいのに css だけ古く、
+    新しく足した部品（App Store の札）が素のまま、でかい青いりんごで出た。
+    中身が変われば名前が変わるので、どこも必ず取り直す。
+
+    ?v= のような問い合わせにしないのは、頁をそのまま開いた（file://）ときに
+    問い合わせの付いた道を読めない環境があるから。**名前そのものに入れる。**
+    古い名前のものは、書き出すたびに消す（残すと assets/ が膨らむ）。
+  */
+  const stamp = (body) => crypto.createHash('sha256').update(body).digest('hex').slice(0, 8);
+  const emit = (ext, body) => {
+    const mine = new RegExp(`^${name.replace(/[-]/g, '\\-')}\\.([0-9a-f]{8}\\.)?${ext}$`);
+    for (const f of fs.readdirSync(path.join(ROOT, 'assets'))) {
+      if (mine.test(f)) fs.rmSync(path.join(ROOT, 'assets', f));
+    }
+    if (body == null) return '';
+    const file = `${name}.${stamp(body)}.${ext}`;
+    fs.writeFileSync(path.join(ROOT, 'assets', file), body);
+    return `/assets/${file}`;
+  };
 
   // 注記だけの page.js は、**置かないし読ませない。**
   // 空のファイルを site に残すと、あとで「これは何だ」と探すことになる
-  const jsPath = path.join(ROOT, `assets/${name}.js`);
-  const empty = isEmptyJs(js);
-  if (empty) { if (fs.existsSync(jsPath)) fs.rmSync(jsPath); }
-  else fs.writeFileSync(jsPath, js);
+  const cssPath = emit('css', css);
+  const jsPath = emit('js', isEmptyJs(js) ? null : js);
 
-  /*
-    **名前のうしろに ?v= を付けないこと。**
-
-    直したのに古いものが出るのを防げるが、頁をそのまま開いた（file://）ときに
-    問い合わせの付いた道を読めない環境がある。そこで読めないと css がまるごと
-    落ちて、**頁が素のまま**になる。得より損のほうが大きい。
-
-    手元で見るあいだは tools/serve.mjs が「貯めるな」と言っているので困らない。
-    公開したあと古いものが出たときは、Ctrl+Shift+R で読み直せばよい。
-  */
   return {
     ...mod.default,
     name,
-    css: `/assets/${name}.css`,
-    js: empty ? '' : `/assets/${name}.js`,
+    css: cssPath,
+    js: jsPath,
   };
 }
 
