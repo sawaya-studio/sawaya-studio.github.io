@@ -1,16 +1,21 @@
 ---
 theme: recaday
 lang: ja
-title: recaday
+# 検索結果の見出しになる。**App Store の名前と揃えておく**（探す人はこの言葉で探す）
+title: recaday - 時刻入り vlog かんたん作成
+titleEn: recaday - Make a vlog with the time on it
 # ここは検索結果と SNS に出る一行。**「準備中です。」のままにしないこと。**
-description: >
-  一日を短く撮りためて、一本の vlog にするアプリ。撮った時刻がそのまま映像に
-  焼き込まれるので、時間を調べて入れる必要はありません。
+description: recadayは、一日のできごとを短い動画で撮りためて、一本のvlogにまとめるアプリです。撮影した時刻は映像にそのまま入るので、自分で時刻を調べて入力する手間がかかりません。
 image: /assets/cards/recaday-1200x630.png
 imageW: 1200
 imageH: 630
 imageAlt: RECADAY — record a day
 icon: /assets/recaday-icon.png
+# 検索に渡すアプリの素性（themes/_lib.mjs の structuredData）
+app: recaday
+appOS: iOS 16.4
+appCategory: PhotographyApplication
+appStore: https://apps.apple.com/jp/app/id6815089116
 ---
 
 <!--

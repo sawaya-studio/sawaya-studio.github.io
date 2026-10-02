@@ -35,6 +35,7 @@
 
 import fs from 'node:fs';
 import crypto from 'node:crypto';
+import { execFileSync } from 'node:child_process';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
@@ -69,7 +70,11 @@ function frontMatter(src) {
     if (val === '>' || val === '|') {
       const buf = [];
       while (i + 1 < lines.length && /^\s+\S/.test(lines[i + 1])) buf.push(lines[++i].trim());
-      val = buf.join(val === '>' ? ' ' : '\n');
+      /* > で折った行は空白でつなぐが、**和文どうしのあいだには空白を入れない。**
+         入れると「映像に 焼き込まれる」のように、検索結果の一行に空白が残る */
+      val = val === '>'
+        ? buf.reduce((a, b) => (!a ? b : /[\u3000-\u9fff\uff00-\uffef]$/.test(a) && /^[\u3000-\u9fff\uff00-\uffef]/.test(b) ? a + b : `${a} ${b}`), '')
+        : buf.join('\n');
     } else if (/^\[.*\]$/.test(val)) {
       val = val.slice(1, -1).split(',').map((s) => s.trim().replace(/^["']|["']$/g, '')).filter(Boolean);
     } else {
@@ -202,7 +207,7 @@ async function buildOne(file) {
   const dest = path.join(ROOT, outRel);
   fs.mkdirSync(path.dirname(dest), { recursive: true });
   fs.writeFileSync(dest, out);
-  return { outRel, bytes: Buffer.byteLength(out) };
+  return { outRel, src: path.relative(ROOT, file).replace(/\\/g, '/'), bytes: Buffer.byteLength(out) };
 }
 
 async function buildAll() {
@@ -221,9 +226,42 @@ async function buildAll() {
     console.log(`  ${r.outRel.padEnd(34)} ${(r.bytes / 1024).toFixed(1)} KB`);
   }
   console.log(`${made.length} 枚`);
+  writeCrawlFiles(made);
   checkLinks(made);
   checkFonts();
   return made;
+}
+
+/*
+  検索の入口。sitemap.xml と robots.txt。
+  ==========================================================================
+  **どちらも作り直すたびに書き出す。** 手で直さないこと。
+  頁を足せば sitemap にも勝手に載る。手で書いた頁（HAND_MADE）も載せる。
+
+  lastmod は、その頁の元を git が最後に記録した日。
+  git が無いところで作り直したときは付けない（嘘の日付を書くよりよい）。
+*/
+function writeCrawlFiles(made) {
+  const site = JSON.parse(fs.readFileSync(path.join(ROOT, 'site.json'), 'utf8'));
+  const lastmod = (rel) => {
+    try {
+      return execFileSync('git', ['log', '-1', '--format=%cs', '--', rel], { cwd: ROOT, encoding: 'utf8' }).trim();
+    } catch { return ''; }
+  };
+  const pages = [
+    ...made.map((r) => ({ outRel: r.outRel, src: r.src })),
+    ...HAND_MADE.map((f) => ({ outRel: f, src: f })),
+  ].sort((a, b) => a.outRel.localeCompare(b.outRel));
+  const urls = pages.map(({ outRel, src }) => {
+    const loc = site.origin + '/' + outRel.replace(/index\.html$/, '');
+    const d = lastmod(src);
+    return `  <url><loc>${loc}</loc>${d ? `<lastmod>${d}</lastmod>` : ''}</url>`;
+  });
+  fs.writeFileSync(path.join(ROOT, 'sitemap.xml'),
+    `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join('\n')}\n</urlset>\n`);
+  fs.writeFileSync(path.join(ROOT, 'robots.txt'),
+    `User-agent: *\nAllow: /\n\nSitemap: ${site.origin}/sitemap.xml\n`);
+  console.log(`  sitemap.xml（${urls.length} 頁） robots.txt`);
 }
 
 /*

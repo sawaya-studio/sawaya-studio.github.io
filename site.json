@@ -1,6 +1,12 @@
 {
   "name": "sawaya studio",
   "origin": "https://sawaya-studio.github.io",
+  "author": "Kento Sawaya",
+
+  "//google": "Google の札。**空のものは頁に出ない。** siteVerification は Search Console の「HTML タグ」の content の値",
+  "google": {
+    "siteVerification": "bKSZb2aNxypjwIHYYj9NtY45hHgTIoZPrgJ5Ot8-bj8"
+  },
 
   "//accounts": "道具ごとの社の口。**空の口は頁に出ない。** 持ったら URL を書けば出る（鍵は頁の theme 名）",
   "accounts": {

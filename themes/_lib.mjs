@@ -77,9 +77,56 @@ ${img ? `<meta property="og:image" content="${img}">` + (page.imageW && page.ima
 <meta property="og:image:alt" content="${esc(page.imageAlt)}">` : '') + `
 <meta name="twitter:card" content="${page.twitterCard ?? 'summary_large_image'}">` : ''}
 ${page.icon ? `<link rel="icon" href="${page.icon}">\n<link rel="apple-touch-icon" href="${page.appleIcon ?? page.icon}">` : ''}
-<link rel="canonical" href="${url}">
+<link rel="canonical" href="${url}">${page.site?.google?.siteVerification ? `
+<meta name="google-site-verification" content="${esc(page.site.google.siteVerification)}">` : ''}${structuredData(page)}
 ${extra}
 <link rel="stylesheet" href="${css}">`;
+}
+
+/*
+  検索に渡す、頁の素性（JSON-LD）。
+  ==========================================================================
+  **書くのは front matter だけ。** ここで組み立てる。
+
+  - 根の頁（/）… site そのもの（WebSite）と、作り手（Organization）
+  - app: を書いた頁 … そのアプリ（SoftwareApplication）
+
+      app: recaday                                 … アプリの名前（title が別名になる）
+      appOS: iOS 16.4
+      appCategory: PhotographyApplication          … schema.org の分類
+      appStore: https://apps.apple.com/jp/app/…
+
+  **値段は「無料」で決め打ちにしている。** 有料のアプリを足すときはここを直すこと。
+*/
+function structuredData(page) {
+  const site = page.site ?? {};
+  const origin = site.origin ?? '';
+  const author = { '@type': 'Person', name: site.author ?? site.name };
+  const items = [];
+  if (page.url === '/') {
+    items.push({
+      '@context': 'https://schema.org', '@type': 'WebSite',
+      name: site.name, url: origin + '/', inLanguage: ['ja', 'en'],
+      publisher: { '@type': 'Organization', name: site.name, url: origin + '/', founder: author },
+    });
+  }
+  if (page.app) {
+    items.push({
+      '@context': 'https://schema.org', '@type': 'SoftwareApplication',
+      name: page.app,
+      ...(page.title && page.title !== page.app ? { alternateName: page.title } : {}),
+      description: page.description,
+      url: origin + page.url,
+      ...(page.image ? { image: origin + page.image } : {}),
+      operatingSystem: page.appOS,
+      applicationCategory: page.appCategory,
+      ...(page.appStore ? { downloadUrl: page.appStore, installUrl: page.appStore } : {}),
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'JPY' },
+      author,
+    });
+  }
+  // </script> を中に書かせないため、< は \u003c にしておく
+  return items.map((o) => `\n<script type="application/ld+json">${JSON.stringify(o).replace(/</g, '\\u003c')}</script>`).join('');
 }
 
 /*

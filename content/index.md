@@ -2,7 +2,8 @@
 theme: works
 lang: ja
 title: "{{site.name}}"
-description: sawaya studio top ページ
+# 検索結果に出る一行
+description: sawaya studioは、iPhoneアプリ「recaday」など、毎日の暮らしを少し楽しくするアプリを作っています。recadayを使うと、撮影した時刻が入ったvlogをかんたんに作れます。
 icon: /assets/sawaya-studio-icon.svg
 appleIcon: /assets/sawaya-studio-icon.png
 ---

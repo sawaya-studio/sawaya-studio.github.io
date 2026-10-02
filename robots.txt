@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://sawaya-studio.github.io/sitemap.xml
